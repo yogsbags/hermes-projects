@@ -1,0 +1,1253 @@
+{
+  "mandate": {
+    "mandate_id": "india-auto-components",
+    "title": "Auto components",
+    "focus": "operating-company",
+    "geography": [
+      "India"
+    ],
+    "sector": [
+      "motor vehicles",
+      "vehicle bodies and trailers",
+      "auto components"
+    ],
+    "sector_codes": [
+      "291",
+      "292",
+      "293"
+    ],
+    "ownership": [
+      "founder",
+      "family"
+    ],
+    "exclude_ownership": [
+      "private_equity"
+    ],
+    "revenue": {
+      "min": 300,
+      "max": 1500,
+      "currency": "INR",
+      "scale": "crore"
+    },
+    "revenue_min_inr_cr": 300,
+    "revenue_max_inr_cr": 1500,
+    "asset_types": [],
+    "exclude_assets": [],
+    "units_min": null,
+    "units_max": null,
+    "price_min": null,
+    "price_max": null,
+    "currency": "INR",
+    "strategy": ""
+  },
+  "roles": {
+    "orchestrating": [
+      "origination-controller",
+      "research-coordinator",
+      "fit-scorer",
+      "evidence-reviewer"
+    ],
+    "delegated_workers": [
+      "company-researcher",
+      "ownership-researcher",
+      "financial-researcher",
+      "transaction-researcher",
+      "relationship-researcher"
+    ],
+    "deterministic": [
+      "mandate_parse",
+      "mca_registry_query",
+      "entity_normalize",
+      "evidence_normalize",
+      "deduplication",
+      "data_validation",
+      "database_store"
+    ]
+  },
+  "controller": {
+    "focus_notes": "Workers must not relax the requirement for an India-based founder- or family-owned operating company in motor vehicles, vehicle bodies and trailers, or auto components with annual revenue between INR 300 crore and INR 1,500 crore, excluding private-equity ownership.",
+    "raw": "{\"focus_notes\":\"Workers must not relax the requirement for an India-based founder- or family-owned operating company in motor vehicles, vehicle bodies and trailers, or auto components with annual revenue between INR 300 crore and INR 1,500 crore, excluding private-equity ownership.\"}"
+  },
+  "fit_scorer": {
+    "raw": "{\"scores\":[{\"entity_id\":\"s-m-auto-engineering\",\"mandatory\":[{\"check\":\"geography\",\"result\":\"pass\",\"reason\":\"The excerpt states that the company has manufacturing plants in Pune, Pithampur, and Chennai, India.\"},{\"check\":\"sector\",\"result\":\"pass\",\"reason\":\"The excerpt supports that the company manufactures components, assemblies, and modules for the automotive industry.\"},{\"check\":\"ownership\",\"result\":\"unknown\",\"reason\":\"No excerpt supports founder or family ownership.\"},{\"check\":\"listing_status\",\"result\":\"unknown\",\"reason\":\"No excerpt states that the company is unlisted, privately held, or publicly traded.\"},{\"check\":\"size\",\"result\":\"pass\",\"reason\":\"The excerpt reports FY 2025 revenue of ₹945.79 crore, within the mandate range of ₹300–₹1,500 crore.\"},{\"check\":\"business_model\",\"result\":\"pass\",\"reason\":\"The excerpt states that the company designs, develops, and manufactures automotive components, assemblies, and modules.\"}]},{\"entity_id\":\"rsb-transmissions-i-rsb-group\",\"mandatory\":[{\"check\":\"geography\",\"result\":\"pass\",\"reason\":\"The excerpt states that the company is headquartered in Pune and has manufacturing setups across multiple Indian locations.\"},{\"check\":\"sector\",\"result\":\"pass\",\"reason\":\"The excerpt supports design and manufacturing of aggregates and systems related to commercial vehicles, passenger cars, construction, and farm equipment.\"},{\"check\":\"ownership\",\"result\":\"unknown\",\"reason\":\"The excerpts do not support founder or family ownership.\"},{\"check\":\"listing_status\",\"result\":\"unknown\",\"reason\":\"The excerpts do not state that the company is unlisted, privately held, or publicly traded.\"},{\"check\":\"size\",\"result\":\"fail\",\"reason\":\"The excerpt reports expected FY25 revenue of around ₹3,300 crore, above the mandate maximum of ₹1,500 crore.\"},{\"check\":\"business_model\",\"result\":\"pass\",\"reason\":\"The excerpt identifies RSB as a manufacturer of automotive components and systems.\"}]},{\"entity_id\":\"sandhu-enterprises\",\"mandatory\":[{\"check\":\"geography\",\"result\":\"pass\",\"reason\":\"The excerpt states that the group has five manufacturing plants at Pantnagar, India.\"},{\"check\":\"sector\",\"result\":\"pass\",\"reason\":\"The excerpt identifies the company as an automotive systems manufacturer for two-wheelers, three-wheelers, and trucks.\"},{\"check\":\"ownership\",\"result\":\"pass\",\"reason\":\"The excerpt states that the company is 100% family-owned.\"},{\"check\":\"listing_status\",\"result\":\"unknown\",\"reason\":\"No excerpt states that the company is unlisted, privately held, or publicly traded.\"},{\"check\":\"size\",\"result\":\"unknown\",\"reason\":\"No excerpt provides a revenue figure with a currency and unit that can be compared with the mandate range.\"},{\"check\":\"business_model\",\"result\":\"pass\",\"reason\":\"The excerpt states that Sandhu Enterprises focuses on automotive component manufacturing.\"}]},{\"entity_id\":\"kishan-autoparts\",\"mandatory\":[{\"check\":\"geography\",\"result\":\"pass\",\"reason\":\"The excerpt states that Kishan Autoparts was founded in Rajkot, Gujarat, India.\"},{\"check\":\"sector\",\"result\":\"pass\",\"reason\":\"The excerpt identifies the company as a manufacturer and exporter of connecting rods and engine valves for vehicles and equipment.\"},{\"check\":\"ownership\",\"result\":\"pass\",\"reason\":\"The excerpt states that KAPL was incorporated by the Changela family.\"},{\"check\":\"listing_status\",\"result\":\"pass\",\"reason\":\"The excerpt explicitly describes the company as private and unlisted.\"},{\"check\":\"size\",\"result\":\"unknown\",\"reason\":\"No excerpt provides a revenue figure with a currency and unit that can be compared with the mandate range.\"},{\"check\":\"business_model\",\"result\":\"pass\",\"reason\":\"The excerpt states that the company manufactures and exports connecting rods and engine valves.\"}]},{\"entity_id\":\"bhavani-industries-india\",\"mandatory\":[{\"check\":\"geography\",\"result\":\"pass\",\"reason\":\"The excerpt states that the company operates at Rajkot, Gujarat, India.\"},{\"check\":\"sector\",\"result\":\"pass\",\"reason\":\"The excerpt supports automotive transmission components including gears…"
+  },
+  "entities": [
+    {
+      "entity_id": "s-m-auto-engineering",
+      "name": "S.M. Auto Engineering Pvt. Ltd.",
+      "names": [
+        "S.M. Auto Engineering Pvt. Ltd."
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; manufacturing plants in Pune, Pithampur and Chennai",
+          "source_url": "https://www.smauto.co.in/",
+          "excerpt": "has 10 independent manufacturing plants spread across Pune (Maharashtra), Pithampur (Madhya Pradesh), and Chennai (Tamil Nadu)",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-manufacturing-plants-in-pune-pit"
+        },
+        {
+          "field": "sector",
+          "value": "Auto components and automotive assemblies/modules",
+          "source_url": "https://www.smauto.co.in/",
+          "excerpt": "capable of designing, developing, and manufacturing components & assemblies, and modules for the automotive industry",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-auto-components-and-automotive-assemblies"
+        },
+        {
+          "field": "business_model",
+          "value": "Automotive component system supplier and manufacturer",
+          "source_url": "https://www.smauto.co.in/",
+          "excerpt": "It has evolved into a system supplier capable of designing, developing, and manufacturing components & assemblies, and modules for the automotive industry",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-automotive-component-system-suppl"
+        },
+        {
+          "field": "revenue",
+          "value": "₹945.79 Cr (FY 2025)",
+          "source_url": "https://www.thecompanycheck.com/company/s-m-auto-engineering-pvt-ltd/U34300MH1976PTC019348",
+          "excerpt": "Revenue · FY 2025 ₹945.79 Cr",
+          "confidence": "sourced",
+          "evidence_id": "ev-revenue-945-79-cr-fy-2025-https-www-thecompanych"
+        },
+        {
+          "field": "transaction_status",
+          "value": "NO_PUBLIC_PROCESS_FOUND",
+          "source_url": "https://www.bmj.com/content/342/bmj.d3126",
+          "excerpt": "Absence of evidence is not evidence of absence",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-no-public-process-found-https"
+        },
+        {
+          "field": "relationship",
+          "value": "Sanjay Chopda — Managing Director",
+          "source_url": "https://in.linkedin.com/in/sanjay-chopda-11368b148",
+          "excerpt": "MD at SM Auto Engineering Pvt Ltd",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-sanjay-chopda-managing-director-htt"
+        }
+      ],
+      "unknowns": [
+        "No named owner, founder, promoter, adviser, auditor, or lender identified in the screening search.",
+        "listing_status",
+        "ownership",
+        "ownership status and private-equity exclusion",
+        "revenue"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "s-m-auto-engineering",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company has manufacturing plants in Pune, Pithampur, and Chennai, India."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt supports that the company manufactures components, assemblies, and modules for the automotive industry."
+          },
+          {
+            "check": "ownership",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No excerpt supports founder or family ownership."
+          },
+          {
+            "check": "listing_status",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No sourced claim confirms that the company is unlisted."
+          },
+          {
+            "check": "size",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt reports FY 2025 revenue of ₹945.79 crore, within the mandate range of ₹300–₹1,500 crore."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company designs, develops, and manufactures automotive components, assemblies, and modules."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 0.67,
+        "fit_label": "INSUFFICIENT_EVIDENCE",
+        "fit_score": null,
+        "transaction_status": "NO_PUBLIC_PROCESS_FOUND",
+        "transaction_status_note": "No public process found in the sourced claims. This is not proof the target is off-market.",
+        "financial_confirmation_required": false
+      },
+      "validation_errors": []
+    },
+    {
+      "entity_id": "rsb-transmissions-i-rsb-group",
+      "name": "RSB Transmissions (I) Ltd. / RSB Group",
+      "names": [
+        "RSB Transmissions (I) Ltd. / RSB Group"
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; headquartered in Pune with manufacturing locations including Jamshedpur, Pune, Dharwad, Chennai, Pantnagar, Cuttack and Lucknow",
+          "source_url": "https://www.rsbglobal.com/",
+          "excerpt": "headquartered at Pune, it has grown into a pulsating institution with manufacturing setups at Jamshedpur, Pune, Dharwad, Chennai, Sricity, Pantnagar, Cuttack, Lucknow",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-headquartered-in-pune-with-manuf"
+        },
+        {
+          "field": "sector",
+          "value": "Automotive components and systems",
+          "source_url": "https://www.rsbglobal.com/",
+          "excerpt": "business interest ranging from design to manufacturing of aggregates and systems related to commercial vehicles, passenger cars, construction and farm equipments",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-automotive-components-and-systems-https-w"
+        },
+        {
+          "field": "business_model",
+          "value": "Design, engineering and manufacturing of automotive components, aggregates and systems",
+          "source_url": "https://www.rsbglobal.com/",
+          "excerpt": "Be a socially responsible leading manufacturer of Automotive components & Systems",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-design-engineering-and-manufactur"
+        },
+        {
+          "field": "revenue",
+          "value": "around ₹3,300 crore (expected FY25 revenue); turnover of more than ₹3,000 crore last year",
+          "source_url": "https://www.fortuneindia.com/markets/ipo/road-to-ipo-decoding-rsb-groups-3-fold-revenue-growth-strategy/123503",
+          "excerpt": "RSB achieved a turnover of more than ₹3,000 crore last year and expects to conclude FY25 with a revenue of around ₹3,300 crore.",
+          "confidence": "sourced",
+          "evidence_id": "ev-revenue-around-3-300-crore-expected-fy25-revenue"
+        },
+        {
+          "field": "transaction_status",
+          "value": "FUNDRAISING",
+          "source_url": "https://www.vccircle.com/exclusive-auto-parts-maker-rsb-prepares-exit-plan-for-private-equity-investors",
+          "excerpt": "Pune-based auto components maker RSB Transmissions India Ltd plans to raise funds to let its private equity backers exit and to fuel expansion.",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-fundraising-https-www-vccircl"
+        },
+        {
+          "field": "relationship",
+          "value": "R. K. Behera — Founder and Chairman, RSB Group",
+          "source_url": "https://www.rsbglobal.com/leadership.php",
+          "excerpt": "Mr. R. K. Behera is the Chairman and Founder of the RSB Group.",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-r-k-behera-founder-and-chairman-rsb"
+        },
+        {
+          "field": "relationship",
+          "value": "S. K. Behera — Co-founder, Vice-Chairman and Managing Director",
+          "source_url": "https://www.rsbglobal.com/leadership.php",
+          "excerpt": "Mr. S. K. Behera cofounded RSB Group along with his brother Mr. R. K. Behera. He is the Vice-Chairman & Managing Director of the Group",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-s-k-behera-co-founder-vice-chairman"
+        }
+      ],
+      "unknowns": [
+        "No named adviser, auditor, or lender identified in the screening search.",
+        "listing_status",
+        "ownership",
+        "ownership status and private-equity exclusion",
+        "revenue"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "rsb-transmissions-i-rsb-group",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company is headquartered in Pune and has manufacturing setups across multiple Indian locations."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt supports design and manufacturing of aggregates and systems related to commercial vehicles, passenger cars, construction, and farm equipment."
+          },
+          {
+            "check": "ownership",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "The excerpts do not support founder or family ownership."
+          },
+          {
+            "check": "listing_status",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No sourced claim confirms that the company is unlisted."
+          },
+          {
+            "check": "size",
+            "result": "fail",
+            "evidence_ids": [],
+            "reason": "The excerpt reports expected FY25 revenue of around ₹3,300 crore, above the mandate maximum of ₹1,500 crore."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt identifies RSB as a manufacturer of automotive components and systems."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 0.67,
+        "fit_label": "FAILS_MANDATORY",
+        "fit_score": null,
+        "transaction_status": "FUNDRAISING",
+        "transaction_status_note": "Transaction status is copied from a sourced claim.",
+        "financial_confirmation_required": false
+      },
+      "validation_errors": []
+    },
+    {
+      "entity_id": "sandhu-enterprises",
+      "name": "Sandhu Enterprises",
+      "names": [
+        "Sandhu Enterprises"
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; five manufacturing plants at Pantnagar",
+          "source_url": "https://sandhuenterprises.co.in/?page_id=15",
+          "excerpt": "Group consists of 5 manufacturing plants at Pantnagar",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-five-manufacturing-plants-at-pan"
+        },
+        {
+          "field": "sector",
+          "value": "Automotive systems and components for two-wheelers, three-wheelers and trucks",
+          "source_url": "https://sandhuenterprises.co.in/?page_id=15",
+          "excerpt": "Leading Automotive systems manufacturer for 2W,3W, Trucks, Non-Automotive & Electrical components",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-automotive-systems-and-components-for-two"
+        },
+        {
+          "field": "business_model",
+          "value": "Automotive component manufacturing, including fabrication, welding, pressing, coating and machining",
+          "source_url": "https://sandhuenterprises.co.in/?page_id=15",
+          "excerpt": "Sandhu Enterprises is a diversified group with focus on Automotive component manufacturing",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-automotive-component-manufacturin"
+        },
+        {
+          "field": "ownership",
+          "value": "family",
+          "source_url": "https://sandhuenterprises.co.in/?page_id=15",
+          "excerpt": "100% family-owned company led by Mr. Sherjas Sandhu, the first generation technocrat entrepreneur.",
+          "confidence": "sourced",
+          "evidence_id": "ev-ownership-family-https-sandhuenterprises-co-in-p"
+        },
+        {
+          "field": "transaction_status",
+          "value": "NO_PUBLIC_PROCESS_FOUND",
+          "source_url": "https://www.bmj.com/content/342/bmj.d3126",
+          "excerpt": "Absence of evidence is not evidence of absence",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-no-public-process-found-https"
+        },
+        {
+          "field": "relationship",
+          "value": "Sherjas Sandhu — Managing Director; family-company leader",
+          "source_url": "https://sandhuenterprises.co.in/?page_id=15",
+          "excerpt": "Mr. Sherjas Sandhu ... is Managing Director.",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-sherjas-sandhu-managing-director-fa"
+        }
+      ],
+      "unknowns": [
+        "No named owner, founder, promoter, adviser, auditor, or lender identified in the screening search.",
+        "listing_status",
+        "private-equity exclusion",
+        "revenue"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "sandhu-enterprises",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the group has five manufacturing plants at Pantnagar, India."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt identifies the company as an automotive systems manufacturer for two-wheelers, three-wheelers, and trucks."
+          },
+          {
+            "check": "ownership",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company is 100% family-owned."
+          },
+          {
+            "check": "listing_status",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No sourced claim confirms that the company is unlisted."
+          },
+          {
+            "check": "size",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No excerpt provides a revenue figure with a currency and unit that can be compared with the mandate range."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that Sandhu Enterprises focuses on automotive component manufacturing."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 0.67,
+        "fit_label": "INSUFFICIENT_EVIDENCE",
+        "fit_score": null,
+        "transaction_status": "NO_PUBLIC_PROCESS_FOUND",
+        "transaction_status_note": "No public process found in the sourced claims. This is not proof the target is off-market.",
+        "financial_confirmation_required": true
+      },
+      "validation_errors": []
+    },
+    {
+      "entity_id": "kishan-autoparts",
+      "name": "Kishan Autoparts Pvt. Ltd.",
+      "names": [
+        "Kishan Autoparts Pvt. Ltd."
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; based in Rajkot, Gujarat",
+          "source_url": "https://www.kishanauto.com/about.php",
+          "excerpt": "Kishan Autoparts was founded by Shri Shantibhai Changela, in Rajkot, Gujarat, India",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-based-in-rajkot-gujarat-https-ww"
+        },
+        {
+          "field": "sector",
+          "value": "Automotive components: connecting rods and engine valves",
+          "source_url": "https://www.kishanauto.com/about.php",
+          "excerpt": "leading manufacturer and exporter of Connecting Rods and Engine Valve for Cars, LCV, HCV, Earthmovers, Marine, Tractors etc.",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-automotive-components-connecting-rods-and"
+        },
+        {
+          "field": "business_model",
+          "value": "Manufacturing and export of automotive engine components",
+          "source_url": "https://www.kishanauto.com/about.php",
+          "excerpt": "has grown steadily through the years to become a leading manufacturer and exporter of Connecting Rods and Engine Valve",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-manufacturing-and-export-of-autom"
+        },
+        {
+          "field": "ownership",
+          "value": "family",
+          "source_url": "https://www.icra.in/Rating/GetRationalReportFilePdf?id=38530",
+          "excerpt": "KAPL was incorporated in 2001 by the Changela family as a private limited company.",
+          "confidence": "sourced",
+          "evidence_id": "ev-ownership-family-https-www-icra-in-rating-getrat"
+        },
+        {
+          "field": "listing_status",
+          "value": "unlisted",
+          "source_url": "https://economictimes.indiatimes.com/company/kishan-autoparts-private-limited/U29219GJ2000PTC038264",
+          "excerpt": "It's a private unlisted company and is classified as'company limited by shares'.",
+          "confidence": "sourced",
+          "evidence_id": "ev-listing-status-unlisted-https-economictimes-indi"
+        },
+        {
+          "field": "transaction_status",
+          "value": "NO_PUBLIC_PROCESS_FOUND",
+          "source_url": "https://www.bmj.com/content/342/bmj.d3126",
+          "excerpt": "Absence of evidence is not evidence of absence",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-no-public-process-found-https"
+        },
+        {
+          "field": "relationship",
+          "value": "Shri Shantibhai Changela — Founder",
+          "source_url": "https://www.kishanauto.com/about.php",
+          "excerpt": "Kishan Autoparts was founded by Shri Shantibhai Changela, in Rajkot, Gujarat, India.",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-shri-shantibhai-changela-founder-ht"
+        }
+      ],
+      "unknowns": [
+        "No named additional relationship, adviser, auditor, or lender identified in the screening search.",
+        "private-equity exclusion",
+        "revenue"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "kishan-autoparts",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that Kishan Autoparts was founded in Rajkot, Gujarat, India."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt identifies the company as a manufacturer and exporter of connecting rods and engine valves for vehicles and equipment."
+          },
+          {
+            "check": "ownership",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that KAPL was incorporated by the Changela family."
+          },
+          {
+            "check": "listing_status",
+            "result": "pass",
+            "evidence_ids": [
+              "ev-listing-status-unlisted-https-economictimes-indi"
+            ],
+            "reason": "A sourced claim confirms the company is unlisted or privately held."
+          },
+          {
+            "check": "size",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No excerpt provides a revenue figure with a currency and unit that can be compared with the mandate range."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company manufactures and exports connecting rods and engine valves."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 0.83,
+        "fit_label": "INSUFFICIENT_EVIDENCE",
+        "fit_score": null,
+        "transaction_status": "NO_PUBLIC_PROCESS_FOUND",
+        "transaction_status_note": "No public process found in the sourced claims. This is not proof the target is off-market.",
+        "financial_confirmation_required": true
+      },
+      "validation_errors": []
+    },
+    {
+      "entity_id": "bhavani-industries-india",
+      "name": "Bhavani Industries India LLP",
+      "names": [
+        "Bhavani Industries India LLP"
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; based in Rajkot, Gujarat",
+          "source_url": "https://bhavani.co.in/",
+          "excerpt": "components for Diesel Engine components at Rajkot, Gujarat, India",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-based-in-rajkot-gujarat-https-bh"
+        },
+        {
+          "field": "sector",
+          "value": "Automotive transmission, engine and braking components",
+          "source_url": "https://bhavani.co.in/",
+          "excerpt": "Our components of Transmission Components comprises of Gears, Shafts, Syncro-Rings & Shifter-Sleeves",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-automotive-transmission-engine-and-brakin"
+        },
+        {
+          "field": "business_model",
+          "value": "Forging, precision machining and heat-treatment manufacturer of automotive components",
+          "source_url": "https://bhavani.co.in/",
+          "excerpt": "Manufacturing expertise on various process like : Cold, warm and hot Forging including net / near net shape forming; precision machining",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-forging-precision-machining-and-h"
+        },
+        {
+          "field": "ownership",
+          "value": "family",
+          "source_url": "https://bhavani.co.in/about-us/",
+          "excerpt": "Bhavani Industries India LLP, a family owned group, was established in 1975 by Nandawana Brothers to cater to the requirements of components for Diesel Engine components at Rajkot, Gujarat, India.",
+          "confidence": "sourced",
+          "evidence_id": "ev-ownership-family-https-bhavani-co-in-about-us"
+        },
+        {
+          "field": "listing_status",
+          "value": "unlisted",
+          "source_url": "https://www.sensibook.com/companies/2746656/AAM-3024/BHAVANI-INDUSTRIES-INDIA-LLP",
+          "excerpt": "BHAVANI INDUSTRIES INDIA LLP (CIN: AAM-3024) is an unlisted (privately held) 8-year-old company incorporated on 24 Mar 2018",
+          "confidence": "sourced",
+          "evidence_id": "ev-listing-status-unlisted-https-www-sensibook-com"
+        },
+        {
+          "field": "revenue",
+          "value": "₹500–₹1,000 Cr (FY ended March 31, 2025)",
+          "source_url": "https://tracxn.com/d/legal-entities/india/bhavani-industries-india-llp/__ndCUARPVJAuSbh9rFNahL6tqnDAbZd3qwJn-ISF3bs0",
+          "excerpt": "BHAVANI INDUSTRIES INDIA LLP generated between ₹500 Cr and ₹1,000 Cr in revenue for the financial year ending on Mar 31, 2025.",
+          "confidence": "sourced",
+          "evidence_id": "ev-revenue-500-1-000-cr-fy-ended-march-31-2025-http"
+        },
+        {
+          "field": "transaction_status",
+          "value": "NO_PUBLIC_PROCESS_FOUND",
+          "source_url": "https://www.bmj.com/content/342/bmj.d3126",
+          "excerpt": "Absence of evidence is not evidence of absence",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-no-public-process-found-https"
+        },
+        {
+          "field": "relationship",
+          "value": "Himanshubhai Dolatram Nandwana — Designated Partner",
+          "source_url": "https://www.thecompanycheck.com/company/bhavani-industries-india-llp/AAM-3024",
+          "excerpt": "Himanshubhai Dolatram Nandwana Designated Partner",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-himanshubhai-dolatram-nandwana-desi"
+        },
+        {
+          "field": "relationship",
+          "value": "Sureshbhai Dolatram Nandwana — Designated Partner",
+          "source_url": "https://www.thecompanycheck.com/company/bhavani-industries-india-llp/AAM-3024",
+          "excerpt": "Sureshbhai Dolatram Nandwana Designated Partner",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-sureshbhai-dolatram-nandwana-design"
+        }
+      ],
+      "unknowns": [
+        "No named adviser, auditor, or lender identified in the screening search.",
+        "private-equity exclusion",
+        "revenue"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "bhavani-industries-india",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company operates at Rajkot, Gujarat, India."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt supports automotive transmission components including gears, shafts, syncro-rings, and shifter-sleeves."
+          },
+          {
+            "check": "ownership",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt describes Bhavani Industries India LLP as a family-owned group established by the Nandawana Brothers."
+          },
+          {
+            "check": "listing_status",
+            "result": "pass",
+            "evidence_ids": [
+              "ev-listing-status-unlisted-https-www-sensibook-com"
+            ],
+            "reason": "A sourced claim confirms the company is unlisted or privately held."
+          },
+          {
+            "check": "size",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt reports FY 2025 revenue between ₹500 crore and ₹1,000 crore, entirely within the mandate range."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt supports manufacturing automotive components through forging and precision machining."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 1.0,
+        "fit_label": "MANDATE_FIT",
+        "fit_score": 70,
+        "transaction_status": "NO_PUBLIC_PROCESS_FOUND",
+        "transaction_status_note": "No public process found in the sourced claims. This is not proof the target is off-market.",
+        "financial_confirmation_required": false
+      },
+      "validation_errors": []
+    },
+    {
+      "entity_id": "g-s-auto-international",
+      "name": "G.S. Auto International Ltd.",
+      "names": [
+        "G.S. Auto International Ltd."
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; manufacturing facilities in Ludhiana and Jamshedpur",
+          "source_url": "https://gsauto.in/product/Company%20Profile/65/Company%20Profile",
+          "excerpt": "Our manufacturing facilities are located in major industrial township of Ludhiana in North India & Jamshedpur in Eastern India",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-manufacturing-facilities-in-ludh"
+        },
+        {
+          "field": "sector",
+          "value": "Automotive suspension, fastening, casting and fabricated components",
+          "source_url": "https://gsauto.in/product/Company%20Profile/65/Company%20Profile",
+          "excerpt": "GSAUTO is one of the leading and fastest growing manufacturer of Automotive Suspension and Fastening Components",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-automotive-suspension-fastening-casting-a"
+        },
+        {
+          "field": "business_model",
+          "value": "Manufacturer supplying automotive components to vehicle OEMs and aftermarket channels",
+          "source_url": "https://gsauto.in/product/Company%20Profile/65/Company%20Profile",
+          "excerpt": "We develop components based on Customer's Specifications, Drawings and also provide Designing Solutions for enhanced Product Performance & Improved Quality",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-manufacturer-supplying-automotive"
+        },
+        {
+          "field": "revenue",
+          "value": "Rs. 14,516.07 lakhs (FY ended March 31, 2025)",
+          "source_url": "https://www.indiainfoline.com/company/g-s-auto-international-ltd/reports/directors-report",
+          "excerpt": "Revenue from Operations | 14516.07 | 15070.31",
+          "confidence": "sourced",
+          "evidence_id": "ev-revenue-rs-14-516-07-lakhs-fy-ended-march-31-202"
+        },
+        {
+          "field": "transaction_status",
+          "value": "FUNDRAISING",
+          "source_url": "https://scanx.trade/stock-market-news/companies/g-s-auto-international-defers-rights-issue-committee-meeting-pending-bse-approval/37182368",
+          "excerpt": "G.S. Auto International Ltd has postponed its Rights Issue Committee meeting ... pending BSE's in-principle approval for the proposed rights issue.",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-fundraising-https-scanx-trade"
+        },
+        {
+          "field": "relationship",
+          "value": "Baba Gurmukh Singh Ji — Founder",
+          "source_url": "https://www.gsauto.in/product/Company%20Profile/65/About%20Us",
+          "excerpt": "The entrepreneurship of our founder, Baba Gurmukh Singh Ji, began with manufacturing of Bicycle Components",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-baba-gurmukh-singh-ji-founder-https"
+        },
+        {
+          "field": "relationship",
+          "value": "Jasbir Singh Ryait — Current Chairman and CEO",
+          "source_url": "https://www.gsauto.in/product/Company%20Profile/65/About%20Us",
+          "excerpt": "S. Jasbir Singh Ryait Chairman & CEO",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-jasbir-singh-ryait-current-chairman"
+        }
+      ],
+      "unknowns": [
+        "No named adviser, auditor, or lender identified in the screening search.",
+        "listing_status",
+        "ownership",
+        "private-equity exclusion",
+        "revenue"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "g-s-auto-international",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company has manufacturing facilities in Ludhiana and Jamshedpur, India."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt identifies GSAUTO as a manufacturer of automotive suspension and fastening components."
+          },
+          {
+            "check": "ownership",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No excerpt supports founder or family ownership."
+          },
+          {
+            "check": "listing_status",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No sourced claim confirms that the company is unlisted."
+          },
+          {
+            "check": "size",
+            "result": "fail",
+            "evidence_ids": [],
+            "reason": "The excerpt reports revenue of Rs. 14,516.07 lakhs, equivalent to approximately ₹145.16 crore, below the mandate minimum of ₹300 crore."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt supports manufacturing automotive components based on customer specifications and drawings."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 0.67,
+        "fit_label": "FAILS_MANDATORY",
+        "fit_score": null,
+        "transaction_status": "FUNDRAISING",
+        "transaction_status_note": "Transaction status is copied from a sourced claim.",
+        "financial_confirmation_required": false
+      },
+      "validation_errors": []
+    },
+    {
+      "entity_id": "talbros-automotive-components",
+      "name": "Talbros Automotive Components Ltd.",
+      "names": [
+        "Talbros Automotive Components Ltd."
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; first manufacturing unit in Faridabad, Haryana, with manufacturing facilities across India",
+          "source_url": "https://yourstory.com/smbstory/talbros-faridabad-large-enterprise-gasket-manufacturing-forging-tata-motors-ashok-leyland-bmw",
+          "excerpt": "set up the first manufacturing unit in Faridabad, Haryana",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-first-manufacturing-unit-in-fari"
+        },
+        {
+          "field": "sector",
+          "value": "Automotive gaskets, forgings, chassis, suspension, anti-vibration components and hoses",
+          "source_url": "https://yourstory.com/smbstory/talbros-faridabad-large-enterprise-gasket-manufacturing-forging-tata-motors-ashok-leyland-bmw",
+          "excerpt": "Talbros is a diversified auto component player with presence across automobile categories in two-wheelers, passenger vehicles, commercial vehicles and farm equipment",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-automotive-gaskets-forgings-chassis-suspe"
+        },
+        {
+          "field": "business_model",
+          "value": "Automotive component manufacturing and direct supply to OEMs",
+          "source_url": "https://yourstory.com/smbstory/talbros-faridabad-large-enterprise-gasket-manufacturing-forging-tata-motors-ashok-leyland-bmw",
+          "excerpt": "We sell directly to OEMs (Original Equipment Manufacturer)",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-automotive-component-manufacturin"
+        },
+        {
+          "field": "listing_status",
+          "value": "listed",
+          "source_url": "https://www.moneycontrol.com/company-facts/talbrosautomotivecomponents/listing/TAC",
+          "excerpt": "BSE: 505160 | NSE: TALBROAUTO | Represents Equity.",
+          "confidence": "sourced",
+          "evidence_id": "ev-listing-status-listed-https-www-moneycontrol-com"
+        },
+        {
+          "field": "revenue",
+          "value": "₹647.9 Cr (9M FY26 consolidated total income from operations)",
+          "source_url": "https://investors.talbros.com/investor-presentations/Q3-9M-FY26-Investor-Presentation.pdf",
+          "excerpt": "9M FY26 vs 9M FY25 Total Income from Operations ₹647.9 Crs.",
+          "confidence": "sourced",
+          "evidence_id": "ev-revenue-647-9-cr-9m-fy26-consolidated-total-inco"
+        },
+        {
+          "field": "transaction_status",
+          "value": "ACTIVE_SALE_PROCESS",
+          "source_url": "https://www.autocarpro.in/news-national/talbros-automotive-components-to-divest-entire-40-stake-in-nippon-leakless-talbros-118372",
+          "excerpt": "Talbros Automotive Components Ltd (TACL) ... announced that its Board of Directors have approved the divestment of its entire 40% stake in its joint venture company Nippon Leakless Talbros.",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-active-sale-process-https-www"
+        },
+        {
+          "field": "relationship",
+          "value": "Umesh Talwar — Promoter",
+          "source_url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/3ef4741b-1f5a-451c-9b39-324616fc218c.pdf",
+          "excerpt": "Umesh Talwar PROMOTER",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-umesh-talwar-promoter-https-www-bse"
+        },
+        {
+          "field": "relationship",
+          "value": "Anuj Talwar — Managing Director-designate; son of Umesh Talwar",
+          "source_url": "https://www.bseindia.com/xml-data/corpfiling/AttachHIS/edf0fb10-26a5-43a7-a42f-6be719631ad1.pdf",
+          "excerpt": "Appointment of Mr. Anuj Talwar ... as Managing Diretor ... Mr. Anuj Talwar is son of Mr. Umesh Talwar.",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-anuj-talwar-managing-director-desig"
+        }
+      ],
+      "unknowns": [
+        "No named adviser, auditor, or lender identified in the screening search.",
+        "ownership",
+        "private-equity exclusion"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "talbros-automotive-components",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company established its first manufacturing unit in Faridabad, Haryana, India."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt identifies Talbros as a diversified auto component player across multiple automobile categories."
+          },
+          {
+            "check": "ownership",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No excerpt supports founder or family ownership."
+          },
+          {
+            "check": "listing_status",
+            "result": "unknown",
+            "evidence_ids": [
+              "ev-listing-status-listed-https-www-moneycontrol-com"
+            ],
+            "reason": "No sourced claim confirms that the company is unlisted."
+          },
+          {
+            "check": "size",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt reports 9M FY26 total income from operations of ₹647.9 crore, within the mandate revenue range."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company sells directly to OEMs."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 0.67,
+        "fit_label": "INSUFFICIENT_EVIDENCE",
+        "fit_score": null,
+        "transaction_status": "ACTIVE_SALE_PROCESS",
+        "transaction_status_note": "A public sale process is underway.",
+        "financial_confirmation_required": false
+      },
+      "validation_errors": []
+    },
+    {
+      "entity_id": "omax-autos",
+      "name": "Omax Autos Limited",
+      "names": [
+        "Omax Autos Limited"
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; headquarters in Gurgaon, Haryana, and manufacturing plants in Lucknow",
+          "source_url": "https://www.omaxauto.com/about-company-profile.aspx",
+          "excerpt": "Anchored in Gurgaon, Haryana, the Company today operates three manufacturing plants in Lucknow",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-headquarters-in-gurgaon-haryana"
+        },
+        {
+          "field": "sector",
+          "value": "Automotive sheet-metal components, frames, long members and assemblies",
+          "source_url": "https://www.omaxauto.com/about-company-profile.aspx",
+          "excerpt": "leading Indian manufacturer of automotive sheet-metal components, frames, long members and assemblies",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-automotive-sheet-metal-components-frames"
+        },
+        {
+          "field": "business_model",
+          "value": "Tier-1 engineering and manufacturing supplier to commercial-vehicle OEMs",
+          "source_url": "https://www.omaxauto.com/about-company-profile.aspx",
+          "excerpt": "supplying tier-1 OEMs across commercial vehicles, railways and heavy fabrication",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-tier-1-engineering-and-manufactur"
+        },
+        {
+          "field": "ownership",
+          "value": "founder",
+          "source_url": "https://www.omaxauto.com/about-company-profile.aspx",
+          "excerpt": "The Company was an initiative of Mr. Jatender Kumar Mehta, today Vice Chairman & Managing Director",
+          "confidence": "sourced",
+          "evidence_id": "ev-ownership-founder-https-www-omaxauto-com-about-c"
+        },
+        {
+          "field": "listing_status",
+          "value": "listed",
+          "source_url": "https://www.omaxauto.com/about-company-profile.aspx",
+          "excerpt": "What began modestly, on three acres of land, has today grown into Omax Autos Limited - a publicly listed tier-1 manufacturer",
+          "confidence": "sourced",
+          "evidence_id": "ev-listing-status-listed-https-www-omaxauto-com-abo"
+        },
+        {
+          "field": "revenue",
+          "value": "Rs. 36,925.86 lakhs (FY 2024-25 revenue from operations)",
+          "source_url": "https://www.omaxauto.com/resources/images/16090036.pdf",
+          "excerpt": "Revenue from Operations 36,925.86",
+          "confidence": "sourced",
+          "evidence_id": "ev-revenue-rs-36-925-86-lakhs-fy-2024-25-revenue-fr"
+        },
+        {
+          "field": "transaction_status",
+          "value": "NO_PUBLIC_PROCESS_FOUND",
+          "source_url": "https://www.bmj.com/content/342/bmj.d3126",
+          "excerpt": "Absence of evidence is not evidence of absence",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-no-public-process-found-https"
+        },
+        {
+          "field": "relationship",
+          "value": "Jatender Kumar Mehta — Promoter and Vice Chairman & Managing Director; founding initiator",
+          "source_url": "https://www.omaxauto.com/about-management-board-of-directors.aspx",
+          "excerpt": "Mr. Jatender Kumar Mehta, a Promoter of the Company, has been on the Board since inception.",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-jatender-kumar-mehta-promoter-and-v"
+        },
+        {
+          "field": "relationship",
+          "value": "Devashish Mehta — Managing Director; son of Jatender Kumar Mehta",
+          "source_url": "https://www.omaxauto.com/resources/images/80775587.pdf",
+          "excerpt": "Mr. Devashish Mehta is son of Mr. Jatender Kumar Mehta, Vice Chairman cum Managing Director",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-devashish-mehta-managing-director-s"
+        }
+      ],
+      "unknowns": [
+        "No named adviser, auditor, or lender identified in the screening search.",
+        "ownership status and private-equity exclusion",
+        "revenue"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "omax-autos",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that the company is based in Gurgaon, Haryana, and operates manufacturing plants in Lucknow, India."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt identifies Omax Autos as an Indian manufacturer of automotive sheet-metal components, frames, long members, and assemblies."
+          },
+          {
+            "check": "ownership",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt supports founder involvement by identifying the company as an initiative of Mr. Jatender Kumar Mehta."
+          },
+          {
+            "check": "listing_status",
+            "result": "fail",
+            "evidence_ids": [
+              "ev-listing-status-listed-https-www-omaxauto-com-abo"
+            ],
+            "reason": "A sourced claim confirms the company is publicly listed."
+          },
+          {
+            "check": "size",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt reports FY 2024–25 revenue from operations of Rs. 36,925.86 lakhs, equivalent to approximately ₹369.26 crore, within the mandate range."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that Omax Autos supplies tier-1 OEMs across commercial vehicles, railways, and heavy fabrication."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 1.0,
+        "fit_label": "FAILS_MANDATORY",
+        "fit_score": null,
+        "transaction_status": "NO_PUBLIC_PROCESS_FOUND",
+        "transaction_status_note": "No public process found in the sourced claims. This is not proof the target is off-market.",
+        "financial_confirmation_required": false
+      },
+      "validation_errors": []
+    },
+    {
+      "entity_id": "satrac-engineering",
+      "name": "SATRAC Engineering Pvt. Ltd.",
+      "names": [
+        "SATRAC Engineering Pvt. Ltd."
+      ],
+      "claims": [
+        {
+          "field": "geography",
+          "value": "India; manufacturing operations including Chennai",
+          "source_url": "https://www.satrac.com/",
+          "excerpt": "SATRAC Chennai proudly inaugurates its new state-of-the-art plant dedicated to manufacturing trailer and truck bodies",
+          "confidence": "sourced",
+          "evidence_id": "ev-geography-india-manufacturing-operations-includi"
+        },
+        {
+          "field": "sector",
+          "value": "Vehicle bodies and trailers",
+          "source_url": "https://www.satrac.com/",
+          "excerpt": "India’s leading Trailer and Truck body Manufacturer",
+          "confidence": "sourced",
+          "evidence_id": "ev-sector-vehicle-bodies-and-trailers-https-www-sat"
+        },
+        {
+          "field": "business_model",
+          "value": "Manufacturing of trailers, tippers, tankers, bulkers and truck bodies",
+          "source_url": "https://www.satrac.com/",
+          "excerpt": "Select CategoryTrailersTippers & Tip TrailersTruck BodiesTankers & Bulkers",
+          "confidence": "sourced",
+          "evidence_id": "ev-business-model-manufacturing-of-trailers-tippers"
+        },
+        {
+          "field": "ownership",
+          "value": "Kyokuto (Japan)",
+          "source_url": "https://www.satrac.com/about-us/",
+          "excerpt": "2020 We became a part of the Kyokuto Family- Japan.",
+          "confidence": "sourced",
+          "evidence_id": "ev-ownership-kyokuto-japan-https-www-satrac-com-abo"
+        },
+        {
+          "field": "revenue",
+          "value": "₹550 crore (last fiscal)",
+          "source_url": "https://www.thehindubusinessline.com/news/satrac-inaugurates-its-trailer-amp-truck-body-manufacturing-plant-near-chennai-invests-250-crore/article70647116.ece",
+          "excerpt": "Last fiscal, the company reported revenue of ₹550 crore and is aiming to double it in two years with the launch of the Chennai plant, which is now the company’s flagship facility.",
+          "confidence": "sourced",
+          "evidence_id": "ev-revenue-550-crore-last-fiscal-https-www-thehindu"
+        },
+        {
+          "field": "transaction_status",
+          "value": "RECENTLY_ACQUIRED",
+          "source_url": "https://www.lincolninternational.com/transactions/kyokuto-kaihatsu-kogyo-co-ltd-has-acquired-satrac-engineering-pvt-ltd/",
+          "excerpt": "2020 — Kyokuto Kaihatsu Kogyo Co. Ltd. has acquired Satrac Engineering Pvt. Ltd.",
+          "confidence": "sourced",
+          "evidence_id": "ev-transaction-status-recently-acquired-https-www-l"
+        },
+        {
+          "field": "relationship",
+          "value": "M. C. Bantwal — Founder and Managing Director",
+          "source_url": "https://exa.ai/library/person/5jfplsd2bsm",
+          "excerpt": "Founder & Managing Director at SATRAC Engineering",
+          "confidence": "sourced",
+          "evidence_id": "ev-relationship-m-c-bantwal-founder-and-managing-di"
+        }
+      ],
+      "unknowns": [
+        "No named additional relationship, adviser, auditor, or lender identified in the screening search.",
+        "listing_status",
+        "ownership status and private-equity exclusion",
+        "revenue"
+      ],
+      "workers": [
+        "company-researcher",
+        "ownership-researcher",
+        "financial-researcher",
+        "transaction-researcher"
+      ],
+      "screening": {
+        "company_id": "satrac-engineering",
+        "mandate_id": "india-auto-components",
+        "mandatory": [
+          {
+            "check": "geography",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt states that SATRAC operates a manufacturing plant in Chennai, India."
+          },
+          {
+            "check": "sector",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt identifies SATRAC as a trailer and truck body manufacturer, within vehicle bodies and trailers."
+          },
+          {
+            "check": "ownership",
+            "result": "fail",
+            "evidence_ids": [],
+            "reason": "The excerpt states that SATRAC became part of the Kyokuto family in Japan, contradicting the founder or family ownership requirement."
+          },
+          {
+            "check": "listing_status",
+            "result": "unknown",
+            "evidence_ids": [],
+            "reason": "No sourced claim confirms that the company is unlisted."
+          },
+          {
+            "check": "size",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt reports last-fiscal revenue of ₹550 crore, within the mandate range."
+          },
+          {
+            "check": "business_model",
+            "result": "pass",
+            "evidence_ids": [],
+            "reason": "The excerpt lists manufacturing of trailers, tippers, truck bodies, tankers, and bulkers."
+          }
+        ],
+        "preferred": [],
+        "evidence_completeness": 0.83,
+        "fit_label": "FAILS_MANDATORY",
+        "fit_score": null,
+        "transaction_status": "RECENTLY_ACQUIRED",
+        "transaction_status_note": "Transaction status is copied from a sourced claim.",
+        "financial_confirmation_required": false
+      },
+      "validation_errors": []
+    }
+  ],
+  "worker_failures": [],
+  "red_team": "Evidence Reviewer red-team\n\nScope limitation: the package is truncated during the Sandhu Enterprises claims, so this review covers the material shown only.\n\nGlobal issues\n\n- Every screening check has `\"evidence_ids\": []`, despite claims being present. This breaks traceability between each pass/fail/unknown decision and its supporting excerpt.\n- The evidence-completeness value of `0.67` is not auditable from the package. No calculation or field-level methodology is provided.\n- Listing status is `unknown` for every company. The package should not imply that any target is privately held or unlisted merely because the legal name contains “Pvt. Ltd.” or because no listing evidence was found.\n- The package does not establish that the cited sources were current as of a defined review date.\n- “No public process found” is not an off-market conclusion. It is only a limited search result, and the package does not document the search scope, databases, date range, or queries used.\n\n1. S.M. Auto Engineering Pvt. Ltd.\n\nContradictions and weaknesses\n\n- Geography, sector, business model, and revenue are marked as passes, but all corresponding `evidence_ids` are empty. The claims exist, but the screening record does not link to them.\n- Ownership is correctly marked unknown. The relationship excerpt identifying Sanjay Chopda as Managing Director does not establish founder or family ownership.\n- The revenue evidence is a third-party directory entry reporting ₹945.79 crore for FY2025. It is not clear whether this is standalone or consolidated revenue, audited or estimated, or whether it refers to the exact legal entity rather than a group or similarly named entity.\n- The transaction-status evidence is not evidence of transaction status. The cited BMJ excerpt — “Absence of evidence is not evidence of absence” — is a general epistemic statement, not a source about S.M. Auto Engineering.\n- Consequently, `NO_PUBLIC_PROCESS_FOUND` is unsupported as a sourced company-specific conclusion. The accompanying caveat is directionally correct but does not cure the missing search evidence.\n- The company website excerpt supports operations and locations, but does not support founder/family ownership, unlisted status, or absence of a transaction process.\n\nMissing excerpts or verification\n\n- Exact legal-entity confirmation tying the website, revenue record, and company identity together.\n- Primary or authoritative ownership evidence.\n- Revenue basis: standalone/consolidated, audited/unaudited, and reporting period.\n- A documented transaction search with date, sources checked, and results.\n- Evidence supporting listing status, if that field is required for the mandate.\n\n2. RSB Transmissions (I) Ltd. / RSB Group\n\nContradictions and weaknesses\n\n- The entity name combines a legal company and a broader group. The revenue excerpt says “RSB” and “RSB Group,” but the screening target is specifically RSB Transmissions (I) Ltd. The package does not prove that ₹3,300 crore is revenue of the screened legal entity.\n- The revenue source says “expected FY25 revenue” and “turnover of more than ₹3,000 crore last year.” This is forward-looking or imprecisely dated, not a confirmed audited figure.\n- The size fail may be directionally justified, but the legal-entity and accounting perimeter are not established in the evidence shown.\n- Ownership is marked unknown even though the package includes excerpts identifying R. K. Behera as founder and chairman and S. K. Behera as co-founder, vice-chairman, and managing director. At minimum, this is an internal evidence inconsistency requiring explanation. The fit scorer’s check cannot be changed here, but the record should explain why those excerpts were not accepted for the ownership check.\n- The transaction status is labeled `FUNDRAISING`, supported by a VCCircle report stating that the company planned to raise funds to enable PE backers to exit and fund expansion. This supports a reported fundraising/PE-exit situation, but not necessarily a current, active, or completed process.\n- The source appears to describe a planned process; no date, status update, mandate/adviser, amount, investor, or closing outcome is provided in the excerpt.\n- “Transaction status is copied from a sourced claim” is not an adequate status note. It does not assess source date, present status, or whether the claim concerns fundraising, a secondary PE exit, a company sale, or multiple transactions.\n- The transaction evidence may actually be relevant to the mandate’s exclusion of private-equity ownership. The package does not reconcile whether PE investors remain owners, are exiting, or have already exited.\n\nMissing excerpts or verification\n\n- Exact legal entity and group perimeter for the revenue figure.\n- Current ownership cap table or authoritative ownership evidence.\n- Date and current status of the reported fundraising/PE-exit process.\n- Evidence distinguishing primary fundraising from a secondary sale by PE investors.\n- Evidence showing whether any transaction was completed, abandoned, or remains active.\n- Search evidence for other public transaction processes.\n\n3. Sandhu Enterprises\n\nContradictions and weaknesses\n\n- Geography is supported only by an excerpt stating five manufacturing plants at Pantnagar. It does not clearly establish the legal entity’s registered location or whether “Sandhu Enterprises” is the operating company, a group label, or a trade name.\n- Ownership is marked pass based on the stated “100% family-owned” claim. The package should identify who the family owners are and whether the claim applies to the exact screened entity.\n- Size is correctly marked unknown based on the material shown. No revenue conclusion should be inferred from plant count, product breadth, or “leading manufacturer” language.\n- The target is therefore not shown to be inside the ₹300–₹1,500 crore revenue band.\n- The transaction status is `NO_PUBLIC_PROCESS_FOUND`, but no company-specific transaction-search excerpt is shown. The absence caveat is appropriate, but the status remains weakly supported.\n- Listing status remains unknown; family ownership does not establish that the entity is unlisted.\n- The displayed package is truncated before the full claims set, so potential contradictions in the missing portion cannot be assessed.\n\nMissing excerpts or verification\n\n- Exact legal identity and corporate structure.\n- Named family owners and source date for the 100% ownership assertion.\n- Revenue, year, currency/unit, and standalone versus consolidated basis.\n- Listing-status evidence.\n- Documented transaction-search scope and date.\n- Confirmation that the five plants belong to the screened legal entity rather than an affiliated group.\n\nTransaction-status assessment\n\n- S.M. Auto: weak/unsupported. The BMJ quotation is not a transaction-status source.\n- RSB: strongest of the three, but still incomplete. It supports a reported fundraising/PE-exit plan, not necessarily a current or completed transaction. The date and present status are missing.\n- Sandhu: weak/unsupported in the material shown. “No public process found” lacks documented search provenance.\n- None of the three should be described as confirmed off-market.\n- None of the status labels should be merged with mandate fit or interpreted as an attractiveness score.\n\nReviewer conclusion\n\nThe package contains useful operating-company excerpts, but its audit trail is not reliable because all evidence-link fields are empty. The most material red flags are:\n\n1. Unsupported company-specific “no public process found” claims.\n2. A non-evidentiary BMJ quotation used under S.M. Auto’s transaction status.\n3. Incomplete temporal support for RSB’s fundraising classification.\n4. Entity/perimeter ambiguity for RSB revenue.\n5. Ownership evidence present for RSB but not reflected in the ownership check.\n6. No revenue evidence for Sandhu.\n7. Unknown listing status across the package.\n8. Truncated evidence preventing complete review of Sandhu.\n\nNo outreach recommendation is made.",
+  "path": "/Users/yogs87/Documents/New project/hermes projects/aveyroni-agent-teams/project-02-deal-origination/runs/india-auto-components/orchestrator-run.json"
+}

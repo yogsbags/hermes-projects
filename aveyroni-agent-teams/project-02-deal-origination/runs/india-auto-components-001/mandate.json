@@ -1,0 +1,13 @@
+{
+  "mandate_id": "india-auto-components-001",
+  "source_text": "Founder or family-owned Indian auto-component manufacturers, estimated revenue ₹300–1,500 crore, supplying Tier-1 or OEM customers, with export capability, and no known institutional private-equity ownership.",
+  "sector": ["auto components"],
+  "geography": ["India"],
+  "revenue_min_inr_cr": 300,
+  "revenue_max_inr_cr": 1500,
+  "ownership": ["founder", "family"],
+  "exclude_ownership": ["private_equity"],
+  "business_model": ["manufacturer", "tier-1 or OEM supplier"],
+  "mandatory_checks": ["geography", "sector", "ownership", "size", "business model", "export capability"],
+  "preferences": []
+}

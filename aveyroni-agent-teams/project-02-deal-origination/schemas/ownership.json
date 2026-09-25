@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aveyroni.local/schemas/ownership.json",
+  "title": "OwnershipTree",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["company_id", "holders", "institutional_pe_known"],
+  "properties": {
+    "company_id": { "type": "string" },
+    "as_of": { "type": ["string", "null"] },
+    "institutional_pe_known": { "type": "boolean" },
+    "holders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "holder_type", "confidence"],
+        "properties": {
+          "name": { "type": "string" },
+          "holder_type": { "enum": ["promoter_family", "founder", "esop", "corporate", "private_equity", "public", "other", "unknown"] },
+          "percent": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+          "confidence": { "enum": ["high", "medium", "low"] },
+          "evidence_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aveyroni.local/schemas/evidence.json",
+  "title": "EvidenceClaim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["evidence_id", "claim", "source", "kind", "confidence"],
+  "properties": {
+    "evidence_id": { "type": "string" },
+    "company_id": { "type": "string" },
+    "claim": { "type": "string" },
+    "source": { "type": "string" },
+    "source_url": { "type": "string" },
+    "source_date": { "type": ["string", "null"], "format": "date" },
+    "publication_date": { "type": ["string", "null"], "format": "date" },
+    "excerpt": { "type": "string" },
+    "kind": { "enum": ["reported", "calculated", "inferred"] },
+    "confidence": { "enum": ["high", "medium", "low"] },
+    "contradictions": { "type": "array", "items": { "type": "string" } }
+  }
+}

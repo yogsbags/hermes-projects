@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aveyroni.local/schemas/screening.json",
+  "title": "ScreeningResult",
+  "description": "Mandate fit and transaction status are separate. They are not collapsed into one score.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["company_id", "mandate_id", "transaction_status"],
+  "properties": {
+    "company_id": { "type": "string" },
+    "mandate_id": { "type": "string" },
+    "mandatory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check", "result"],
+        "properties": {
+          "check": { "type": "string" },
+          "result": { "enum": ["pass", "fail", "unknown"] },
+          "evidence_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "preferred": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["check", "result"],
+        "properties": {
+          "check": { "type": "string" },
+          "result": { "enum": ["met", "unmet", "unknown"] },
+          "evidence_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "evidence_completeness": { "type": "number", "minimum": 0, "maximum": 1 },
+    "fit_label": {
+      "enum": [
+        "HIGH_MANDATE_FIT",
+        "MANDATE_FIT",
+        "PARTIAL_FIT",
+        "FAILS_MANDATORY",
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    "fit_score": {
+      "description": "Optional display score. Do not use it without the mandatory and preferred checks.",
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "transaction_status": {
+      "enum": [
+        "UNKNOWN",
+        "NO_PUBLIC_PROCESS_FOUND",
+        "PE_BACKED",
+        "STRATEGICALLY_OWNED",
+        "RECENTLY_ACQUIRED",
+        "FUNDRAISING",
+        "ACTIVE_SALE_PROCESS",
+        "CONFIRMED_OWNER_DIALOGUE"
+      ]
+    },
+    "transaction_status_note": { "type": "string" },
+    "financial_confirmation_required": { "type": "boolean" }
+  }
+}

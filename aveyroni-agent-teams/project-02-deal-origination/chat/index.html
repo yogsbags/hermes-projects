@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aveyroni Origination Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,520&family=Outfit:wght@340;460;560&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0d0b;
+      --panel: #121310;
+      --ink: #f3efe6;
+      --muted: #9c968b;
+      --line: rgba(243, 239, 230, 0.1);
+      --brass: #d7b48a;
+      --brass-dim: rgba(215, 180, 138, 0.14);
+      --user: #1b1d17;
+      --danger: #e7b2a8;
+      --ok: #c5d2b2;
+      --worker: #9fb7d9;
+      --code: #b7b09f;
+      --data: #8fcab8;
+      color-scheme: dark;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; overflow: hidden; background: var(--bg); }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Outfit, "Avenir Next", sans-serif;
+      font-weight: 340;
+    }
+    button, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    .app {
+      position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+      display: grid; grid-template-rows: 56px minmax(0, 1fr);
+      height: 100vh;
+      min-height: 0;
+    }
+    .topbar {
+      display: flex; align-items: center; gap: 18px;
+      padding: 0 22px; border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      font-family: Fraunces, Georgia, serif;
+      letter-spacing: 0.14em; font-size: 14px;
+    }
+    .brand span { color: var(--brass); }
+    .topbar .meta { color: var(--muted); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .body { height: 100%; min-height: 0; display: grid; grid-template-columns: 232px minmax(0, 1.35fr) minmax(320px, 0.85fr); }
+    .rail, .workspace { border-right: 1px solid var(--line); min-height: 0; }
+    .workspace { border-right: 0; border-left: 1px solid var(--line); }
+    .rail, .workspace, .chat { display: flex; flex-direction: column; height: 100%; min-height: 0; min-width: 0; }
+    .rail { padding: 18px 14px 24px; gap: 8px; background: #10110e; overflow-y: auto; }
+    .rail h2, .workspace h2, .label {
+      margin: 0; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 560;
+    }
+    .session, .chip-btn, .back, .approve button, .tool {
+      background: transparent; border: 1px solid var(--line); border-radius: 10px; text-align: left;
+    }
+    .session { padding: 10px 12px; }
+    .session.active { border-color: rgba(215, 180, 138, 0.55); background: var(--brass-dim); }
+    .session small { display: block; color: var(--muted); margin-top: 3px; }
+    .new-mandate { margin-bottom: 8px; padding: 10px 12px; color: var(--brass); }
+    .rail-block { margin-top: 18px; display: grid; gap: 6px; }
+    .rail-block h2 { margin-bottom: 2px; }
+    .inbox-menu { display: grid; gap: 6px; margin-top: 2px; padding-left: 8px; border-left: 1px solid var(--line); }
+    .session .badge {
+      display: inline-block; margin-left: 6px; color: var(--brass); font-size: 10px; letter-spacing: 0.08em;
+    }
+    .thread { flex: 1; overflow: auto; padding: 22px 26px 12px; display: flex; flex-direction: column; gap: 16px; min-width: 0; min-height: 0; }
+    /* A short trace used to sit at the top and leave a tall empty band above
+       the composer. This spacer takes only the spare room, so the trace sits
+       just above the composer, and it shrinks away once the thread is full. */
+    .thread::before { content: ""; flex: 1 0 0px; }
+    .thread:has(#empty:not([hidden]))::before { display: none; }
+    .msg { max-width: 680px; line-height: 1.5; white-space: pre-wrap; }
+    .msg.user { align-self: flex-end; background: var(--user); border: 1px solid var(--line); border-radius: 16px 16px 4px 16px; padding: 12px 14px; }
+    .msg.agent, .card { align-self: flex-start; }
+    .msg.agent { border-left: 2px solid var(--brass); padding: 2px 0 2px 14px; }
+    .msg.report-msg { white-space: normal; max-width: min(720px, 100%); }
+    .report { display: grid; gap: 18px; }
+    .report-head h2 {
+      margin: 0 0 6px; font-family: Fraunces, Georgia, serif; font-size: 28px; font-weight: 520; letter-spacing: -0.03em;
+    }
+    .report-head p { margin: 0; color: var(--muted); }
+    .report-company {
+      display: grid; gap: 12px; padding-top: 14px; border-top: 1px solid var(--line);
+    }
+    .report-company h3 { margin: 0; font-size: 18px; font-weight: 560; }
+    .report-section { display: grid; gap: 4px; }
+    .report-section h4, .dossier h4 {
+      margin: 0; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 560;
+    }
+    .report-section p, .dossier .section p { margin: 0; }
+    .report-foot { margin: 0; color: var(--muted); font-size: 12px; }
+    .msg.error { border-left-color: var(--danger); color: var(--danger); }
+    .who { display: block; margin-bottom: 6px; color: var(--muted); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .card {
+      width: min(520px, 100%);
+      border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: #141511;
+    }
+    .trace-card { width: min(780px, 100%); }
+    .card h3 { margin: 0 0 10px; font-size: 14px; font-weight: 560; }
+
+    /* --- agent-kind vocabulary, shared by the rail roster and the run trace --- */
+    .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex: none; background: var(--muted); }
+    .dot.kind-orchestrator { background: var(--brass); }
+    .dot.kind-worker { background: var(--worker); }
+    .dot.kind-code { background: var(--code); }
+    .dot.kind-data { background: var(--data); }
+
+    .roster { display: grid; gap: 7px; }
+    .roster .agent { display: flex; align-items: baseline; gap: 7px; font-size: 12px; line-height: 1.35; cursor: default; }
+    .roster .agent .dot { margin-top: 2px; }
+    .roster .agent b { font-weight: 460; color: var(--ink); }
+
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 10px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Collapsible trace card: expanded while a run streams live (the "watch
+       it work" moment), then collapses to a single terse summary line once
+       it finishes -- the actual report below it is what should read as the
+       answer, not a permanently-expanded technical log competing with it. */
+    .trace-toggle {
+      display: flex; align-items: center; gap: 8px; width: 100%;
+      background: none; border: 0; padding: 0; margin: 0 0 10px; text-align: left;
+      font-family: inherit; color: inherit; cursor: pointer;
+    }
+    .trace-toggle h3 { margin: 0; font-size: 14px; font-weight: 560; }
+    .trace-toggle .chevron { color: var(--muted); font-size: 10px; transition: transform 0.15s ease; flex: none; }
+    .card.collapsed .trace-toggle .chevron { transform: rotate(-90deg); }
+    .trace-toggle .summary-inline { color: var(--muted); font-size: 12px; }
+    .card.collapsed .trace-toggle { margin-bottom: 0; }
+    .card.collapsed .trace-body { display: none; }
+
+    .stages { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; font-size: 13px; }
+    .step { display: flex; align-items: flex-start; gap: 8px; color: var(--muted); }
+    .step .dot { margin-top: 5px; }
+    .step.done { color: var(--ink); }
+    .step.done .dot { background: var(--ok); }
+    .step-main { flex: 1; }
+
+    .step-group { display: grid; gap: 6px; }
+    .step-head { display: flex; align-items: flex-start; gap: 8px; color: var(--muted); }
+    .step-head .dot { margin-top: 5px; }
+    .step-group.done .step-head { color: var(--ink); }
+    .step-group.done .step-head .dot { background: var(--ok); }
+    .worker-chips { list-style: none; margin: 0; padding-left: 15px; display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start; }
+    .worker-chips > li { font-size: 11px; padding: 5px 10px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; max-width: 300px; }
+    .trace-card .worker-chips > li { width: min(600px, 100%); max-width: 100%; }
+    .worker-chips > li.done { color: var(--ink); border-color: rgba(197, 210, 178, 0.4); }
+    .worker-chips > li.done > .chip-head .dot { background: var(--ok); }
+    .worker-chips .chip-head { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+    /* Live per-tool-call feed inside a chip, streamed via delegate_task's
+       relayed subagent.tool events -- collapsed once the worker reports
+       back (see renderDelegateGroup's done branch), so the finished trace
+       stays clean while the run is showing its actual work in progress. */
+    .worker-chips .chip-activity { list-style: none; margin: 0; padding-left: 12px; display: grid; gap: 2px; max-width: 280px; }
+    .trace-card .worker-chips .chip-activity { max-width: 100%; width: 100%; }
+    .worker-chips .chip-activity li {
+      font-size: 10px; color: var(--muted); border: 0; padding: 0; border-radius: 0; background: none;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+      animation: chip-activity-in 0.2s ease-out;
+    }
+    @keyframes chip-activity-in { from { opacity: 0; } to { opacity: 1; } }
+
+    .trace-summary { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 11px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+    .trace-summary span { border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
+
+    .actions, .approve { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .actions button, .approve button, .tool, .back { padding: 7px 10px; border-radius: 999px; font-size: 12px; }
+    .actions button:hover, .session:hover, .tool:hover { border-color: rgba(215, 180, 138, 0.45); }
+    .approve .yes, .back.yes {
+      background: var(--brass); color: #1a140c; border: 0; font-weight: 560;
+    }
+    .back.yes:disabled { opacity: 0.45; }
+    .composer { margin-top: auto; flex-shrink: 0; border-top: 1px solid var(--line); padding: 12px 16px 14px; display: grid; gap: 8px; }
+    .composer-row { display: flex; gap: 8px; align-items: end; }
+    textarea {
+      flex: 1; min-width: 0; resize: none; min-height: 48px; max-height: 140px;
+      border-radius: 14px; border: 1px solid var(--line); background: var(--panel);
+      padding: 12px 14px; line-height: 1.4;
+    }
+    textarea:focus { outline: 1px solid rgba(215, 180, 138, 0.7); }
+    .run {
+      border: 0; border-radius: 14px; background: var(--brass); color: #1a140c;
+      font-weight: 560; padding: 0 16px; height: 48px;
+    }
+    .workspace-run { width: 100%; margin-top: 14px; }
+    .run:disabled { opacity: 0.45; cursor: wait; }
+    .tools { display: flex; gap: 8px; flex-wrap: wrap; }
+    .workspace { padding: 18px 16px 22px; overflow: auto; background: #10110e; }
+    .workspace header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+    .workspace header strong { font-weight: 560; }
+    .dossier { border-top: 1px solid var(--line); padding: 14px 0 4px; }
+    .dossier h3 { margin: 0 0 4px; font-size: 15px; font-weight: 560; }
+    .dossier p { margin: 0 0 4px; font-size: 14px; line-height: 1.45; }
+    .dossier .section { margin: 10px 0 0; }
+    .dossier .section h4 { margin-bottom: 4px; }
+    .dossier .section p { margin: 0; color: var(--ink); }
+    .dossier .fit.good { color: var(--ok); }
+    .dossier .fit.bad { color: var(--danger); }
+    .dossier-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .outreach-card {
+      border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 10px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .outreach-card header { margin: 0 0 10px; }
+    .outreach-card input, .outreach-card textarea {
+      width: 100%; box-sizing: border-box; color: var(--ink); background: var(--panel);
+      border: 1px solid var(--line); border-radius: 9px; padding: 9px 10px; font: inherit;
+    }
+    .outreach-card textarea { min-height: 170px; resize: vertical; }
+    .outreach-card .field { margin-bottom: 9px; }
+    .outreach-status { color: var(--brass); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+    .outreach-contact { font-size: 13px; color: var(--muted); margin-bottom: 10px; overflow-wrap: anywhere; }
+    .outreach-error { color: var(--danger); font-size: 13px; margin-top: 8px; }
+    .outreach-card.selected { border-color: rgba(215, 180, 138, 0.55); }
+    .block { border-top: 1px solid var(--line); padding: 14px 0; }
+    .block p, .kv { margin: 0; font-size: 14px; line-height: 1.45; }
+    .kv { display: grid; gap: 6px; color: var(--muted); }
+    .kv b { color: var(--ink); font-weight: 460; }
+    .funnel { display: grid; gap: 6px; }
+    .funnel div { display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; color: var(--muted); font-weight: 460; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+    th, td { padding: 8px 6px 8px 0; border-bottom: 1px solid var(--line); }
+    tr.company { cursor: pointer; }
+    tr.company:hover td { color: var(--brass); }
+    .note { color: var(--muted); font-size: 12px; line-height: 1.4; margin-top: 12px; }
+    .field { display: grid; gap: 4px; margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+    .field input, .field select {
+      width: 100%; border: 1px solid var(--line); border-radius: 8px; background: var(--panel);
+      padding: 8px 10px; color: var(--ink);
+    }
+    .checks { display: grid; gap: 6px; }
+    .checks label { display: flex; gap: 8px; align-items: center; color: var(--ink); }
+    .checks input { width: auto; }
+    .multi-select { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+    .multi-select summary { cursor: pointer; padding: 8px 10px; color: var(--ink); list-style: none; }
+    .multi-select summary::-webkit-details-marker { display: none; }
+    .multi-options { max-height: 220px; overflow: auto; border-top: 1px solid var(--line); padding: 8px 10px; display: grid; gap: 6px; }
+    .multi-options label { display: flex; gap: 8px; align-items: flex-start; color: var(--ink); line-height: 1.3; }
+    .multi-options input { width: auto; margin-top: 2px; }
+    form[data-focus="operating-company"] [data-panel="real-estate"],
+    form[data-focus="real-estate"] [data-panel="operating-company"] { display: none; }
+    .field input:focus, .field select:focus { outline: 1px solid rgba(215, 180, 138, 0.7); }
+    .save { border: 0; border-radius: 999px; background: var(--brass); color: #1a140c; font-weight: 560; padding: 7px 12px; }
+    .warn { color: var(--danger); }
+    .readiness-banner {
+      border: 1px solid rgba(231, 178, 168, 0.4); background: rgba(231, 178, 168, 0.08);
+      border-radius: 12px; padding: 10px 12px; margin: 0 0 14px; font-size: 12px; line-height: 1.5;
+    }
+    .readiness-banner b { color: var(--danger); display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .readiness-banner ul { margin: 4px 0 0; padding-left: 16px; color: var(--muted); }
+    .good { color: var(--ok); }
+    ul.clean { margin: 8px 0 0; padding-left: 18px; }
+    .empty-thread { margin: auto 0; width: min(460px, 100%); color: var(--muted); }
+    .empty-thread h1 { font-family: Fraunces, Georgia, serif; font-weight: 520; color: var(--ink); font-size: 34px; letter-spacing: -0.03em; margin: 0 0 8px; }
+    @media (max-width: 980px) {
+      .body { grid-template-columns: 1fr; }
+      .rail { display: none; }
+      .topbar .meta { display: none; }
+      .workspace { border-left: 0; border-top: 1px solid var(--line); max-height: 42dvh; }
+      .thread, .composer { padding-left: 16px; padding-right: 16px; }
+      .composer-row { display: grid; grid-template-columns: 1fr; }
+      .run { height: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">AVEYRONI <span>DESK</span></div>
+      <div class="meta">Origination intelligence</div>
+    </header>
+    <div class="body">
+      <aside class="rail">
+        <button class="session new-mandate" type="button" id="new-mandate">+ New mandate</button>
+        <h2>Mandates</h2>
+        <div id="sessions"></div>
+        <div class="rail-block" id="outreach-rail">
+          <h2>Outreach</h2>
+          <div id="desk-nav"></div>
+        </div>
+      </aside>
+      <section class="chat">
+        <div class="thread" id="thread">
+          <div class="empty-thread" id="empty">
+            <h1>Ask the deal team.</h1>
+            <p>State the mandate in a sentence, or use Run to send this buy box through the origination orchestrator. The panel on the right stays on this mandate.</p>
+          </div>
+        </div>
+        <form class="composer" id="form">
+          <div class="composer-row">
+            <textarea id="input" rows="2" placeholder="Ask Aveyroni Deal Team…" aria-label="Message"></textarea>
+            <button class="run" id="send" type="submit">Run →</button>
+          </div>
+          <div class="tools">
+            <button class="tool" type="button" id="files">+ Files</button>
+            <button class="tool" type="button" id="sources">Sources</button>
+            <button class="tool" type="button" id="deep">Deep research</button>
+            <button class="tool" type="button" id="roles">How the team works</button>
+            <button class="tool" type="button" id="team">Run</button>
+            <input id="file" type="file" hidden />
+          </div>
+        </form>
+      </section>
+      <aside class="workspace" id="workspace" aria-live="polite"></aside>
+    </div>
+  </div>
+  <script>
+    function fitDesk() {
+      const app = document.querySelector(".app");
+      if (!app) return;
+      app.style.top = "0px";
+      app.style.bottom = "auto";
+      app.style.height = window.innerHeight + "px";
+    }
+    fitDesk();
+    window.addEventListener("resize", fitDesk);
+    const TOOL_LABELS = {
+      delegate_task: "Research Coordinator",
+      origination_controller: "Origination Controller",
+      evidence_reviewer: "Evidence Reviewer",
+      mandate_parse: "Mandate parse",
+      entity_normalize: "Entity normalize",
+      evidence_normalize: "Evidence normalize",
+      deduplication: "Deduplication",
+      fit_scorer: "Fit Scorer",
+      data_validation: "Data validation",
+      database_store: "Save run",
+      mca_registry_query: "MCA Registry",
+      tavily_search: "Search",
+      tavily_extract: "Read page",
+      tavily_map: "Map site",
+      tavily_crawl: "Crawl",
+      tavily_research: "Research"
+    };
+
+    // Every step the orchestrator can emit, classified by what actually
+    // produced it — this is the same split documented in the project
+    // README ("Orchestrating agents" / "Delegated research workers" /
+    // "Deterministic code"), just made visible in the UI instead of only
+    // in prose.
+    const AGENT_KIND = {
+      mandate_parse: "code",
+      origination_controller: "orchestrator",
+      mca_registry_query: "data",
+      delegate_task: "code", // the Research Coordinator dispatching; its chips are "worker"
+      entity_normalize: "code",
+      evidence_normalize: "code",
+      deduplication: "code",
+      fit_scorer: "orchestrator",
+      data_validation: "code",
+      evidence_reviewer: "orchestrator",
+      database_store: "code"
+    };
+    const KIND_LABEL = { orchestrator: "Orchestrator", worker: "Worker", data: "Registry", code: "Code" };
+    const KIND_LABEL_PLURAL = { orchestrator: "Orchestrators", worker: "Workers", data: "Registries", code: "Code" };
+    const KIND_ORDER = ["orchestrator", "worker", "data", "code"];
+    const WORKER_ID_TO_NAME = {
+      "company-researcher": "Company Researcher",
+      "mca-registry": "MCA Registry",
+      "ownership-researcher": "Ownership Researcher",
+      "financial-researcher": "Financial Researcher",
+      "transaction-researcher": "Transaction Researcher",
+      "relationship-researcher": "Relationship Researcher"
+    };
+
+    // The fixed roster — always visible in the rail, before any run starts,
+    // so "this is a multi-agent team" is the first thing a viewer sees, not
+    // something they have to click Run team to discover.
+    const AGENTS = [
+      { name: "Origination Controller", kind: "orchestrator", note: "One Hermes turn. Tools off. Frames the buy box's binding constraint before any search starts — it cannot search or invent targets itself." },
+      { name: "Research Coordinator", kind: "code", note: "Not a model call. The service that batches delegate_task, at most three workers at once, and drives the gap-fill pass." },
+      { name: "MCA Registry", kind: "data", note: "India-only registry accelerator. It activates only for an India operating-company mandate with a mapped sector; every other geography uses web discovery." },
+      { name: "Company Researcher", kind: "worker", note: "Finds real candidate names from public sources when the registry doesn't apply. Delegated, spawned for one pass." },
+      { name: "Ownership Researcher", kind: "worker", note: "Sources who owns each named target and leaves unresolved ownership unknown." },
+      { name: "Financial Researcher", kind: "worker", note: "Sources one revenue figure per target from a public filing or rating report. Never invents EBITDA." },
+      { name: "Transaction Researcher", kind: "worker", note: "Checks for a public sale process. No process found is logged as exactly that — not proof of off-market status." },
+      { name: "Fit Scorer", kind: "orchestrator", note: "One Hermes turn. Judges only the excerpts already gathered — it cannot search, so it cannot go find evidence to fit a conclusion." },
+      { name: "Relationship Researcher", kind: "worker", note: "Runs after scoring. One search per company, for a named contact — never drafts or sends outreach." },
+      { name: "Contact Finder", kind: "data", note: "Outreach only, and only after you click. Finds a named decision-maker with a usable email. Does not send." },
+      { name: "Outreach Copy Writer", kind: "orchestrator", note: "Writes a subject and body from sourced facts. Nothing is sent until you approve the exact draft in Inbox." },
+      { name: "Evidence Reviewer", kind: "orchestrator", note: "Red-teams the finished package. Cannot change a fit score or transaction status — only flag weak evidence." },
+      { name: "Deterministic pipeline", kind: "code", note: "Mandate parsing, entity/evidence normalization, deduplication, and validation. No model call, ever — this is what a claim without a source gets dropped by." }
+    ];
+
+    const state = {
+      attached: "",
+      mandates: [],
+      activeMandateId: null,
+      config: null,
+      editing: false,
+      creating: false,
+      returnMandateId: null,
+      targets: [],
+      outreach: [],
+      outreachReadiness: { ready: false, missing: [] },
+      outreachBusy: false,
+      outreachError: "",
+      view: "mandate",
+      selectedDraftId: null
+    };
+    let busy = false;
+    let abort = null;
+    let sessionId = null;
+
+    const thread = document.getElementById("thread");
+    const empty = document.getElementById("empty");
+    const workspace = document.getElementById("workspace");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+    }
+    function pretty(value) {
+      const text = String(value).replaceAll("_", " ");
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+    function labelList(values, fallback) {
+      if (!values || !values.length) return fallback;
+      return values.map(pretty).join(", ");
+    }
+
+    function renderSessions() {
+      const html = state.mandates.map((mandate) => {
+        const geography = mandate.geography?.[0] || "No geography";
+        const subject = mandate.focus === "real-estate"
+          ? mandate.asset_types?.[0] || "real estate"
+          : mandate.sector?.[0] || "operating company";
+        const active = mandate.mandate_id === state.activeMandateId && !state.creating;
+        return `<button class="session${active ? " active" : ""}" type="button" data-mandate-id="${esc(mandate.mandate_id)}"${busy ? " disabled" : ""}>` +
+          `<b>${esc(mandate.title)}</b><small>${esc(pretty(geography))} · ${esc(pretty(subject))}</small></button>`;
+      }).join("");
+      document.getElementById("sessions").innerHTML = html || `<p class="note">No saved mandates.</p>`;
+      renderDeskNav();
+    }
+
+    function pendingDrafts() {
+      return (state.outreach || []).filter((draft) => draft.status === "pending_approval");
+    }
+
+    function inboxStatus(draft) {
+      if (draft.status === "provider_draft") return "Instantly campaign draft";
+      return pretty(draft.status || "draft");
+    }
+
+    function renderDeskNav() {
+      const nav = document.getElementById("desk-nav");
+      if (!nav) return;
+      const realEstate = state.config?.focus === "real-estate";
+      const disabled = !state.activeMandateId || busy || state.creating ? " disabled" : "";
+      if (realEstate) {
+        nav.innerHTML = `<p class="note">Outreach is for operating-company mandates.</p>`;
+        return;
+      }
+      const drafts = (state.outreach || []).slice().reverse();
+      const pending = pendingDrafts().length;
+      const inboxHint = pending
+        ? `${pending} waiting for approval`
+        : drafts.length
+          ? `${drafts.length} draft${drafts.length === 1 ? "" : "s"}`
+          : "No drafts yet";
+      const items = drafts.length
+        ? drafts.map((draft) => {
+            const contact = draft.contact || {};
+            const active = state.view === "inbox" && state.selectedDraftId === draft.draft_id;
+            return `<button class="session${active ? " active" : ""}" type="button" data-open-inbox="${esc(draft.draft_id)}"${disabled}>` +
+              `<b>${esc(draft.company || "Untitled draft")}</b>` +
+              `<small>${esc(inboxStatus(draft))} · ${esc(contact.name || contact.title || "Decision-maker")}</small></button>`;
+          }).join("")
+        : `<p class="note">Use Outreach to find a contact and write copy.</p>`;
+      nav.innerHTML = `
+        <button class="session${state.view === "outreach" ? " active" : ""}" type="button" data-view="outreach"${disabled}>
+          <b>Outreach</b>
+          <small>Find a decision-maker and write copy</small>
+        </button>
+        <button class="session${state.view === "inbox" && !state.selectedDraftId ? " active" : ""}" type="button" data-view="inbox"${disabled}>
+          <b>Inbox</b>${pending ? `<span class="badge">${pending}</span>` : ""}
+          <small>${esc(inboxHint)}</small>
+        </button>
+        <div class="inbox-menu">${items}</div>`;
+    }
+
+    function renderWorkspace() {
+      const config = state.config;
+      if (!config) {
+        workspace.innerHTML = `<header><div><h2>Workspace</h2><strong>Mandate</strong></div></header><p class="note">Loading the mandate.</p>`;
+        return;
+      }
+      if (state.editing) {
+        const focuses = (config.focuses || []).map((item) => `<option value="${esc(item.id)}"${item.id === config.focus ? " selected" : ""}>${esc(item.label)}</option>`).join("");
+        const currencies = (config.currencies || []).map((code) => `<option value="${esc(code)}"${code === config.currency ? " selected" : ""}>${esc(code)}</option>`).join("");
+        const revenueScales = (config.revenue_scales || ["million", "billion", "crore"]).map((unit) => `<option value="${esc(unit)}"${unit === config.revenue_scale ? " selected" : ""}>${esc(pretty(unit))}</option>`).join("");
+        const selectedSectorCodes = new Set(config.sector_codes || []);
+        const sectors = (config.sector_catalog || []).map((item) => `<label><input type="checkbox" name="sector_codes" value="${esc(item.id)}"${selectedSectorCodes.has(item.id) ? " checked" : ""} /> ${esc(item.label)}</label>`).join("");
+        const sectorSummary = config.sector?.length ? `${config.sector.length} selected` : "Select NIC sectors";
+        const assets = (config.asset_catalog || []).map((item) => `<label><input type="checkbox" name="asset_types" value="${esc(item.id)}"${config.asset_types.includes(item.id) ? " checked" : ""} /> ${esc(item.label)}</label>`).join("");
+        workspace.innerHTML = `
+          <header><div><h2>Workspace</h2><strong>${state.creating ? "New mandate" : "Edit mandate"}</strong></div></header>
+          <form id="mandate-form" data-focus="${esc(config.focus || "operating-company")}">
+            <label class="field">Buy box <select name="focus">${focuses}</select></label>
+            <label class="field">Name <input name="title" value="${esc(config.title)}" required /></label>
+            <label class="field">Geography <input name="geography" value="${esc(config.geography.join(", "))}" required /></label>
+            <label class="field">Currency <select name="currency">${currencies}</select></label>
+            <div data-panel="operating-company">
+              <div class="field">Sectors
+                <details class="multi-select">
+                  <summary data-sector-summary>${esc(sectorSummary)}</summary>
+                  <div class="multi-options">${sectors}</div>
+                </details>
+                <span>NIC 2008 codes drive MCA discovery for India. Elsewhere, the labels guide web research.</span>
+              </div>
+              <label class="field">Revenue unit <select name="revenue_scale">${revenueScales}</select></label>
+              <label class="field">Revenue minimum <input name="revenue_min" type="number" min="0" value="${esc(config.revenue_min)}" /></label>
+              <label class="field">Revenue maximum <input name="revenue_max" type="number" min="1" value="${esc(config.revenue_max)}" /></label>
+              <label class="field">Ownership <input name="ownership" value="${esc(config.ownership.join(", "))}" /></label>
+              <label class="field">Exclude <input name="exclude_ownership" value="${esc(config.exclude_ownership.join(", "))}" /></label>
+            </div>
+            <div data-panel="real-estate">
+              <div class="field">Asset types <div class="checks">${assets}</div></div>
+              <label class="field">Units minimum <input name="units_min" type="number" min="0" value="${esc(config.units_min ?? "")}" /></label>
+              <label class="field">Units maximum <input name="units_max" type="number" min="0" value="${esc(config.units_max ?? "")}" /></label>
+              <label class="field">Price minimum <input name="price_min" type="number" min="0" value="${esc(config.price_min ?? "")}" /></label>
+              <label class="field">Price maximum <input name="price_max" type="number" min="0" value="${esc(config.price_max ?? "")}" /></label>
+              <label class="field">Strategy <input name="strategy" value="${esc(config.strategy || "")}" placeholder="Value-add, core, development" /></label>
+              <label class="field">Exclude <input name="exclude_assets" value="${esc((config.exclude_assets || []).join(", "))}" placeholder="Office, hospitality" /></label>
+            </div>
+            <p class="note">The next message uses this buy box, including the asset types you leave checked.</p>
+            <p class="note" id="config-error"></p>
+            <div class="actions"><button class="save" type="submit">Save</button><button type="button" data-reset-fields>Reset fields</button><button type="button" data-cancel-config>Cancel</button></div>
+          </form>`;
+        const form = document.getElementById("mandate-form");
+        form.querySelector("[name=focus]").addEventListener("change", (event) => {
+          form.dataset.focus = event.target.value;
+        });
+        form.querySelectorAll("[name=sector_codes]").forEach((checkbox) => {
+          checkbox.addEventListener("change", () => {
+            const count = form.querySelectorAll("[name=sector_codes]:checked").length;
+            form.querySelector("[data-sector-summary]").textContent = count ? `${count} selected` : "Select NIC sectors";
+          });
+        });
+        form.addEventListener("submit", saveConfig);
+        return;
+      }
+      const realEstate = config.focus === "real-estate";
+      const band = `${config.currency} ${config.revenue_min}–${config.revenue_max} ${config.revenue_scale}`;
+      const price = config.price_min == null ? "Not set" : `${config.currency} ${Number(config.price_min).toLocaleString("en-US")}–${Number(config.price_max).toLocaleString("en-US")}`;
+      const units = config.units_min == null ? "Not set" : `${config.units_min}–${config.units_max}`;
+      const screen = (config.asset_screen || []).map((item) => `<div><b>${esc(item.label)}</b> ${esc(item.screen)}</div>`).join("");
+      const facts = realEstate ? `
+          <div>Buy box <b>Real estate</b></div>
+          <div>Markets <b>${esc(pretty(config.geography[0]))}</b></div>
+          <div>Asset types <b>${esc(labelList(config.asset_types, ""))}</b></div>
+          <div>Units <b>${esc(units)}</b></div>
+          <div>Price <b>${esc(price)}</b></div>
+          <div>Strategy <b>${esc(config.strategy || "Not set")}</b></div>
+          <div>Exclude <b>${esc(labelList(config.exclude_assets, "None"))}</b></div>` : `
+          <div>Buy box <b>Operating company</b></div>
+          <div>Geography <b>${esc(pretty(config.geography[0]))}</b></div>
+          <div>Sectors <b>${esc(labelList(config.sector, ""))}</b></div>
+          <div>Currency <b>${esc(config.currency)}</b></div>
+          <div>Revenue <b>${esc(band)}</b></div>
+          <div>Ownership <b>${esc(labelList(config.ownership, ""))}</b></div>
+          <div>Exclude <b>${esc(labelList(config.exclude_ownership, "None"))}</b></div>`;
+      if (state.view === "outreach") {
+        renderOutreachWorkspace();
+        return;
+      }
+      if (state.view === "inbox") {
+        renderInboxWorkspace();
+        return;
+      }
+      workspace.innerHTML = `
+        <header><div><h2>Workspace</h2><strong>Mandate</strong></div><div class="actions">${realEstate ? "" : `<button class="back" type="button" data-view="outreach">Outreach</button><button class="back" type="button" data-view="inbox">Inbox</button>`}<button class="back" type="button" data-clear-chat>Clear chat &amp; results</button><button class="back" type="button" data-edit>Edit</button></div></header>
+        <div class="kv">
+          ${facts}
+        </div>
+        ${readinessBanner(config)}
+        <button class="run workspace-run" type="button" data-run-team${config.orchestrator && !config.orchestrator.ready ? " disabled" : ""}>Run</button>
+        ${realEstate ? `<div class="block"><h2>How the team screens</h2><div class="kv">${screen}</div><p class="note">The next message tells the team to use these measures and to leave fit blank when asset type, market, or that size measure is unknown.</p></div>` : ""}
+        <div class="block">
+          <h2>${realEstate ? "Properties" : "Companies"}</h2>
+          ${targetCards(realEstate)}
+        </div>`;
+    }
+
+    function readinessBanner(config) {
+      const orchestrator = config.orchestrator;
+      if (!orchestrator || orchestrator.ready) return "";
+      const items = (orchestrator.missing || []).map((line) => `<li>${esc(line)}</li>`).join("");
+      return `<div class="readiness-banner">
+        <b>Run is blocked</b>
+        The origination team cannot run a live pass right now. "Companies" will stay empty until this is fixed.
+        <ul>${items}</ul>
+      </div>`;
+    }
+
+    function targetCards(realEstate) {
+      const targets = state.targets || [];
+      if (!targets.length) {
+        const noun = realEstate ? "property" : "company";
+        return `<p class="note">None yet. A ${noun} appears here after the team finds it in a public source.</p>`;
+      }
+      return targets.map((item) => {
+        const tone = item.fit_label === "MANDATE_FIT" ? "good" : (item.fit_label === "FAILS_MANDATORY" ? "bad" : "");
+        return `<article class="dossier">
+          <h3>${esc(item.name)}</h3>
+          <p class="fit ${tone}">${esc(item.fit)}</p>
+          ${item.entity_id && !realEstate ? `<div class="dossier-actions"><button class="back yes" type="button" data-prepare-outreach="${esc(item.entity_id)}"${state.outreachBusy || !state.outreachReadiness.ready ? " disabled" : ""}>Outreach</button></div>` : ""}
+        </article>`;
+      }).join("");
+    }
+
+    function outreachReadinessBanner() {
+      if (state.outreachReadiness?.ready) return "";
+      const missing = (state.outreachReadiness?.missing || []).map((item) => `<li>${esc(item)}</li>`).join("");
+      return `<div class="readiness-banner"><b>Outreach is blocked</b><ul>${missing}</ul></div>`;
+    }
+
+    function draftCardHtml(draft) {
+      const contact = draft.contact || {};
+      const pending = draft.status === "pending_approval";
+      const approved = draft.status === "approved";
+      const done = draft.status === "sent" || draft.status === "provider_draft";
+      const selected = draft.draft_id === state.selectedDraftId ? " selected" : "";
+      return `<article class="outreach-card${selected}" data-draft-card="${esc(draft.draft_id)}">
+        <header><strong>${esc(draft.company)}</strong><span class="outreach-status">${esc(inboxStatus(draft))}</span></header>
+        <div class="outreach-contact">${esc(contact.name || "Decision-maker")} · ${esc(contact.title || "Title unavailable")} · ${esc(contact.email || "No email")}</div>
+        <label class="field">Subject<input data-outreach-subject value="${esc(draft.subject)}"${pending ? "" : " disabled"} /></label>
+        <label class="field">Message<textarea data-outreach-body${pending ? "" : " disabled"}>${esc(draft.body)}</textarea></label>
+        <div class="dossier-actions">
+          ${pending ? `<button class="back yes" type="button" data-approve-outreach="${esc(draft.draft_id)}">Approve exact draft</button><button class="back" type="button" data-reject-outreach="${esc(draft.draft_id)}">Reject</button>` : ""}
+          ${approved ? `<button class="back yes" type="button" data-deliver-outreach="${esc(draft.draft_id)}" data-provider="gmail">Send with Gmail</button><button class="back" type="button" data-deliver-outreach="${esc(draft.draft_id)}" data-provider="instantly">Create Instantly campaign</button>` : ""}
+          ${!done && draft.status !== "rejected" ? `<button class="back" type="button" data-suppress-outreach="${esc(draft.draft_id)}">Do not contact</button>` : ""}
+        </div>
+      </article>`;
+    }
+
+    function renderOutreachWorkspace() {
+      const blocked = !state.outreachReadiness?.ready;
+      const targets = state.targets || [];
+      workspace.innerHTML = `
+        <header><div><h2>Outreach</h2><strong>Find a contact and write copy</strong></div><div class="actions"><button class="back" type="button" data-view="mandate">Back to mandate</button><button class="back" type="button" data-view="inbox">Inbox</button></div></header>
+        <p class="note">Contact Finder looks up a named decision-maker. Outreach Copy Writer drafts the email from sourced facts. Nothing is sent until you approve the exact draft in Inbox.</p>
+        ${outreachReadinessBanner()}
+        ${state.outreachError ? `<p class="outreach-error">${esc(state.outreachError)}</p>` : ""}
+        <div class="block">
+          <h2>Mandate-fit companies</h2>
+          ${targets.length ? targets.map((item) => `
+            <article class="dossier">
+              <h3>${esc(item.name)}</h3>
+              ${item.facts ? `<p>${esc(item.facts)}</p>` : ""}
+              <p class="note">${esc(item.fit || "")}</p>
+              ${item.entity_id ? `<div class="dossier-actions"><button class="back yes" type="button" data-prepare-outreach="${esc(item.entity_id)}"${state.outreachBusy || blocked ? " disabled" : ""}>${state.outreachBusy ? "Finding contact…" : "Find decision-maker & write copy"}</button></div>` : ""}
+            </article>
+          `).join("") : `<p class="note">Run the team first. Outreach only starts from a company that already fits this buy box.</p>`}
+        </div>`;
+    }
+
+    function renderInboxWorkspace() {
+      const drafts = (state.outreach || []).slice().reverse();
+      const selected = state.selectedDraftId
+        ? drafts.filter((draft) => draft.draft_id === state.selectedDraftId)
+        : drafts;
+      const cards = selected.map(draftCardHtml).join("");
+      workspace.innerHTML = `
+        <header><div><h2>Inbox</h2><strong>${state.selectedDraftId ? "Draft" : "All drafts"}</strong></div><div class="actions">${state.selectedDraftId ? `<button class="back" type="button" data-view="inbox">All drafts</button>` : ""}<button class="back" type="button" data-view="outreach">Outreach</button><button class="back" type="button" data-view="mandate">Back to mandate</button></div></header>
+        <p class="note">Review the exact copy the writer produced. Gmail sends only on a separate click. Instantly creates an inactive campaign.</p>
+        ${outreachReadinessBanner()}
+        ${state.outreachError ? `<p class="outreach-error">${esc(state.outreachError)}</p>` : ""}
+        ${cards || `<p class="note">Inbox is empty. Open Outreach, pick a mandate-fit company, and let the agents find a contact and write copy.</p>`}`;
+    }
+
+    async function saveConfig(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const body = Object.fromEntries(formData.entries());
+      body.asset_types = formData.getAll("asset_types");
+      body.sector_codes = formData.getAll("sector_codes");
+      const error = document.getElementById("config-error");
+      try {
+        const creating = state.creating;
+        const endpoint = creating ? "/api/mandates" : `/api/mandates/${encodeURIComponent(state.activeMandateId)}`;
+        const response = await fetch(endpoint, {
+          method: creating ? "POST" : "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "The mandate could not be saved.");
+        state.config = data.config;
+        state.activeMandateId = data.config.mandate_id;
+        state.mandates = state.mandates.filter((item) => item.mandate_id !== data.config.mandate_id).concat(data.mandate || data.config);
+        if (creating) {
+          await fetch(`/api/mandates/${encodeURIComponent(data.config.mandate_id)}/activate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+        }
+        state.creating = false;
+        state.returnMandateId = null;
+        state.editing = false;
+        if (data.thread_reset) {
+          sessionId = null;
+          clearThreadDom();
+          state.targets = [];
+          state.outreach = [];
+        }
+        renderSessions();
+        renderWorkspace();
+      } catch (err) {
+        if (error) error.textContent = err.message;
+      }
+    }
+
+    function clearThreadDom() {
+      thread.querySelectorAll(".msg, .card").forEach((node) => node.remove());
+      empty.hidden = false;
+    }
+
+    function renderHistory(messages) {
+      clearThreadDom();
+      (messages || []).forEach((message) => {
+        const role = message.role === "user" ? "user" : "agent";
+        addMessage(role, message.content ?? message.text ?? "");
+      });
+    }
+
+    function blankConfig(source) {
+      return {
+        ...source,
+        mandate_id: null,
+        title: "",
+        focus: source?.focus || "operating-company",
+        geography: [],
+        sector: [],
+        sector_codes: [],
+        revenue_min: "",
+        revenue_max: "",
+        revenue_scale: source?.revenue_scale || "million",
+        ownership: [],
+        exclude_ownership: [],
+        asset_types: [],
+        units_min: null,
+        units_max: null,
+        price_min: null,
+        price_max: null,
+        currency: source?.currency || "INR",
+        strategy: "",
+        exclude_assets: []
+      };
+    }
+
+    async function selectMandate(mandateId) {
+      if (!mandateId || busy || (mandateId === state.activeMandateId && !state.creating)) return;
+      const encoded = encodeURIComponent(mandateId);
+      const activate = await fetch(`/api/mandates/${encoded}/activate`, { method: "POST" });
+      const activation = await activate.json();
+      if (!activate.ok) throw new Error(activation.error || "The mandate could not be opened.");
+      const [configResponse, historyResponse, targetsResponse, outreachResponse] = await Promise.all([
+        fetch(`/api/mandates/${encoded}`),
+        fetch(`/api/history?mandate_id=${encoded}`),
+        fetch(`/api/targets?mandate_id=${encoded}`),
+        fetch(`/api/outreach?mandate_id=${encoded}`)
+      ]);
+      const configData = await configResponse.json();
+      const historyData = await historyResponse.json();
+      const targetsData = await targetsResponse.json();
+      const outreachData = await outreachResponse.json();
+      if (!configResponse.ok) throw new Error(configData.error || "The mandate could not be opened.");
+      state.activeMandateId = mandateId;
+      state.config = configData.config || configData;
+      state.targets = targetsData.targets || [];
+      state.outreach = outreachData.drafts || [];
+      state.outreachReadiness = outreachData.readiness || { ready: false, missing: ["Outreach configuration"] };
+      state.outreachError = "";
+      state.editing = false;
+      state.creating = false;
+      state.returnMandateId = null;
+      state.attached = "";
+      state.view = "mandate";
+      state.selectedDraftId = null;
+      sessionId = historyData.session_id || null;
+      renderHistory(historyData.messages || []);
+      renderSessions();
+      renderWorkspace();
+    }
+
+    async function clearActiveChat() {
+      if (!state.activeMandateId || busy) return;
+      const response = await fetch(`/api/mandates/${encodeURIComponent(state.activeMandateId)}/clear-thread`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}"
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "The conversation could not be cleared.");
+      sessionId = null;
+      state.attached = "";
+      state.targets = [];
+      state.outreach = [];
+      state.outreachError = "";
+      clearThreadDom();
+      renderWorkspace();
+    }
+
+    async function outreachAction(action, payload) {
+      if (!state.activeMandateId || state.outreachBusy) return null;
+      state.outreachBusy = true;
+      state.outreachError = "";
+      renderWorkspace();
+      try {
+        const response = await fetch(`/api/outreach/${action}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mandate_id: state.activeMandateId, ...payload })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "The outreach action failed.");
+        const draft = data.draft;
+        if (draft?.draft_id) {
+          state.outreach = state.outreach.filter((item) => item.draft_id !== draft.draft_id).concat(draft);
+          if (action === "prepare") {
+            state.view = "inbox";
+            state.selectedDraftId = draft.draft_id;
+          }
+        }
+        return draft;
+      } catch (error) {
+        state.outreachError = error.message;
+        return null;
+      } finally {
+        state.outreachBusy = false;
+        renderSessions();
+        renderWorkspace();
+      }
+    }
+
+    function draftCard(button) {
+      return button.closest("[data-draft-card]");
+    }
+
+    async function approveOutreach(button) {
+      const card = draftCard(button);
+      await outreachAction("approve", {
+        draft_id: button.dataset.approveOutreach,
+        subject: card?.querySelector("[data-outreach-subject]")?.value || "",
+        body: card?.querySelector("[data-outreach-body]")?.value || ""
+      });
+    }
+
+    async function deliverOutreach(button) {
+      const provider = button.dataset.provider;
+      const message = provider === "gmail"
+        ? "Send this approved email now through Gmail?"
+        : "Create an inactive Instantly campaign containing this approved email? It will not be activated.";
+      if (!window.confirm(message)) return;
+      await outreachAction("deliver", {
+        draft_id: button.dataset.deliverOutreach,
+        provider
+      });
+    }
+
+    async function suppressOutreach(button) {
+      const draft = state.outreach.find((item) => item.draft_id === button.dataset.suppressOutreach);
+      if (!draft || !window.confirm(`Add ${draft.company} and this email to this mandate's do-not-contact list?`)) return;
+      await outreachAction("suppress", {
+        entity_id: draft.entity_id,
+        email: draft.contact?.email || "",
+        reason: "user_request"
+      });
+      await outreachAction("reject", { draft_id: draft.draft_id });
+    }
+
+    function resetMandateFields(form) {
+      const keepFocus = form.elements.focus.value;
+      const keepCurrency = form.elements.currency.value;
+      form.querySelectorAll("input:not([type=checkbox])").forEach((field) => { field.value = ""; });
+      form.querySelectorAll("input[type=checkbox]").forEach((field) => { field.checked = false; });
+      form.elements.focus.value = keepFocus;
+      form.elements.currency.value = keepCurrency;
+      form.dataset.focus = keepFocus;
+    }
+
+    function hideEmpty() { empty.hidden = true; }
+    function stripLabel(text, prefixes) {
+      let value = String(text || "").trim();
+      for (const prefix of prefixes || []) {
+        if (value.toLowerCase().startsWith(prefix.toLowerCase())) {
+          return value.slice(prefix.length).trim();
+        }
+      }
+      return value;
+    }
+    function sectionBlock(title, text, prefixes) {
+      const value = stripLabel(text, prefixes);
+      if (!value) return "";
+      return `<div class="section"><h4>${esc(title)}</h4><p>${esc(value)}</p></div>`;
+    }
+    function looksLikeReport(text) {
+      const value = String(text || "");
+      return /Why it fits|Market thesis|Nothing was sent/.test(value);
+    }
+    function reportHtml(text, targets) {
+      const lines = String(text || "").split("\n").map((line) => line.trim()).filter(Boolean);
+      const title = lines[0] || "Buy box";
+      const summary = lines.find((line) => /fit this buy box|met every mandatory|other candidate/i.test(line)) || "";
+      const cards = (targets || []).map((item) => {
+        const tone = item.fit_label === "MANDATE_FIT" ? "good" : "";
+        return `<article class="report-company">
+          <h3>${esc(item.name)}</h3>
+          <p class="fit ${tone}">${esc(item.fit || "")}</p>
+          ${sectionBlock("Why it fits", item.why, ["Why it fits:"])}
+          ${sectionBlock("Market thesis", item.thesis, ["Market thesis:", "Thesis:"])}
+          ${item.gap ? `<div class="report-section"><p class="note">${esc(item.gap)}</p></div>` : ""}
+          ${sectionBlock("Facts", item.facts, [])}
+          ${sectionBlock("Process", item.transaction, [])}
+          ${sectionBlock("Seller interest", item.seller, ["Seller interest (signals only):"])}
+          ${sectionBlock("Source", item.source, ["Source:"])}
+        </article>`;
+      }).join("");
+      return `<div class="report">
+        <header class="report-head"><h2>${esc(title)}</h2>${summary ? `<p>${esc(summary)}</p>` : ""}</header>
+        ${cards}
+        <p class="report-foot">Nothing was sent.</p>
+      </div>`;
+    }
+    function paintAgentBody(body, text) {
+      if (!body) return;
+      const node = body.parentElement;
+      if (looksLikeReport(text) && (state.targets || []).length) {
+        body.className = "report";
+        body.innerHTML = reportHtml(text, state.targets);
+        if (node) node.classList.add("report-msg");
+        return;
+      }
+      body.className = "";
+      body.textContent = text;
+      if (node) node.classList.remove("report-msg");
+    }
+    function addMessage(role, text) {
+      hideEmpty();
+      const node = document.createElement("article");
+      node.className = `msg ${role}`;
+      const who = document.createElement("span");
+      who.className = "who";
+      who.textContent = role === "user" ? "You" : "Aveyroni";
+      const body = document.createElement("span");
+      if (role.startsWith("agent") && looksLikeReport(text) && (state.targets || []).length) {
+        node.classList.add("report-msg");
+        paintAgentBody(body, text);
+      } else {
+        body.textContent = text;
+      }
+      node.append(who, body);
+      thread.append(node);
+      thread.scrollTop = thread.scrollHeight;
+      return body;
+    }
+    function addCard(html) {
+      hideEmpty();
+      const node = document.createElement("article");
+      node.className = "card";
+      node.innerHTML = html;
+      thread.append(node);
+      thread.scrollTop = thread.scrollHeight;
+      return node;
+    }
+
+    function readableDetail(detail) {
+      const text = String(detail || "").trim();
+      if (!text) return "";
+      if (/[{}\[\]]/.test(text) || /^(import |from |def |class )/i.test(text) || /hermes_tools/i.test(text)) return "";
+      return text;
+    }
+    function toolLabel(name) {
+      if (TOOL_LABELS[name]) return TOOL_LABELS[name];
+      return String(name || "Tool").replaceAll("_", " ").replace(/^\w/, (ch) => ch.toUpperCase());
+    }
+
+    // "Research Coordinator · Ownership Researcher · Financial Researcher"
+    // (a start detail) or "Gap pass · Company Researcher" -> the first
+    // token is who dispatched the batch, the rest are the workers in it.
+    function splitDetail(detail) {
+      return (detail || "").split(" · ").map((part) => part.trim()).filter(Boolean);
+    }
+    // Wall-clock duration between a step's start and done event, timed
+    // client-side (no backend change needed -- the SSE stream already
+    // delivers both events in real time as they actually happen). Same
+    // idea as Claude's own "10 seconds" / "3 seconds" per-action labels.
+    function formatDuration(ms) {
+      if (!Number.isFinite(ms) || ms < 0) return "";
+      if (ms < 1000) return "<1s";
+      const totalSeconds = Math.round(ms / 1000);
+      if (totalSeconds < 60) return `${totalSeconds}s`;
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return seconds ? `${minutes}m ${seconds}s` : `${minutes}m`;
+    }
+
+    // "ownership-researcher 30, financial-researcher 30" (a done detail)
+    // -> { "Ownership Researcher": "30", "Financial Researcher": "30" }
+    function parseDoneCounts(detail) {
+      const map = {};
+      (detail || "").split(",").forEach((part) => {
+        const match = part.trim().match(/^([\w-]+)\s+(\d+)$/);
+        if (match) map[WORKER_ID_TO_NAME[match[1]] || match[1]] = match[2];
+      });
+      return map;
+    }
+
+    function traceCard() {
+      const runStartedAt = Date.now();
+      const legend = KIND_ORDER.map((k) => `<span><span class="dot kind-${k}"></span>${KIND_LABEL[k]}</span>`).join("");
+      const card = addCard(
+        `<button class="trace-toggle" type="button" data-trace-toggle>` +
+        `<span class="chevron">\u25be</span><h3>Agent trace</h3>` +
+        `<span class="summary-inline" data-summary-inline></span></button>` +
+        `<div class="trace-body" data-trace-body>` +
+        `<div class="legend">${legend}</div><ul class="stages" data-trace></ul>` +
+        `<div class="actions"><button type="button" data-stop>Stop run</button></div>` +
+        `<div class="trace-summary" data-summary hidden></div>` +
+        `</div>`
+      );
+      card.classList.add("trace-card");
+      const list = card.querySelector("[data-trace]");
+      const summaryEl = card.querySelector("[data-summary]");
+      const summaryInlineEl = card.querySelector("[data-summary-inline]");
+      const stopButton = card.querySelector("[data-stop]");
+      card.querySelector("[data-trace-toggle]").addEventListener("click", () => {
+        card.classList.toggle("collapsed");
+      });
+      const rows = new Map();
+      const workersSeen = new Set();
+      let usedRegistry = false;
+
+      function renderDelegateGroup(event) {
+        let row = rows.get(event.id);
+        if (!row) {
+          row = document.createElement("li");
+          row.className = "step-group running";
+          row.innerHTML = `<div class="step-head"><span class="dot kind-code"></span><span class="step-title"></span></div><ul class="worker-chips"></ul>`;
+          list.append(row);
+          rows.set(event.id, row);
+        }
+        const title = row.querySelector(".step-title");
+        const chips = row.querySelector(".worker-chips");
+        if (event.phase !== "done") {
+          if (!row.dataset.startedAt) row.dataset.startedAt = String(Date.now());
+          const [dispatcher, ...workers] = splitDetail(event.detail);
+          title.textContent = `${dispatcher || "Research Coordinator"} — dispatching ${workers.length} worker${workers.length === 1 ? "" : "s"} in parallel`;
+          chips.innerHTML = workers.map((w) => `<li class="running" data-worker="${esc(w)}"><span class="chip-head"><span class="dot kind-worker"></span>${esc(w)}</span></li>`).join("");
+          workers.forEach((w) => workersSeen.add(w));
+        } else {
+          row.classList.remove("running");
+          row.classList.add("done");
+          const counts = parseDoneCounts(event.detail);
+          const reported = Object.keys(counts).length;
+          const took = row.dataset.startedAt ? formatDuration(Date.now() - Number(row.dataset.startedAt)) : "";
+          title.textContent = title.textContent.replace(/ — dispatching.*/, ` — ${reported} worker${reported === 1 ? "" : "s"} reported back${took ? " · " + took : ""}`);
+          chips.querySelectorAll("li").forEach((chip) => {
+            const w = chip.dataset.worker;
+            chip.classList.remove("running");
+            chip.classList.add("done");
+            const count = counts[w];
+            const head = chip.querySelector(".chip-head");
+            if (head) head.innerHTML = `<span class="dot kind-worker"></span>${esc(w)}${count !== undefined ? ` · ${esc(count)}` : ""}`;
+            const activity = chip.querySelector(".chip-activity");
+            if (activity) activity.remove(); // collapse the live feed once this worker has reported back
+          });
+        }
+      }
+
+      function renderSingleStep(event) {
+        let row = rows.get(event.id);
+        if (!row) {
+          row = document.createElement("li");
+          row.className = "step";
+          row.innerHTML = `<span class="dot"></span><span class="step-main"></span>`;
+          list.append(row);
+          rows.set(event.id, row);
+        }
+        const kind = AGENT_KIND[event.name] || "code";
+        const done = event.phase === "done";
+        if (!done && !row.dataset.startedAt) row.dataset.startedAt = String(Date.now());
+        row.className = `step ${done ? "done" : "running"}`;
+        row.querySelector(".dot").className = `dot kind-${kind}`;
+        const detail = readableDetail(event.detail);
+        let text = `${toolLabel(event.name)}${detail ? " — " + detail : ""}`;
+        if (done && row.dataset.startedAt) {
+          const took = formatDuration(Date.now() - Number(row.dataset.startedAt));
+          if (took) text += ` · ${took}`;
+        }
+        row.querySelector(".step-main").textContent = text;
+        if (event.name === "mca_registry_query" && done && !/unreachable/i.test(event.detail || "")) usedRegistry = true;
+      }
+
+      const MAX_CHIP_ACTIVITY = 3;
+      function renderSubagentEvent(event) {
+        if (event.phase !== "tool" || !event.worker) return;
+        // The same worker name (e.g. "Ownership Researcher") can appear in
+        // more than one delegate batch in one run -- a fill pass, then
+        // later a gap pass. Match by data-worker in JS (no fragile
+        // selector-string escaping needed) and only ever target a chip
+        // that is still .running, never an already-.done one from an
+        // earlier batch -- otherwise a later batch's live events silently
+        // re-attach activity to a finished, unrelated chip.
+        const candidates = [...list.querySelectorAll(".worker-chips li.running")].filter(
+          (li) => li.dataset.worker === event.worker
+        );
+        const chip = candidates[candidates.length - 1];
+        if (!chip) return; // no currently-running chip for this worker -- ignore rather than guess
+        let activity = chip.querySelector(".chip-activity");
+        if (!activity) {
+          activity = document.createElement("ul");
+          activity.className = "chip-activity";
+          chip.append(activity);
+        }
+        const line = document.createElement("li");
+        const tool = event.tool_name ? toolLabel(event.tool_name) : "tool";
+        const preview = readableDetail(event.preview);
+        line.textContent = preview ? `${tool}: ${preview}` : tool;
+        line.title = line.textContent; // full text on hover; the row itself truncates
+        activity.append(line);
+        while (activity.children.length > MAX_CHIP_ACTIVITY) activity.firstElementChild.remove();
+      }
+
+      return {
+        tool(event) {
+          if (event.name === "delegate_task") renderDelegateGroup(event);
+          else renderSingleStep(event);
+          thread.scrollTop = thread.scrollHeight;
+        },
+        subagent(event) {
+          renderSubagentEvent(event);
+          thread.scrollTop = thread.scrollHeight;
+        },
+        finish() {
+          stopButton.hidden = true; // the run is over; a live "Stop run" control no longer makes sense
+          if (!list.children.length) {
+            const row = document.createElement("li");
+            row.className = "step";
+            row.textContent = "No tool calls this turn. The reply is below.";
+            list.append(row);
+            summaryInlineEl.textContent = "No tool calls";
+            card.classList.add("collapsed");
+            return;
+          }
+          const steps = list.children.length;
+          summaryEl.hidden = false;
+          const bits = [`${steps} step${steps === 1 ? "" : "s"}`];
+          if (workersSeen.size) bits.push(`${workersSeen.size} worker${workersSeen.size === 1 ? "" : "s"} delegated`);
+          if (usedRegistry) bits.push("Registry-backed discovery");
+          const totalTook = formatDuration(Date.now() - runStartedAt);
+          if (totalTook) bits.push(totalTook);
+          summaryEl.innerHTML = bits.map((b) => `<span>${esc(b)}</span>`).join("");
+          // Collapse to a single terse line once the run is done -- the same
+          // pattern Claude's own tool-use UI uses: expanded while it streams
+          // live, collapsed to "N actions, ran N commands" once finished, so
+          // the actual answer below reads as the prominent result, not a
+          // permanently-open technical log competing with it. Still one
+          // click away via the chevron for anyone who wants to review it.
+          summaryInlineEl.textContent = bits.join(" · ");
+          card.classList.add("collapsed");
+        }
+      };
+    }
+
+    async function ask(message, localOnly, endpoint) {
+      if (busy) return;
+      if (!state.activeMandateId || state.creating) {
+        addMessage("agent", "Save this mandate before starting a conversation or running the team.");
+        return;
+      }
+      addMessage("user", message);
+      if (localOnly) return;
+      busy = true;
+      send.disabled = true;
+      renderSessions();
+      abort = new AbortController();
+      const run = traceCard();
+      const reply = addMessage("agent", "");
+      try {
+        const suffix = endpoint === "/api/orchestrate" ? "orchestrate" : "chat";
+        const response = await fetch(`/api/${suffix}?mandate_id=${encodeURIComponent(state.activeMandateId)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: suffix === "orchestrate" ? "{}" : JSON.stringify({ message }),
+          signal: abort.signal
+        });
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || "The desk could not start.");
+        }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+        while (true) {
+          const chunk = await reader.read();
+          if (chunk.done) break;
+          buffer += decoder.decode(chunk.value, { stream: true });
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop() || "";
+          for (const part of parts) {
+            const line = part.split("\n").find((row) => row.startsWith("data: "));
+            if (!line) continue;
+            const event = JSON.parse(line.slice(6));
+            if (event.error) throw new Error(event.error);
+            if (event.tool) run.tool(event.tool);
+            if (event.subagent) run.subagent(event.subagent);
+            if (event.targets) {
+              state.targets = event.targets;
+              if (!state.editing) renderWorkspace();
+            }
+            if (event.delta) {
+              reply.textContent += event.delta;
+              thread.scrollTop = thread.scrollHeight;
+            }
+            if (event.done) sessionId = event.session_id || sessionId;
+          }
+        }
+        run.finish();
+        if (!reply.textContent.trim() && !reply.querySelector(".report")) reply.textContent = "The desk returned an empty reply.";
+        else if (looksLikeReport(reply.textContent) && (state.targets || []).length) {
+          paintAgentBody(reply, reply.textContent);
+        }
+      } catch (error) {
+        if (error.name === "AbortError") reply.textContent = "Run stopped. Nothing was sent outside this desk.";
+        else {
+          reply.parentElement.classList.add("error");
+          reply.textContent = error.message;
+        }
+      } finally {
+        abort = null;
+        busy = false;
+        send.disabled = false;
+        renderSessions();
+        input.focus();
+      }
+    }
+
+    function approval(title, body, mode) {
+      const kind = mode || "continue";
+      addCard(`<h3>${esc(title)}</h3><p>${esc(body)}</p><div class="approve"><button class="yes" type="button" data-approve="${esc(kind)}">Approve</button><button type="button" data-cancel>Cancel</button></div>`);
+    }
+
+    document.getElementById("form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const message = input.value.trim();
+      if (!message) return;
+      input.value = "";
+      const note = state.attached ? `File name only, contents not uploaded: ${state.attached}\n\n` : "";
+      state.attached = "";
+      ask(note + message);
+    });
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        document.getElementById("form").requestSubmit();
+      }
+    });
+    document.body.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      if (button.dataset.mandateId) {
+        selectMandate(button.dataset.mandateId).catch((error) => addMessage("agent error", error.message));
+      }
+      if (button.dataset.view) {
+        state.view = button.dataset.view;
+        state.selectedDraftId = null;
+        renderSessions();
+        renderWorkspace();
+      }
+      if (button.dataset.openInbox) {
+        state.view = "inbox";
+        state.selectedDraftId = button.dataset.openInbox;
+        renderSessions();
+        renderWorkspace();
+      }
+      if ("edit" in button.dataset) { state.editing = true; renderWorkspace(); }
+      if ("cancelConfig" in button.dataset) {
+        if (state.creating && state.returnMandateId) {
+          selectMandate(state.returnMandateId).catch((error) => addMessage("agent error", error.message));
+        } else {
+          state.editing = false;
+          state.creating = false;
+          renderSessions();
+          renderWorkspace();
+        }
+      }
+      if ("resetFields" in button.dataset) {
+        const form = document.getElementById("mandate-form");
+        if (form) resetMandateFields(form);
+      }
+      if ("clearChat" in button.dataset) {
+        clearActiveChat().catch((error) => addMessage("agent error", error.message));
+      }
+      if (button.dataset.prepareOutreach) {
+        outreachAction("prepare", { entity_id: button.dataset.prepareOutreach });
+      }
+      if (button.dataset.approveOutreach) approveOutreach(button);
+      if (button.dataset.rejectOutreach) {
+        outreachAction("reject", { draft_id: button.dataset.rejectOutreach });
+      }
+      if (button.dataset.deliverOutreach) deliverOutreach(button);
+      if (button.dataset.suppressOutreach) suppressOutreach(button);
+      if ("runTeam" in button.dataset) requestTeamRun();
+      if ("stop" in button.dataset && abort) abort.abort();
+      if ("deep" in button.dataset) approval("Approval required", "This starts a longer research pass in the thread. No one is contacted.");
+      if ("approve" in button.dataset) {
+        ask("Continue research only on companies already named from sources in this thread. If none have been sourced, say so. Do not invent companies. Do not contact anyone.");
+      }
+      if ("cancel" in button.dataset) addMessage("agent", "Cancelled. No research was launched and nothing was sent.");
+    });
+    document.getElementById("new-mandate").addEventListener("click", () => {
+      if (busy) return;
+      state.returnMandateId = state.activeMandateId;
+      state.config = blankConfig(state.config);
+      state.activeMandateId = null;
+      sessionId = null;
+      state.attached = "";
+      state.targets = [];
+      state.outreach = [];
+      state.outreachError = "";
+      state.view = "mandate";
+      state.selectedDraftId = null;
+      state.creating = true;
+      state.editing = true;
+      clearThreadDom();
+      renderSessions();
+      renderWorkspace();
+    });
+    document.getElementById("files").addEventListener("click", () => document.getElementById("file").click());
+    document.getElementById("file").addEventListener("change", () => {
+      const file = document.getElementById("file").files[0];
+      state.attached = file ? file.name : "";
+      if (file) {
+        addCard(`<h3>File name only</h3><p>${esc(file.name)} will be mentioned in the next message. The file itself is not uploaded. Paste an excerpt if the team should read it.</p>`);
+      }
+    });
+    document.getElementById("sources").addEventListener("click", () => {
+      addCard("<h3>How sources are used</h3><p>Company sites, rating reports, and filings outrank directories. Founder or family ownership is evidence for the buy box, not proof that a transaction is available.</p>");
+    });
+    document.getElementById("deep").addEventListener("click", () => {
+      approval("Approval required", "This starts a longer research pass in the thread. No one is contacted.");
+    });
+    document.getElementById("roles").addEventListener("click", () => {
+      const rows = AGENTS.map((a) => `<div class="agent"><span class="dot kind-${a.kind}"></span><span><b>${esc(a.name)}</b> — ${esc(a.note)}</span></div>`).join("");
+      addCard(
+        `<h3>How the team works</h3>` +
+        `<div class="legend">${KIND_ORDER.map((k) => `<span><span class="dot kind-${k}"></span>${KIND_LABEL[k]}</span>`).join("")}</div>` +
+        `<div class="roster">${rows}</div>` +
+        `<p class="note">Orchestrator = a Hermes model turn. Worker = a delegated agent, spawned for one research pass, that cannot delegate again. Registry = a deterministic structured-data query. Code = deterministic, no model call ever — this is what drops a claim with no source and enforces that a company can't score a fit while a mandatory check is unknown.</p>`
+      );
+    });
+    function requestTeamRun() {
+      const orchestrator = state.config?.orchestrator;
+      if (orchestrator && !orchestrator.ready) {
+        const items = (orchestrator.missing || []).map((line) => `<li>${esc(line)}</li>`).join("");
+        addCard(`<h3>Run is blocked</h3><p>The origination team cannot run a live pass right now:</p><ul>${items}</ul><p class="note">Fix these, then reload the desk.</p>`);
+        return;
+      }
+      ask("Run the origination team on the active buy box.", false, "/api/orchestrate");
+    }
+
+    document.getElementById("team").addEventListener("click", requestTeamRun);
+
+    async function boot() {
+      try {
+        const response = await fetch("/api/mandates");
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Mandates could not be loaded.");
+        state.mandates = data.mandates || [];
+        const active = data.active_mandate_id || state.mandates[0]?.mandate_id;
+        if (active) {
+          state.activeMandateId = null;
+          await selectMandate(active);
+        } else {
+          state.config = blankConfig(data.template || {});
+          state.creating = true;
+          state.editing = true;
+          renderSessions();
+          renderWorkspace();
+        }
+      } catch (error) {
+        workspace.innerHTML = `<header><div><h2>Workspace</h2><strong>Unavailable</strong></div></header><p class="note warn">${esc(error.message)}</p>`;
+      }
+    }
+    boot();
+    renderSessions();
+    renderWorkspace();
+  </script>
+</body>
+</html>

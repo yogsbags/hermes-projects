@@ -1,0 +1,12 @@
+{
+  "mandate_id": "india-auto-components-001",
+  "note": "Demo funnel targets, not promised outcomes.",
+  "stages": [
+    { "stage": "discovered", "target_count": 150 },
+    { "stage": "identity_verified", "target_count": 80 },
+    { "stage": "mandate_fit", "target_count": 45 },
+    { "stage": "high_fit", "target_count": 20 },
+    { "stage": "priority", "target_count": 10 },
+    { "stage": "deeply_researched", "target_count": 5 }
+  ]
+}

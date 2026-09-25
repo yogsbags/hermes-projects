@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aveyroni.local/schemas/mandate.json",
+  "title": "BuyBox",
+  "description": "Structured investment mandate. Downstream skills consume this object and do not re-interpret the original prose.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "mandate_id",
+    "sector",
+    "geography",
+    "ownership",
+    "exclude_ownership"
+  ],
+  "anyOf": [
+    { "required": ["revenue"] },
+    { "required": ["revenue_min_inr_cr", "revenue_max_inr_cr"] }
+  ],
+  "properties": {
+    "mandate_id": { "type": "string" },
+    "client": { "type": "string" },
+    "source_text": { "type": "string" },
+    "sector": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "geography": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "revenue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min", "max", "currency", "scale"],
+      "properties": {
+        "min": { "type": "number", "minimum": 0 },
+        "max": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "scale": { "enum": ["million", "billion", "crore"] }
+      }
+    },
+    "revenue_min_inr_cr": { "type": "number", "minimum": 0 },
+    "revenue_max_inr_cr": { "type": "number", "minimum": 0 },
+    "ownership": {
+      "type": "array",
+      "items": { "enum": ["founder", "family", "promoter", "corporate", "private_equity", "public"] }
+    },
+    "exclude_ownership": {
+      "type": "array",
+      "items": { "enum": ["founder", "family", "promoter", "corporate", "private_equity", "public"] }
+    },
+    "business_model": { "type": "array", "items": { "type": "string" } },
+    "preferences": { "type": "array", "items": { "type": "string" } },
+    "mandatory_checks": { "type": "array", "items": { "type": "string" } }
+  }
+}

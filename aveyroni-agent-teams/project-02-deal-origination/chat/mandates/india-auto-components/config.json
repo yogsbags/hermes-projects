@@ -1,0 +1,40 @@
+{
+  "title": "Auto components",
+  "focus": "operating-company",
+  "provider": "openai-codex",
+  "model": "gpt-5.6-luna",
+  "geography": [
+    "India"
+  ],
+  "sector": [
+    "motor vehicles",
+    "vehicle bodies and trailers",
+    "auto components"
+  ],
+  "sector_codes": [
+    "291",
+    "292",
+    "293"
+  ],
+  "revenue_min": 300,
+  "revenue_max": 1500,
+  "revenue_scale": "crore",
+  "revenue_min_inr_cr": 300,
+  "revenue_max_inr_cr": 1500,
+  "ownership": [
+    "founder",
+    "family"
+  ],
+  "exclude_ownership": [
+    "private_equity"
+  ],
+  "asset_types": [],
+  "units_min": null,
+  "units_max": null,
+  "price_min": null,
+  "price_max": null,
+  "currency": "INR",
+  "strategy": "",
+  "exclude_assets": [],
+  "mandate_id": "india-auto-components"
+}

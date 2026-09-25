@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+mcp-server.log
+*.log
+.env
+.env.*
+.venv/
+venv/
+**/outreach-drafts.json
+**/outreach-suppressions.json

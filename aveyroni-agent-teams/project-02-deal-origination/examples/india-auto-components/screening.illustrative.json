@@ -1,0 +1,24 @@
+{
+  "illustrative": true,
+  "note": "Format sample. No public process found is not an off-market proof.",
+  "company_id": "example-abc-precision",
+  "mandate_id": "india-auto-components-001",
+  "mandatory": [
+    { "check": "geography", "result": "pass", "evidence_ids": ["ev-format-only"] },
+    { "check": "sector", "result": "pass", "evidence_ids": ["ev-format-only"] },
+    { "check": "ownership", "result": "pass", "evidence_ids": ["ev-format-only"] },
+    { "check": "size", "result": "unknown", "evidence_ids": [] },
+    { "check": "business model", "result": "pass", "evidence_ids": ["ev-format-only"] }
+  ],
+  "preferred": [
+    { "check": "exports", "result": "met", "evidence_ids": ["ev-format-only"] },
+    { "check": "OEM relationships", "result": "unknown", "evidence_ids": [] },
+    { "check": "specialized manufacturing", "result": "met", "evidence_ids": ["ev-format-only"] }
+  ],
+  "evidence_completeness": 0.6,
+  "fit_label": "INSUFFICIENT_EVIDENCE",
+  "fit_score": null,
+  "transaction_status": "NO_PUBLIC_PROCESS_FOUND",
+  "transaction_status_note": "No identified PE ownership and no identified active sale process. Not proof the company is off-market.",
+  "financial_confirmation_required": true
+}

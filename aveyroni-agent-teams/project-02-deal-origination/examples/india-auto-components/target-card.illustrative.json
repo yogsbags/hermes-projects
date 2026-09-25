@@ -1,0 +1,39 @@
+{
+  "illustrative": true,
+  "note": "Format sample for the demo card. Figures are not researched and must not be reused as findings.",
+  "company_id": "example-abc-precision",
+  "legal_name": "ABC Precision Components Pvt Ltd",
+  "display_name": "ABC Precision Components",
+  "ownership_summary": "Founder/family — sample label only",
+  "products": ["Precision machined components"],
+  "customers": "OEM/Tier-1 evidence would be cited here",
+  "exports": ["Germany", "US"],
+  "plants": ["Pune", "Aurangabad"],
+  "revenue_estimate_inr_cr": {
+    "low": 620,
+    "high": 700,
+    "confidence": "low",
+    "evidence_ids": ["ev-format-only"]
+  },
+  "ebitda": "unknown",
+  "why_it_fits": [
+    "Appropriate scale",
+    "Founder-owned",
+    "Export exposure",
+    "Specialized capability",
+    "Fragmented niche"
+  ],
+  "value_creation_hypotheses": [
+    "RFQ automation",
+    "Procurement intelligence",
+    "Export expansion",
+    "Add-on acquisitions"
+  ],
+  "red_team": [
+    "Customer concentration unknown",
+    "EBITDA unavailable",
+    "Succession thesis unsupported"
+  ],
+  "next_action": "Research customer concentration and identify a promoter or adviser relationship.",
+  "evidence_ids": ["ev-format-only"]
+}
