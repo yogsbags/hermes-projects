@@ -19,12 +19,12 @@ from urllib.parse import parse_qs, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 CHAT = Path(__file__).resolve().parent
-HERMES_REPO = Path.home() / ".hermes" / "hermes-agent"
+HERMES_REPO = Path(os.environ.get("HERMES_REPO") or (Path.home() / ".hermes" / "hermes-agent"))
 MANDATE = ROOT / "examples" / "india-auto-components" / "mandate.json"
 CONFIG_PATH = CHAT / "desk-config.json"
 MANDATES_PATH = CHAT / "mandates"
 REGISTRY_PATH = MANDATES_PATH / "registry.json"
-HOST = "127.0.0.1"
+HOST = os.environ.get("HOST") or ("0.0.0.0" if os.environ.get("RAILWAY_ENVIRONMENT") else "127.0.0.1")
 PORT = int(os.environ.get("PORT", "8791"))
 SKILLS = ["origination-controller", "tavily"]
 # Demo default. The saved Hermes model stays minimax-m3 for other sessions.
@@ -110,7 +110,7 @@ def orchestrator_readiness(mandate_id: object = None) -> dict:
     load_hermes_env()
     missing: list[str] = []
     if not HERMES_REPO.exists():
-        missing.append("Hermes agent is not installed at ~/.hermes/hermes-agent.")
+        missing.append(f"Hermes agent is not installed at {HERMES_REPO}.")
     if not (os.environ.get("EXA_API_KEY") or os.environ.get("TAVILY_API_KEY")):
         missing.append("No search credential (EXA_API_KEY or TAVILY_API_KEY) in ~/.hermes/.env.")
     if not os.environ.get("FIRECRAWL_API_KEY"):

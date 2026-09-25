@@ -1,0 +1,12 @@
+.git
+**/.git
+**/__pycache__
+**/*.pyc
+**/.DS_Store
+**/*.log
+**/outreach-drafts.json
+**/outreach-suppressions.json
+**/.venv
+**/venv
+**/.env
+**/.env.*
