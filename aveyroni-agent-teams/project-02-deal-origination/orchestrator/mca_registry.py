@@ -46,6 +46,7 @@ import urllib.request
 from typing import Callable
 
 from orchestrator.deterministic import _claim as _normalize_claim, entity_key
+from orchestrator import nic
 
 SOURCE_URL = os.environ.get(
     "AVEYRONI_MCA_SOURCE_URL",
@@ -53,56 +54,9 @@ SOURCE_URL = os.environ.get(
 )
 WORKER_ID = "mca-registry"
 
-NIC_SECTOR_OPTIONS = [
-    {"id": "10", "label": "NIC 10 — Food products", "sector": "food processing"},
-    {"id": "11", "label": "NIC 11 — Beverages", "sector": "beverages"},
-    {"id": "13", "label": "NIC 13 — Textiles", "sector": "textiles"},
-    {"id": "14", "label": "NIC 14 — Apparel", "sector": "apparel"},
-    {"id": "170", "label": "NIC 170 — Paper and paper products", "sector": "paper and paper packaging"},
-    {"id": "201", "label": "NIC 201 — Basic chemicals", "sector": "chemicals"},
-    {"id": "210", "label": "NIC 210 — Pharmaceuticals", "sector": "pharma contract manufacturing"},
-    {"id": "221", "label": "NIC 221 — Rubber products", "sector": "rubber products"},
-    {"id": "222", "label": "NIC 222 — Plastic products", "sector": "plastic products and packaging"},
-    {"id": "231", "label": "NIC 231 — Glass products", "sector": "glass and building materials"},
-    {"id": "239", "label": "NIC 239 — Other non-metallic mineral products", "sector": "building materials"},
-    {"id": "241", "label": "NIC 241 — Basic iron and steel", "sector": "iron and steel"},
-    {"id": "242", "label": "NIC 242 — Non-ferrous metals", "sector": "non-ferrous metals"},
-    {"id": "243", "label": "NIC 243 — Casting of metals", "sector": "metal casting"},
-    {"id": "251", "label": "NIC 251 — Structural metal products", "sector": "structural metal products"},
-    {"id": "259", "label": "NIC 259 — Other fabricated metal products", "sector": "fabricated metal products"},
-    {"id": "271", "label": "NIC 271 — Motors, generators and transformers", "sector": "power transmission equipment"},
-    {"id": "273", "label": "NIC 273 — Wiring and wiring devices", "sector": "electrical wiring equipment"},
-    {"id": "279", "label": "NIC 279 — Other electrical equipment", "sector": "electrical equipment"},
-    {"id": "281", "label": "NIC 281 — General-purpose machinery", "sector": "general-purpose machinery"},
-    {"id": "282", "label": "NIC 282 — Special-purpose machinery", "sector": "special-purpose machinery"},
-    {"id": "291", "label": "NIC 291 — Motor vehicles", "sector": "motor vehicles"},
-    {"id": "292", "label": "NIC 292 — Vehicle bodies and trailers", "sector": "vehicle bodies and trailers"},
-    {"id": "293", "label": "NIC 293 — Motor-vehicle parts", "sector": "auto components"},
-]
-
-# Sector label (as written in a mandate) -> NIC 2008 code prefixes to match.
-# Extend this as more India verticals get demoed. A mandate sector with no
-# mapping here just means MCA pre-filtering is skipped for it — the web
-# Company Researcher still runs.
-SECTOR_NIC_PREFIXES: dict[str, list[str]] = {
-    "auto component": ["291", "292", "293"],
-    "auto components": ["291", "292", "293"],
-    "automotive": ["291", "292", "293"],
-    "automotive components": ["291", "292", "293"],
-    "auto ancillary": ["291", "292", "293"],
-    "forging": ["241", "242", "243", "259"],
-    "casting": ["241", "242", "243"],
-    "packaging": ["170", "222"],
-    "building material": ["231", "239"],
-    "power transmission": ["271", "273", "279"],
-    "industrial manufacturing": ["251", "259", "281", "282"],
-    "pharma": ["210"],
-    "pharmaceutical": ["210"],
-    "hospital": ["86"],
-    "healthcare": ["86"],
-    "textile": ["13", "14"],
-    "food processing": ["10", "11"],
-}
+# Loaded from config/nic/*.json — do not add roster rows here.
+NIC_SECTOR_OPTIONS = nic.catalog_options()
+SECTOR_NIC_PREFIXES = nic.aliases()
 
 # Mandate ownership label -> mca_companies_enriched.company_class value.
 # This is a legal-structure filter only (Private = not publicly traded). It
@@ -143,23 +97,27 @@ def configured() -> bool:
 
 
 def _nic_prefixes(mandate: dict) -> list[str]:
+    resolved = nic.resolve(mandate)
+    prefixes = list(resolved.get("sector_codes") or [])
     valid = {item["id"] for item in NIC_SECTOR_OPTIONS}
-    prefixes = [
-        str(code).strip()
-        for code in mandate.get("sector_codes") or []
-        if str(code).strip() in valid
-    ]
-    for sector in mandate.get("sector") or []:
-        key = str(sector).strip().lower()
-        for known, values in SECTOR_NIC_PREFIXES.items():
-            if known in key or key in known:
-                prefixes.extend(v for v in values if v not in prefixes)
+    prefixes = [code for code in prefixes if code in valid]
+    if prefixes:
+        return prefixes
+    for code in mandate.get("sector_codes") or []:
+        code = str(code).strip()
+        if code in valid and code not in prefixes:
+            prefixes.append(code)
+    prefixes.extend(
+        value
+        for value in nic.prefixes_from_labels(mandate.get("sector") or [])
+        if value not in prefixes
+    )
     return prefixes
 
 
 def sector_codes_for_labels(sectors: list[str]) -> list[str]:
     """Infer dropdown selections for legacy free-text mandates."""
-    prefixes = _nic_prefixes({"sector": sectors})
+    prefixes = nic.prefixes_from_labels(sectors)
     valid = [item["id"] for item in NIC_SECTOR_OPTIONS]
     return [
         code for code in valid

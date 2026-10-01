@@ -1,0 +1,75 @@
+{
+  "source": "Aveyroni contract origination desk",
+  "agents": [
+    {
+      "id": "signal-hunter",
+      "name": "Signal Hunter",
+      "reuse": "account-research + Hermes parallel-cli, rss-feeds, blogwatcher",
+      "source": "Anthropic + Hermes",
+      "fit": "high",
+      "asks": "Find sourced capex, plant, tender, RFP, hiring, funding, and approval signals on this account only."
+    },
+    {
+      "id": "opportunity-intelligence",
+      "name": "Opportunity Intelligence",
+      "reuse": "account-research + contract-opportunity skill",
+      "source": "Anthropic + Aveyroni",
+      "fit": "high",
+      "asks": "What might they buy, what triggered it, and whether a contract is actually implied. Do not invent a value."
+    },
+    {
+      "id": "qualification",
+      "name": "Account & Contract Qualification",
+      "reuse": "account-research + qualification rubric",
+      "source": "Anthropic + Aveyroni",
+      "fit": "medium-high",
+      "asks": "Score the opportunity against the client mandate. Leave value unknown when no sourced figure exists."
+    },
+    {
+      "id": "buying-committee",
+      "name": "Buying Committee",
+      "reuse": "account-research + account-context",
+      "source": "Anthropic",
+      "fit": "very-high",
+      "asks": "Map who could control the award. Name only sourced people. Mark EPC and procurement as unknown when not sourced."
+    },
+    {
+      "id": "access-outreach",
+      "name": "Access & Outreach",
+      "reuse": "account-research + sales skills",
+      "source": "Anthropic + Aveyroni",
+      "fit": "high",
+      "asks": "Recommend warm path, targeted note, or hold. Do not invent an email. Nothing is sent."
+    },
+    {
+      "id": "contract-pursuit",
+      "name": "Contract Pursuit",
+      "reuse": "pipeline-review + account-plan",
+      "source": "Anthropic",
+      "fit": "very-high",
+      "asks": "Name the current stage and the next human action. Do not skip to award."
+    }
+  ],
+  "hermes_layers": [
+    {"id": "parallel-cli", "name": "parallel-cli", "use": "Parallel web research and enrichment"},
+    {"id": "rss-feeds", "name": "rss-feeds", "use": "Continuous feed ingestion"},
+    {"id": "blogwatcher", "name": "blogwatcher", "use": "Watch company and trade sites"},
+    {"id": "qmd", "name": "qmd", "use": "Hybrid search across local documents"},
+    {"id": "pinecone-research", "name": "pinecone-research", "use": "Persistent research / RAG"},
+    {"id": "osint-investigation", "name": "osint-investigation", "use": "Public-record research"},
+    {"id": "web-discovery", "name": "duckduckgo-search / searxng-search", "use": "Web discovery"}
+  ],
+  "pursuit": [
+    "Signal",
+    "Qualified opportunity",
+    "Stakeholder mapping",
+    "Warm-intro search",
+    "Outreach",
+    "Meeting",
+    "Prequalification",
+    "RFP",
+    "Proposal",
+    "Negotiation",
+    "Contract award"
+  ]
+}

@@ -56,7 +56,17 @@ sys.path.insert(0, str(HERMES_REPO))
 sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)
 
-from orchestrator.deterministic import extract_json, public_targets, render_report, store_run
+from orchestrator.deterministic import (
+    extract_json,
+    public_deep,
+    public_targets,
+    render_deep_report,
+    render_report,
+    store_run,
+)
+from orchestrator import nic
+from orchestrator.contracts import build_desk as build_contract_desk, store_desk as store_contract_desk
+from orchestrator.mca_browse import enrich as enrich_mca_company, readiness as mca_readiness, search as search_mca_companies
 from orchestrator.mca_registry import NIC_SECTOR_OPTIONS, sector_codes_for_labels
 from orchestrator.outreach import (
     approve as approve_outreach,
@@ -78,6 +88,7 @@ ORIGINATION_TARGET_GOAL = max(1, int(os.environ.get("AVEYRONI_TARGET_GOAL", "10"
 ORIGINATION_MAX_BATCHES = max(ORIGINATION_TARGET_GOAL, int(os.environ.get("AVEYRONI_MAX_BATCHES", "100")))
 MATERIAL_CONFIG_FIELDS = {
     "focus", "provider", "model", "geography", "sector", "sector_codes",
+    "industry_code", "sector_code", "niche_code",
     "revenue_min", "revenue_max", "revenue_scale", "ownership",
     "exclude_ownership", "asset_types", "units_min", "units_max",
     "price_min", "price_max", "currency", "strategy", "exclude_assets",
@@ -233,8 +244,11 @@ def _default_config() -> dict:
         "provider": os.environ.get("AVEYRONI_PROVIDER", "").strip() or DEMO_PROVIDER,
         "model": os.environ.get("AVEYRONI_MODEL", "").strip() or DEMO_MODEL,
         "geography": _words(mandate.get("geography") or ["India"]),
-        "sector": _words(mandate.get("sector") or ["auto components"]),
+        "sector": _words(mandate.get("sector") or ["Manufacture of motor vehicles, trailers and semi-trailers"]),
         "sector_codes": ["291", "292", "293"],
+        "industry_code": "C",
+        "sector_code": "29",
+        "niche_code": "",
         "revenue_min_inr_cr": int(mandate.get("revenue_min_inr_cr") or 300),
         "revenue_max_inr_cr": int(mandate.get("revenue_max_inr_cr") or 1500),
         "revenue_min": int(mandate.get("revenue_min_inr_cr") or 300),
@@ -332,6 +346,14 @@ def load_desk_config(mandate_id: object = None) -> dict:
     stored = json.loads(_config_path(resolved).read_text())
     config = normalize_config(stored, partial=True)
     config["mandate_id"] = resolved
+    # Codex OAuth cannot live on Railway. Hosted desks keep the saved
+    # mandate as-is locally, then swap to an API-key provider at runtime.
+    if os.environ.get("RAILWAY_ENVIRONMENT"):
+        hosted_provider = os.environ.get("AVEYRONI_PROVIDER", "").strip()
+        hosted_model = os.environ.get("AVEYRONI_MODEL", "").strip()
+        if hosted_provider and hosted_model:
+            config["provider"] = hosted_provider
+            config["model"] = hosted_model
     return config
 
 
@@ -388,20 +410,26 @@ def normalize_config(payload: dict, partial: bool = False) -> dict:
     geography = _words(payload.get("geography", current.get("geography")))
     raw_sector = _words(payload.get("sector", current.get("sector")))
     known_sector_codes = {item["id"] for item in NIC_SECTOR_OPTIONS}
-    if "sector_codes" in payload:
-        sector_codes = [
-            code for code in _words(payload.get("sector_codes"))
+    resolved = nic.resolve({
+        "industry_code": payload.get("industry_code", current.get("industry_code")),
+        "sector_code": payload.get("sector_code", current.get("sector_code")),
+        "niche_code": payload.get("niche_code", current.get("niche_code")),
+        "sector_codes": payload.get("sector_codes", current.get("sector_codes")),
+        "sector": raw_sector,
+    })
+    if not resolved["sector_codes"] and raw_sector:
+        resolved["sector_codes"] = [
+            code for code in sector_codes_for_labels(raw_sector)
             if code in known_sector_codes
         ]
-    elif "sector" in payload:
-        sector_codes = sector_codes_for_labels(raw_sector)
-    else:
-        sector_codes = [
-            code for code in _words(current.get("sector_codes"))
-            if code in known_sector_codes
-        ] or sector_codes_for_labels(raw_sector)
-    sectors_by_code = {item["id"]: item["sector"] for item in NIC_SECTOR_OPTIONS}
-    sector = [sectors_by_code[code] for code in sector_codes] if sector_codes else raw_sector
+        inferred = nic.infer_selection(resolved["sector_codes"])
+        resolved.update({key: resolved[key] or inferred[key] for key in inferred})
+        resolved["sector"] = resolved["sector"] or nic.labels_for_codes(resolved["sector_codes"]) or raw_sector
+    industry_code = resolved["industry_code"]
+    sector_code = resolved["sector_code"]
+    niche_code = resolved["niche_code"]
+    sector_codes = [code for code in resolved["sector_codes"] if code in known_sector_codes]
+    sector = resolved["sector"] or raw_sector
     ownership = _words(payload.get("ownership", current.get("ownership")))
     if "exclude_ownership" in payload:
         exclude = _words(payload.get("exclude_ownership"))
@@ -411,6 +439,8 @@ def normalize_config(payload: dict, partial: bool = False) -> dict:
         raise ValueError("Geography is required.")
     if focus == "operating-company" and (not sector or not ownership):
         raise ValueError("Sector and ownership are required for an operating company.")
+    if focus == "operating-company" and not sector_code:
+        raise ValueError("Choose an industry and sector.")
     currency = str(payload.get("currency") or current.get("currency") or "USD").strip().upper()
     if currency not in CURRENCIES:
         raise ValueError("Choose USD, INR, EUR, or GBP.")
@@ -458,6 +488,9 @@ def normalize_config(payload: dict, partial: bool = False) -> dict:
         "geography": geography,
         "sector": sector if focus == "operating-company" else [],
         "sector_codes": sector_codes if focus == "operating-company" else [],
+        "industry_code": industry_code if focus == "operating-company" else "",
+        "sector_code": sector_code if focus == "operating-company" else "",
+        "niche_code": niche_code if focus == "operating-company" else "",
         "revenue_min": revenue_low,
         "revenue_max": revenue_high,
         "revenue_scale": revenue_scale,
@@ -480,6 +513,20 @@ def normalize_config(payload: dict, partial: bool = False) -> dict:
     }
 
 
+def latest_package(mandate_id: object = None) -> dict:
+    mandate_id = resolve_mandate_id(mandate_id)
+    path = ROOT / "runs" / mandate_id / "orchestrator-run.json"
+    if not path.exists():
+        raise ValueError("Run the team first so there are mandate-fit companies to take deeper.")
+    try:
+        package = json.loads(path.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError("The last run file could not be read.") from exc
+    if not isinstance(package, dict):
+        raise ValueError("The last run file is not usable.")
+    return package
+
+
 def latest_targets(mandate_id: object = None) -> list:
     mandate_id = resolve_mandate_id(mandate_id)
     metadata = _load_registry()["mandates"][mandate_id]
@@ -497,6 +544,13 @@ def latest_targets(mandate_id: object = None) -> list:
     return public_targets(package)
 
 
+def latest_deep(mandate_id: object = None) -> dict:
+    try:
+        return public_deep(latest_package(mandate_id))
+    except ValueError:
+        return {}
+
+
 def current_visible_history(mandate_id: str, messages: list) -> list:
     """Render the latest saved run using the current public-display policy."""
     visible = visible_turns(messages)
@@ -504,7 +558,6 @@ def current_visible_history(mandate_id: str, messages: list) -> list:
         len(visible) < 2
         or visible[-1].get("role") != "agent"
         or visible[-2].get("role") != "user"
-        or visible[-2].get("text") != "Run the origination team on the active buy box."
     ):
         return visible
     path = ROOT / "runs" / mandate_id / "orchestrator-run.json"
@@ -512,21 +565,31 @@ def current_visible_history(mandate_id: str, messages: list) -> list:
         package = json.loads(path.read_text())
     except (OSError, json.JSONDecodeError):
         return visible
-    if isinstance(package, dict):
+    if not isinstance(package, dict):
+        return visible
+    user_text = visible[-2].get("text")
+    if user_text == "Run the origination team on the active buy box.":
         visible[-1] = {**visible[-1], "text": render_report(package).strip()}
+    elif user_text == "Go deeper on the companies already on the board." and package.get("deep"):
+        visible[-1] = {**visible[-1], "text": render_deep_report(package).strip()}
     return visible
 
 
 def public_config(config: dict | None = None) -> dict:
     config = config or load_desk_config()
     selected = [item for item in ASSET_TYPES if item["id"] in config.get("asset_types", [])]
+    inferred = nic.infer_selection(config.get("sector_codes") or [])
     return {
         **config,
+        "industry_code": config.get("industry_code") or inferred["industry_code"],
+        "sector_code": config.get("sector_code") or inferred["sector_code"],
+        "niche_code": config.get("niche_code") or inferred["niche_code"],
         "models": MODEL_CHOICES,
         "provider_label": "OpenAI Codex",
         "focuses": FOCUS_CHOICES,
         "asset_catalog": ASSET_TYPES,
         "sector_catalog": NIC_SECTOR_OPTIONS,
+        "nic_catalog": nic.catalog(),
         "currencies": CURRENCIES,
         "revenue_scales": REVENUE_SCALES,
         "asset_screen": selected,
@@ -938,6 +1001,7 @@ class Handler(BaseHTTPRequestHandler):
             self._json(200, {
                 "active_mandate_id": registry["active_mandate_id"],
                 "mandates": [mandate_summary(key, value) for key, value in registry["mandates"].items()],
+                "template": public_config(_default_config()),
             })
             return
         route_id = self._route_id(path)
@@ -971,9 +1035,33 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/targets":
             try:
                 mandate_id = self._selected_id(query)
-                self._json(200, {"mandate_id": mandate_id, "targets": latest_targets(mandate_id)})
+                self._json(200, {
+                    "mandate_id": mandate_id,
+                    "targets": latest_targets(mandate_id),
+                    "deep": latest_deep(mandate_id),
+                })
             except KeyError as exc:
                 self._json(404, {"error": str(exc.args[0])})
+            return
+        if path == "/api/mca":
+            try:
+                self._json(200, search_mca_companies({key: (values[0] if values else "") for key, values in query.items()}))
+            except RuntimeError as exc:
+                self._json(400, {"error": str(exc), "readiness": mca_readiness()})
+            return
+        if path == "/api/contracts":
+            try:
+                mandate_id = self._selected_id(query)
+                entity_id = str((query.get("entity_id") or [""])[0] or "").strip()
+                if not entity_id:
+                    raise ValueError("Pick a mandate-fit company before opening contract origination.")
+                desk = build_contract_desk(latest_package(mandate_id), entity_id)
+                store_contract_desk(ROOT / "runs", mandate_id, desk)
+                self._json(200, {"mandate_id": mandate_id, "desk": desk})
+            except KeyError as exc:
+                self._json(404, {"error": str(exc.args[0])})
+            except ValueError as exc:
+                self._json(400, {"error": str(exc)})
             return
         if path == "/api/outreach":
             try:
@@ -1045,6 +1133,21 @@ class Handler(BaseHTTPRequestHandler):
                 self._stream_turn(orchestrated=True, mandate_id=self._selected_id(query, payload))
             except KeyError as exc:
                 self._json(404, {"error": str(exc.args[0])})
+            return
+        if path == "/api/deepen":
+            try:
+                self._stream_turn(orchestrated=True, deepen=True, mandate_id=self._selected_id(query, payload))
+            except KeyError as exc:
+                self._json(404, {"error": str(exc.args[0])})
+            return
+        if path == "/api/mca/enrich":
+            try:
+                result = enrich_mca_company(str(payload.get("cin") or ""), runs_root=ROOT / "runs")
+                self._json(200, {"ok": True, "enrichment": result, "readiness": mca_readiness()})
+            except ValueError as exc:
+                self._json(400, {"error": str(exc), "readiness": mca_readiness()})
+            except RuntimeError as exc:
+                self._json(400, {"error": str(exc), "readiness": mca_readiness()})
             return
         if path.startswith("/api/outreach/"):
             try:
@@ -1226,7 +1329,7 @@ class Handler(BaseHTTPRequestHandler):
             TURN_LOCK.release()
         self._json(200, {"ok": True, "mandate_id": mandate_id})
 
-    def _stream_turn(self, message: str = "", orchestrated: bool = False, mandate_id: str | None = None) -> None:
+    def _stream_turn(self, message: str = "", orchestrated: bool = False, deepen: bool = False, mandate_id: str | None = None) -> None:
         mandate_id = resolve_mandate_id(mandate_id)
         if not TURN_LOCK.acquire(blocking=False):
             self._json(409, {"error": "The desk is still answering."})
@@ -1257,6 +1360,32 @@ class Handler(BaseHTTPRequestHandler):
                 current.ensure()
                 prior = list(current.history)
                 config = load_desk_config(mandate_id)
+                if deepen:
+                    try:
+                        package = latest_package(mandate_id)
+                    except ValueError as exc:
+                        emit({"error": str(exc)})
+                        emit({"done": True, "session_id": current.session_id, "mandate_id": mandate_id})
+                        return
+                    orchestrator = Orchestrator(
+                        agent=current.agent,
+                        on_event=emit,
+                        runs_root=ROOT / "runs",
+                        system_prompt=current.system_prompt,
+                        history=prior,
+                    )
+                    report = orchestrator.deepen(config, package)
+                    current.history = prior + [
+                        {"role": "user", "content": "Go deeper on the companies already on the board."},
+                        {"role": "assistant", "content": report},
+                    ]
+                    save_history(mandate_id, current.history, current.session_id)
+                    registry = _load_registry()
+                    registry["mandates"][mandate_id]["targets_available"] = True
+                    registry["mandates"][mandate_id]["updated_at"] = _now()
+                    _save_registry(registry)
+                    emit({"done": True, "session_id": current.session_id, "mandate_id": mandate_id})
+                    return
                 reports = []
                 entities_by_id = {}
                 excluded_names = []

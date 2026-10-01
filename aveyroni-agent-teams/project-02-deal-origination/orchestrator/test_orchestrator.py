@@ -10,10 +10,12 @@ from pathlib import Path
 from orchestrator.deterministic import (
     dedupe_entities,
     entity_key,
+    format_evidence_audit,
     normalize_name,
     parse_mandate,
     parse_worker_summary,
     public_targets,
+    render_deep_report,
     render_report,
     screen_entities,
 )
@@ -122,6 +124,41 @@ class DeterministicTests(unittest.TestCase):
         self.assertIn("Why it fits", report)
         self.assertIn("Market thesis", report)
         self.assertIn("Seller interest", report)
+
+    def test_evidence_audit_becomes_a_short_desk_memo(self) -> None:
+        raw = (
+            "Evidence audit — Bhavani Industries India LLP Important unsupported or inadequately "
+            "supported datapoints: - The transaction status `NO_PUBLIC_PROCESS_FOUND` is not established. "
+            "- The customer list is substantially broader than its excerpt. "
+            "- The screening decisions for geography have empty `evidence_ids`. "
+            "- `evidence_completeness: 1.0` is not supported. "
+            "Contradictions and inconsistencies: - The products claim more than the excerpt. "
+            "Fit label, fit score and transaction status are unchanged."
+        )
+        memo = format_evidence_audit(raw)
+        self.assertIn("Bhavani Industries India LLP", memo)
+        self.assertIn("Overstated", memo)
+        self.assertIn("The transaction status", memo)
+        self.assertIn("The customer list", memo)
+        self.assertIn("Conflicts", memo)
+        self.assertIn("The products claim more than the excerpt.", memo)
+        self.assertNotIn("evidence_ids", memo)
+        self.assertNotIn("evidence_completeness", memo)
+        self.assertNotIn("Fit label", memo)
+        report = render_deep_report({
+            "mandate": parse_mandate(OPERATING),
+            "deep": True,
+            "evidence_audit": raw,
+            "entities": [{
+                "entity_id": "bhavani",
+                "name": "Bhavani Industries India LLP",
+                "claims": [],
+                "screening": {"fit_label": "MANDATE_FIT", "fit_score": 70, "mandatory": [{"check": "listing_status", "result": "pass"}]},
+            }],
+        })
+        self.assertIn("Evidence audit", report)
+        self.assertIn("Overstated", report)
+        self.assertNotIn("evidence_ids", report)
 
     def test_public_output_explains_fit_seller_signals_and_thesis(self) -> None:
         entity = {
@@ -621,6 +658,141 @@ class SubagentProgressTests(unittest.TestCase):
                 delegate_fn=delegate, complete_fn=complete,
             ).run(OPERATING)
         self.assertIn("Nothing was sent.", report)
+
+    def test_deepen_runs_partial_agents_on_priority_names(self) -> None:
+        calls = []
+
+        briefs = []
+
+        def complete(role, message):
+            briefs.append((role, message))
+            if role == "evidence-auditor":
+                return "Revenue excerpt is sourced. No invented EBITDA."
+            if role == "outreach-intelligence":
+                return "Approach the promoter with a succession-context note. Do not invent an email."
+            return "unused"
+
+        def delegate(tasks, _agent):
+            calls.append(tasks)
+            summaries = []
+            for task in tasks:
+                goal = task["goal"]
+                if goal.startswith("Market Mapper"):
+                    summaries.append(json.dumps({"entities": [{
+                        "name": "India Auto Components",
+                        "claims": [_claim("market_map", "unlisted auto-component suppliers", "Privately held Tier-1 suppliers remain a control market")],
+                        "unknowns": [],
+                    }]}))
+                elif goal.startswith("Entity Resolver"):
+                    summaries.append(json.dumps({"entities": [{
+                        "name": "Example Works",
+                        "claims": [_claim("registration_id", "U12345MH1998PTC000001", "CIN stated on the registry page")],
+                        "unknowns": [],
+                    }]}))
+                elif goal.startswith("Company Intelligence"):
+                    summaries.append(json.dumps({"entities": [{
+                        "name": "Example Works",
+                        "claims": [_claim("plants", "Pune", "Plant at Pune")],
+                        "unknowns": ["customers"],
+                    }]}))
+                elif goal.startswith("Financial Intelligence"):
+                    summaries.append(json.dumps({"entities": [{
+                        "name": "Example Works",
+                        "claims": [_claim("ebitda", "unknown", "No EBITDA figure in the rating extract")],
+                        "unknowns": ["ebitda"],
+                    }]}))
+                elif goal.startswith("Transaction History"):
+                    summaries.append(json.dumps({"entities": [{
+                        "name": "Example Works",
+                        "claims": [_claim("funding", "none sourced", "No PE investment disclosed")],
+                        "unknowns": [],
+                    }]}))
+                elif goal.startswith("Seller-Signal Agent"):
+                    summaries.append(json.dumps({"entities": [{
+                        "name": "Example Works",
+                        "claims": [_claim("signal", "next-generation management", "Son named as managing director")],
+                        "unknowns": [],
+                    }]}))
+                elif goal.startswith("Relationship Mapper"):
+                    summaries.append(json.dumps({"entities": [{
+                        "name": "Example Works",
+                        "claims": [_claim("relationship", "Founder A as promoter", "Promoter named on the company page")],
+                        "unknowns": ["advisor"],
+                    }]}))
+                elif goal.startswith("Monitoring Agent"):
+                    summaries.append(json.dumps({"entities": [{
+                        "name": "Example Works",
+                        "claims": [_claim("monitor", "no material change", "No new director or plant notice this year")],
+                        "unknowns": [],
+                    }]}))
+                else:
+                    summaries.append(json.dumps({"entities": []}))
+            return json.dumps({
+                "results": [{"task_index": index, "summary": text} for index, text in enumerate(summaries)]
+            })
+
+        package = {
+            "mandate": parse_mandate(OPERATING),
+            "controller": {"focus_notes": "Stay inside the revenue band."},
+            "entities": [{
+                "entity_id": "example-works",
+                "name": "Example Works",
+                "claims": [_claim("listing_status", "unlisted", "The company is privately held and unlisted")],
+                "unknowns": [],
+                "screening": {
+                    "fit_label": "MANDATE_FIT",
+                    "fit_score": 70,
+                    "mandatory": [{"check": "listing_status", "result": "pass"}],
+                },
+            }, {
+                "entity_id": "listed-rival",
+                "name": "Listed Rival Ltd",
+                "claims": [_claim("listing_status", "listed", "The company is publicly listed")],
+                "unknowns": [],
+                "screening": {
+                    "fit_label": "OUT",
+                    "fit_score": 0,
+                    "mandatory": [{"check": "listing_status", "result": "fail"}],
+                },
+            }],
+        }
+
+        with tempfile.TemporaryDirectory() as folder:
+            report = Orchestrator(
+                agent=object(),
+                on_event=lambda _event: None,
+                runs_root=Path(folder),
+                complete_fn=complete,
+                delegate_fn=delegate,
+            ).deepen(OPERATING, package)
+            saved = json.loads((Path(folder) / "india-auto-components" / "deepen-run.json").read_text())
+
+        self.assertEqual(len(calls), 4)
+        self.assertTrue(calls[0][0]["goal"].startswith("Market Mapper"))
+        self.assertIn("Do not add a company to the priority list", calls[0][0]["context"])
+        self.assertEqual([task["goal"].split(".", 1)[0] for task in calls[1]], [
+            "Entity Resolver",
+            "Company Intelligence",
+            "Financial Intelligence",
+        ])
+        self.assertIn("Example Works", calls[1][0]["context"])
+        self.assertNotIn("Listed Rival Ltd", calls[1][0]["context"])
+        self.assertNotIn("Find real targets", calls[1][0]["context"])
+        audit_brief = next(message for role, message in briefs if role == "evidence-auditor")
+        outreach_brief = next(message for role, message in briefs if role == "outreach-intelligence")
+        self.assertIn("Example Works", audit_brief)
+        self.assertNotIn("Listed Rival Ltd", audit_brief)
+        self.assertIn("Example Works", outreach_brief)
+        self.assertNotIn("Listed Rival Ltd", outreach_brief)
+        self.assertIn("Deeper pass", report)
+        self.assertIn("Legal identity", report)
+        self.assertIn("Outreach intelligence", report)
+        self.assertIn("Nothing was sent.", report)
+        fields = {claim["field"] for claim in saved["entities"][0]["claims"]}
+        self.assertIn("registration_id", fields)
+        self.assertIn("plants", fields)
+        self.assertIn("signal", fields)
+        self.assertEqual(saved["entities"][0]["screening"]["fit_label"], "MANDATE_FIT")
 
 
 if __name__ == "__main__":

@@ -7,15 +7,16 @@
     "India"
   ],
   "sector": [
-    "motor vehicles",
-    "vehicle bodies and trailers",
-    "auto components"
+    "Manufacture of motor vehicles, trailers and semi-trailers"
   ],
   "sector_codes": [
     "291",
     "292",
     "293"
   ],
+  "industry_code": "C",
+  "sector_code": "29",
+  "niche_code": "",
   "revenue_min": 300,
   "revenue_max": 1500,
   "revenue_scale": "crore",

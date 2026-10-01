@@ -20,7 +20,10 @@ from orchestrator.deterministic import (
     parse_fit_judgments,
     parse_mandate,
     parse_worker_summary,
+    format_evidence_audit,
+    public_deep,
     public_targets,
+    render_deep_report,
     render_report,
     screen_entities,
     store_run,
@@ -28,12 +31,17 @@ from orchestrator.deterministic import (
 from orchestrator.roles import (
     AFTER_SCORE,
     BATCH_SIZE,
+    DEEP_FILL_ORDER,
+    DEEP_MARKET_ID,
+    DEEP_WORKER_BY_ID,
     DISCOVERY_ID,
     FILL_ORDER,
     WORKERS,
     controller_message,
+    evidence_auditor_message,
     fit_scorer_message,
     gap_plan,
+    outreach_intelligence_message,
     reviewer_message,
     tasks_for,
     WORKER_BY_ID,
@@ -224,6 +232,80 @@ class Orchestrator:
         self.on_event({"delta": report})
         return report
 
+    def deepen(self, config: dict, package: dict) -> str:
+        """Run the partial and missing agents on companies already on the board."""
+        prior_mandate = dict(package.get("mandate") or {})
+        prior_mandate.update(config)
+        if (package.get("mandate") or {}).get("mandate_id"):
+            prior_mandate["mandate_id"] = package["mandate"]["mandate_id"]
+        elif config.get("mandate_id"):
+            prior_mandate["mandate_id"] = config["mandate_id"]
+        mandate = parse_mandate(prior_mandate)
+        cards = public_targets(package)
+        allowed = {card.get("entity_id") for card in cards if card.get("entity_id")}
+        priority = [
+            {
+                **entity,
+                "claims": list(entity.get("claims") or []),
+                "unknowns": list(entity.get("unknowns") or []),
+            }
+            for entity in package.get("entities") or []
+            if entity.get("entity_id") in allowed
+        ]
+        if not priority:
+            raise ValueError("Run the team first so there are mandate-fit companies to take deeper.")
+        names = [entity.get("name") for entity in priority if entity.get("name")]
+        focus_notes = str((package.get("controller") or {}).get("focus_notes") or "Stay inside the buy box.")
+
+        self._event("market_mapper", "start", "Mapping the buy-box universe")
+        market_rows = self._delegate([DEEP_MARKET_ID], mandate, focus_notes, names, "deep-market", "delegate-market")
+        self._event("market_mapper", "done", "Market map filed")
+
+        parsed = list(market_rows)
+        for index, worker_ids in enumerate(_chunks(list(DEEP_FILL_ORDER), BATCH_SIZE), start=1):
+            parsed.extend(self._delegate(worker_ids, mandate, focus_notes, names, "deep", f"delegate-deep-{index}"))
+
+        updated = _merge_deep_claims(priority, parsed)
+        by_id = {entity.get("entity_id"): entity for entity in updated}
+        entities = [by_id.get(entity.get("entity_id"), entity) for entity in package.get("entities") or []]
+        deep_package = {
+            **package,
+            "mandate": mandate,
+            "entities": entities,
+            "deep": True,
+            "market_map": _market_notes(market_rows),
+            "evidence_audit": "",
+            "outreach_intelligence": "",
+        }
+
+        board_view = {**deep_package, "entities": updated}
+        self._event("evidence_auditor", "start", "Auditing sourced claims")
+        deep_package["evidence_audit"] = format_evidence_audit(
+            self.complete_fn("evidence-auditor", evidence_auditor_message(board_view))
+        )
+        self._event("evidence_auditor", "done", "Audit filed")
+        self._event("outreach_intelligence", "start", "Who to approach, and why")
+        deep_package["outreach_intelligence"] = self.complete_fn(
+            "outreach-intelligence",
+            outreach_intelligence_message(board_view),
+        )
+        self._event("outreach_intelligence", "done", "Outreach brief filed")
+
+        folder = self.runs_root / mandate["mandate_id"]
+        folder.mkdir(parents=True, exist_ok=True)
+        deep_path = folder / "deepen-run.json"
+        deep_path.write_text(json.dumps(deep_package, indent=2, ensure_ascii=False) + "\n")
+        path = store_run(self.runs_root, deep_package)
+        deep_package["path"] = str(path)
+        self.last_package = deep_package
+        report = render_deep_report(deep_package)
+        self.on_event({
+            "targets": public_targets(deep_package),
+            "deep": public_deep(deep_package),
+        })
+        self.on_event({"delta": report})
+        return report
+
     def _discover(self, mandate: dict, focus_notes: str) -> list[dict]:
         """Name the candidates. The MCA registry (deterministic, no model call)
         pre-filters India operating-company mandates when it is configured and
@@ -255,7 +337,8 @@ class Orchestrator:
         return self._delegate([DISCOVERY_ID], mandate, focus_notes, [], "discover", "delegate-discover")
 
     def _delegate(self, worker_ids: list[str], mandate: dict, focus_notes: str, names: list[str], mode: str, step_id: str) -> list[dict]:
-        labels = [worker["name"] for worker in WORKERS if worker["id"] in worker_ids]
+        roster = list(WORKERS) + [DEEP_WORKER_BY_ID[worker_id] for worker_id in worker_ids if worker_id in DEEP_WORKER_BY_ID]
+        labels = [worker["name"] for worker in roster if worker["id"] in worker_ids]
         return self._delegate_tasks(
             tasks_for(worker_ids, mandate, focus_notes, names, mode),
             worker_ids,
@@ -395,6 +478,41 @@ def _merge_claims(screened: list[dict], rows: list[dict]) -> list[dict]:
         entity["claims"].extend(extra.get("claims") or [])
         entity["unknowns"] = sorted(set(entity.get("unknowns") or []) | set(extra.get("unknowns") or []))
     return screened
+
+
+def _merge_deep_claims(priority: list[dict], rows: list[dict]) -> list[dict]:
+    incoming = dedupe_entities([
+        entity
+        for row in rows
+        if row.get("worker") != "market-mapper"
+        for entity in row.get("entities") or []
+    ])
+    by_id = {entity.get("entity_id"): entity for entity in incoming}
+    by_key = {entity_key(entity.get("name") or ""): entity for entity in incoming}
+    for entity in priority:
+        extra = by_id.get(entity.get("entity_id")) or by_key.get(entity_key(entity.get("name") or ""))
+        if not extra:
+            continue
+        entity["claims"].extend(extra.get("claims") or [])
+        entity["unknowns"] = sorted(set(entity.get("unknowns") or []) | set(extra.get("unknowns") or []))
+    return priority
+
+
+def _market_notes(rows: list[dict]) -> list[dict]:
+    notes = []
+    for row in rows:
+        if row.get("worker") != "market-mapper":
+            continue
+        for entity in row.get("entities") or []:
+            for claim in entity.get("claims") or []:
+                if claim.get("field") and claim.get("excerpt"):
+                    notes.append({
+                        "field": claim.get("field"),
+                        "value": claim.get("value"),
+                        "source_url": claim.get("source_url"),
+                        "excerpt": claim.get("excerpt"),
+                    })
+    return notes
 
 
 def _keep_named(entities: list[dict], names: list[str]) -> list[dict]:

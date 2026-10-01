@@ -62,6 +62,7 @@
       background: transparent; border: 1px solid var(--line); border-radius: 10px; text-align: left;
     }
     .session { padding: 10px 12px; }
+    a.session { display: block; text-decoration: none; color: inherit; }
     .session.active { border-color: rgba(215, 180, 138, 0.55); background: var(--brass-dim); }
     .session small { display: block; color: var(--muted); margin-top: 3px; }
     .new-mandate { margin-bottom: 8px; padding: 10px 12px; color: var(--brass); }
@@ -96,6 +97,14 @@
       margin: 0; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 560;
     }
     .report-section p, .dossier .section p { margin: 0; }
+    .memo { display: grid; gap: 8px; }
+    .memo h5 {
+      margin: 8px 0 0; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); font-weight: 560;
+    }
+    .memo ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+    .memo li { color: var(--ink); line-height: 1.45; }
+    .memo p { margin: 0; }
     .report-foot { margin: 0; color: var(--muted); font-size: 12px; }
     .msg.error { border-left-color: var(--danger); color: var(--danger); }
     .who { display: block; margin-bottom: 6px; color: var(--muted); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
@@ -149,6 +158,37 @@
     .step-head .dot { margin-top: 5px; }
     .step-group.done .step-head { color: var(--ink); }
     .step-group.done .step-head .dot { background: var(--ok); }
+
+    /* Live step text breathes bright → dark so a long silent model
+       call still reads as "this is the process that is running". */
+    @keyframes illuminate {
+      from {
+        color: #fff6e8;
+        text-shadow: 0 0 14px rgba(215, 180, 138, 0.7), 0 0 4px rgba(243, 239, 230, 0.4);
+      }
+      to {
+        color: #4a4740;
+        text-shadow: 0 0 0 rgba(215, 180, 138, 0);
+      }
+    }
+    .step.running .step-main,
+    .step-group.running .step-title,
+    .worker-chips > li.running > .chip-head,
+    .trace-card.live .trace-toggle h3,
+    .live-wait {
+      animation: illuminate 1.8s ease-in-out infinite alternate;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .step.running .step-main,
+      .step-group.running .step-title,
+      .worker-chips > li.running > .chip-head,
+      .trace-card.live .trace-toggle h3,
+      .live-wait {
+        animation: none;
+        color: var(--brass);
+        text-shadow: none;
+      }
+    }
     .worker-chips { list-style: none; margin: 0; padding-left: 15px; display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start; }
     .worker-chips > li { font-size: 11px; padding: 5px 10px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; max-width: 300px; }
     .trace-card .worker-chips > li { width: min(600px, 100%); max-width: 100%; }
@@ -197,6 +237,8 @@
     .workspace header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 14px; }
     .workspace header strong { font-weight: 560; }
     .dossier { border-top: 1px solid var(--line); padding: 14px 0 4px; }
+    .dossier[data-select-entity] { cursor: pointer; }
+    .dossier.selected { border-color: rgba(215, 180, 138, 0.45); background: var(--brass-dim); border-radius: 10px; padding-left: 10px; padding-right: 10px; }
     .dossier h3 { margin: 0 0 4px; font-size: 15px; font-weight: 560; }
     .dossier p { margin: 0 0 4px; font-size: 14px; line-height: 1.45; }
     .dossier .section { margin: 10px 0 0; }
@@ -205,6 +247,79 @@
     .dossier .fit.good { color: var(--ok); }
     .dossier .fit.bad { color: var(--danger); }
     .dossier-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .body.contracts-open { grid-template-columns: 200px minmax(0, 0.72fr) minmax(420px, 1.28fr); }
+    .body.mca-open { grid-template-columns: 200px minmax(0, 0.52fr) minmax(560px, 1.48fr); }
+    .mca-search {
+      display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center;
+      margin: 0 0 14px;
+    }
+    .mca-search input {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px; background: var(--panel);
+      padding: 11px 14px; color: var(--ink); font-size: 15px;
+    }
+    .mca-search input:focus { outline: 1px solid rgba(215, 180, 138, 0.7); }
+    .mca-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 10px; margin: 0 0 12px; }
+    .mca-filters .field { margin: 0; }
+    .mca-filters .wide { grid-column: 1 / -1; }
+    .mca-actions { display: flex; gap: 8px; align-items: end; }
+    .mca-table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 10px; }
+    .mca-table { min-width: 1860px; }
+    .mca-table th, .mca-table td { padding: 8px 10px; white-space: nowrap; vertical-align: top; }
+    .mca-table td.name { white-space: normal; min-width: 200px; }
+    .mca-table tr.selected td { background: var(--brass-dim); }
+    .mca-pager { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; }
+    .mca-enrich { margin-top: 16px; display: grid; gap: 12px; }
+    .mca-subtable { overflow: auto; border: 1px solid var(--line); border-radius: 10px; }
+    .mca-enrich-btn {
+      border: 0; border-radius: 999px; background: var(--brass); color: #1a140c;
+      font-weight: 560; padding: 7px 12px; font-size: 12px;
+    }
+    .mca-enrich-btn:disabled { opacity: 0.55; }
+    .mca-enrich-btn.done { background: var(--ok); color: #141810; }
+    .funnel-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
+    .funnel-card {
+      border: 1px solid var(--line); border-radius: 12px; padding: 12px 10px;
+      background: rgba(255,255,255,0.02); cursor: pointer; text-align: left;
+      font: inherit; color: inherit; width: 100%;
+    }
+    .funnel-card.active, .funnel-card:hover { border-color: rgba(215, 180, 138, 0.55); }
+    .signal-row {
+      border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-top: 8px;
+      background: rgba(255,255,255,0.02); cursor: pointer; text-align: left; width: 100%;
+      font: inherit; color: inherit; display: grid; gap: 3px;
+    }
+    .signal-row.active, .signal-row:hover { border-color: rgba(215, 180, 138, 0.55); }
+    .signal-row small { color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-size: 11px; }
+    .funnel-card b { display: block; font-family: Fraunces, Georgia, serif; font-size: 28px; font-weight: 520; color: var(--ink); }
+    .funnel-card span { color: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .agent-grid { display: grid; gap: 8px; }
+    .agent-row { display: grid; grid-template-columns: 14px 1fr; gap: 8px; align-items: start; font-size: 12px; line-height: 1.4; }
+    .opp-card {
+      border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 10px;
+      background: rgba(255,255,255,0.02); cursor: pointer; text-align: left; width: 100%;
+      font: inherit; color: inherit;
+    }
+    .opp-card.active, .opp-card:hover { border-color: rgba(215, 180, 138, 0.55); }
+    .opp-card h3 { margin: 0 0 6px; font-size: 15px; font-weight: 560; }
+    .opp-meta { display: grid; gap: 3px; color: var(--muted); font-size: 13px; }
+    .opp-meta b { color: var(--ink); font-weight: 460; }
+    .chain { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+    .chain li { padding-left: 14px; border-left: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    .chain li.known { color: var(--ink); }
+    .stage-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .stage-row span { border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; font-size: 11px; color: var(--muted); }
+    .stage-row span.now { color: var(--brass); border-color: rgba(215, 180, 138, 0.55); }
+    .client-box, .trail-box {
+      border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 10px 0;
+      background: rgba(255,255,255,0.02);
+    }
+    .layer-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .layer-row span {
+      border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px;
+      font-size: 11px; color: var(--muted);
+    }
+    .people-list, .source-list { margin: 0; padding-left: 16px; display: grid; gap: 4px; font-size: 13px; }
+    .source-list a { color: var(--brass); }
     .outreach-card {
       border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 10px;
       background: rgba(255, 255, 255, 0.02);
@@ -278,13 +393,27 @@
       <div class="brand">AVEYRONI <span>DESK</span></div>
       <div class="meta">Origination intelligence</div>
     </header>
-    <div class="body">
+    <div class="body" id="layout">
       <aside class="rail">
         <button class="session new-mandate" type="button" id="new-mandate">+ New mandate</button>
         <h2>Mandates</h2>
         <div id="sessions"></div>
+        <div class="rail-block" id="projects-rail">
+          <h2>Projects</h2>
+          <a class="session" data-base="http://127.0.0.1:8777/" href="http://127.0.0.1:8777/">
+            <b>OSINT globe</b>
+            <small>Public events, flights, ships, company pins</small>
+          </a>
+        </div>
+        <div class="rail-block" id="gev-rail">
+          <h2>God's Eye View</h2>
+          <a class="session" data-base="http://127.0.0.1:4173/" href="http://127.0.0.1:4173/">
+            <b>Cesium console</b>
+            <small>Live flights, AIS, FIRMS, 3D tiles</small>
+          </a>
+        </div>
         <div class="rail-block" id="outreach-rail">
-          <h2>Outreach</h2>
+          <h2>Desk</h2>
           <div id="desk-nav"></div>
         </div>
       </aside>
@@ -303,7 +432,7 @@
           <div class="tools">
             <button class="tool" type="button" id="files">+ Files</button>
             <button class="tool" type="button" id="sources">Sources</button>
-            <button class="tool" type="button" id="deep">Deep research</button>
+            <button class="tool" type="button" id="deep">Go Deeper</button>
             <button class="tool" type="button" id="roles">How the team works</button>
             <button class="tool" type="button" id="team">Run</button>
             <input id="file" type="file" hidden />
@@ -332,6 +461,9 @@
       evidence_normalize: "Evidence normalize",
       deduplication: "Deduplication",
       fit_scorer: "Fit Scorer",
+      evidence_auditor: "Evidence Auditor",
+      outreach_intelligence: "Outreach Intelligence",
+      market_mapper: "Market Mapper",
       data_validation: "Data validation",
       database_store: "Save run",
       mca_registry_query: "MCA Registry",
@@ -358,6 +490,9 @@
       fit_scorer: "orchestrator",
       data_validation: "code",
       evidence_reviewer: "orchestrator",
+      evidence_auditor: "orchestrator",
+      outreach_intelligence: "orchestrator",
+      market_mapper: "worker",
       database_store: "code"
     };
     const KIND_LABEL = { orchestrator: "Orchestrator", worker: "Worker", data: "Registry", code: "Code" };
@@ -369,7 +504,15 @@
       "ownership-researcher": "Ownership Researcher",
       "financial-researcher": "Financial Researcher",
       "transaction-researcher": "Transaction Researcher",
-      "relationship-researcher": "Relationship Researcher"
+      "relationship-researcher": "Relationship Researcher",
+      "market-mapper": "Market Mapper",
+      "entity-resolver": "Entity Resolver",
+      "company-intelligence": "Company Intelligence",
+      "financial-intelligence": "Financial Intelligence",
+      "transaction-history": "Transaction History",
+      "seller-signal": "Seller-Signal Agent",
+      "relationship-deep": "Relationship Mapper",
+      "monitoring-agent": "Monitoring Agent"
     };
 
     // The fixed roster — always visible in the rail, before any run starts,
@@ -388,6 +531,13 @@
       { name: "Contact Finder", kind: "data", note: "Outreach only, and only after you click. Finds a named decision-maker with a usable email. Does not send." },
       { name: "Outreach Copy Writer", kind: "orchestrator", note: "Writes a subject and body from sourced facts. Nothing is sent until you approve the exact draft in Inbox." },
       { name: "Evidence Reviewer", kind: "orchestrator", note: "Red-teams the finished package. Cannot change a fit score or transaction status — only flag weak evidence." },
+      { name: "Go Deeper team", kind: "orchestrator", note: "After a Run, Market Mapper, Entity Resolver, Company and Financial Intelligence, Transaction History, Seller-Signal, Relationship Mapper, Evidence Auditor, Outreach Intelligence, and Monitoring work the companies already on the board." },
+      { name: "Signal Hunter", kind: "worker", note: "Contract origination. Finds sourced capex, plant, tender, and approval signals on the account. Uses Hermes research layers rather than a blank hunt." },
+      { name: "Opportunity Intelligence", kind: "orchestrator", note: "Asks what they might buy, what triggered it, and whether a contract is implied. Does not invent a value." },
+      { name: "Account & Contract Qualification", kind: "orchestrator", note: "Scores the opportunity against the industrial-automation client mandate." },
+      { name: "Buying Committee", kind: "worker", note: "Maps who could control the award. Names only sourced people. EPC stays unknown until sourced." },
+      { name: "Access & Outreach", kind: "orchestrator", note: "Warm path, targeted note, or hold. Does not invent an email. Nothing is sent." },
+      { name: "Contract Pursuit", kind: "orchestrator", note: "Names the current stage and the next human action. Does not skip to award." },
       { name: "Deterministic pipeline", kind: "code", note: "Mandate parsing, entity/evidence normalization, deduplication, and validation. No model call, ever — this is what a claim without a source gets dropped by." }
     ];
 
@@ -405,7 +555,53 @@
       outreachBusy: false,
       outreachError: "",
       view: "mandate",
-      selectedDraftId: null
+      selectedDraftId: null,
+      deep: null,
+      contractDesk: null,
+      selectedOpportunityId: null,
+      contractPane: "signals",
+      selectedSignalId: null,
+      contractEntityId: null,
+      selectedEntityId: null,
+      contractsBusy: false,
+      contractsError: "",
+      mca: {
+        filters: {
+          search: "",
+          q: "",
+          cin: "",
+          company_class: "Public",
+          listing_status: "Unlisted",
+          company_status: "Active",
+          state: "",
+          nic: "",
+          roc: "",
+          category: "",
+          sub_category: "",
+          origin: "",
+          address: "",
+          industry: "",
+          paidup_min_cr: "",
+          paidup_max_cr: "",
+          authorized_min_cr: "",
+          authorized_max_cr: "",
+          registered_from: "",
+          registered_to: "",
+          plc: true
+        },
+        page: 1,
+        page_size: 25,
+        total: 0,
+        pages: 1,
+        rows: [],
+        options: null,
+        readiness: { ready: false, missing: [], enrich_ready: false, enrich_missing: [] },
+        busy: false,
+        error: "",
+        enriching: "",
+        selectedCin: "",
+        enrichments: {}
+      }
     };
     let busy = false;
     let abort = null;
@@ -428,6 +624,50 @@
       if (!values || !values.length) return fallback;
       return values.map(pretty).join(", ");
     }
+    function nicCatalog() {
+      return state.config?.nic_catalog || { industries: [], sectors: [], niches: [] };
+    }
+    function nicLabel(kind, id, fallback) {
+      const row = (nicCatalog()[kind] || []).find((item) => item.id === id);
+      return row ? `${row.id} — ${row.label}` : (fallback || "");
+    }
+    function fillSelect(select, items, value, blank) {
+      const options = [`<option value="">${esc(blank)}</option>`].concat(
+        items.map((item) => `<option value="${esc(item.id)}"${item.id === value ? " selected" : ""}>${esc(item.id)} — ${esc(item.label)}</option>`)
+      );
+      select.innerHTML = options.join("");
+      select.value = items.some((item) => item.id === value) ? value : "";
+    }
+    function bindNicSelects(form, config) {
+      const industry = form.querySelector("[name=industry_code]");
+      const sector = form.querySelector("[name=sector_code]");
+      const niche = form.querySelector("[name=niche_code]");
+      if (!industry || !sector || !niche) return;
+      const catalog = nicCatalog();
+      const paint = () => {
+        const industryId = industry.value;
+        const sectors = (catalog.sectors || []).filter((item) => !industryId || item.industry_id === industryId);
+        fillSelect(sector, sectors, sector.value || config.sector_code || "", "Select sector");
+        const sectorId = sector.value;
+        const niches = (catalog.niches || []).filter((item) => {
+          if (sectorId) return item.sector_id === sectorId;
+          if (industryId) return item.industry_id === industryId;
+          return false;
+        });
+        fillSelect(niche, niches, niche.value || config.niche_code || "", "All niches in this sector");
+      };
+      fillSelect(industry, catalog.industries || [], config.industry_code || "", "Select industry");
+      paint();
+      industry.addEventListener("change", () => {
+        sector.value = "";
+        niche.value = "";
+        paint();
+      });
+      sector.addEventListener("change", () => {
+        niche.value = "";
+        paint();
+      });
+    }
 
     function renderSessions() {
       const html = state.mandates.map((mandate) => {
@@ -441,6 +681,29 @@
       }).join("");
       document.getElementById("sessions").innerHTML = html || `<p class="note">No saved mandates.</p>`;
       renderDeskNav();
+      bindProjectHandoff();
+    }
+
+    function deskHandoff() {
+      const targets = state.targets || [];
+      const byId = (id) => targets.find((item) => item.entity_id === id);
+      const draft = (state.outreach || []).find((item) => item.draft_id === state.selectedDraftId);
+      const chosen = byId(state.contractEntityId) || byId(state.selectedEntityId) || targets[0];
+      const name = (chosen?.name || draft?.company || "").trim();
+      const geo = ((state.config?.geography || [])[0] || "").trim();
+      return { name, geo, query: [name, geo].filter(Boolean).join(", ") };
+    }
+
+    function bindProjectHandoff() {
+      const ctx = deskHandoff();
+      document.querySelectorAll("a.session[data-base]").forEach((link) => {
+        const url = new URL(link.dataset.base, window.location.origin);
+        if (ctx.name) url.searchParams.set("q", ctx.name);
+        if (ctx.geo) url.searchParams.set("geo", ctx.geo);
+        link.href = url.toString();
+        const hint = link.querySelector("small");
+        if (hint && ctx.name) hint.textContent = `Open ${ctx.name}`;
+      });
     }
 
     function pendingDrafts() {
@@ -457,8 +720,13 @@
       if (!nav) return;
       const realEstate = state.config?.focus === "real-estate";
       const disabled = !state.activeMandateId || busy || state.creating ? " disabled" : "";
+      const mcaButton = `
+        <button class="session${state.view === "mca" ? " active" : ""}" type="button" data-view="mca">
+          <b>MCA registry</b>
+          <small>Filter the company master, then enrich a CIN</small>
+        </button>`;
       if (realEstate) {
-        nav.innerHTML = `<p class="note">Outreach is for operating-company mandates.</p>`;
+        nav.innerHTML = `<p class="note">Outreach is for operating-company mandates.</p>${mcaButton}`;
         return;
       }
       const drafts = (state.outreach || []).slice().reverse();
@@ -486,10 +754,20 @@
           <b>Inbox</b>${pending ? `<span class="badge">${pending}</span>` : ""}
           <small>${esc(inboxHint)}</small>
         </button>
+        <button class="session${state.view === "contracts" ? " active" : ""}" type="button" data-view="contracts"${disabled}>
+          <b>Contract origination</b>
+          <small>Find contracts this client could win</small>
+        </button>
+        ${mcaButton}
         <div class="inbox-menu">${items}</div>`;
     }
 
     function renderWorkspace() {
+      syncContractsLayout();
+      if (state.view === "mca") {
+        renderMcaWorkspace();
+        return;
+      }
       const config = state.config;
       if (!config) {
         workspace.innerHTML = `<header><div><h2>Workspace</h2><strong>Mandate</strong></div></header><p class="note">Loading the mandate.</p>`;
@@ -499,9 +777,6 @@
         const focuses = (config.focuses || []).map((item) => `<option value="${esc(item.id)}"${item.id === config.focus ? " selected" : ""}>${esc(item.label)}</option>`).join("");
         const currencies = (config.currencies || []).map((code) => `<option value="${esc(code)}"${code === config.currency ? " selected" : ""}>${esc(code)}</option>`).join("");
         const revenueScales = (config.revenue_scales || ["million", "billion", "crore"]).map((unit) => `<option value="${esc(unit)}"${unit === config.revenue_scale ? " selected" : ""}>${esc(pretty(unit))}</option>`).join("");
-        const selectedSectorCodes = new Set(config.sector_codes || []);
-        const sectors = (config.sector_catalog || []).map((item) => `<label><input type="checkbox" name="sector_codes" value="${esc(item.id)}"${selectedSectorCodes.has(item.id) ? " checked" : ""} /> ${esc(item.label)}</label>`).join("");
-        const sectorSummary = config.sector?.length ? `${config.sector.length} selected` : "Select NIC sectors";
         const assets = (config.asset_catalog || []).map((item) => `<label><input type="checkbox" name="asset_types" value="${esc(item.id)}"${config.asset_types.includes(item.id) ? " checked" : ""} /> ${esc(item.label)}</label>`).join("");
         workspace.innerHTML = `
           <header><div><h2>Workspace</h2><strong>${state.creating ? "New mandate" : "Edit mandate"}</strong></div></header>
@@ -511,13 +786,10 @@
             <label class="field">Geography <input name="geography" value="${esc(config.geography.join(", "))}" required /></label>
             <label class="field">Currency <select name="currency">${currencies}</select></label>
             <div data-panel="operating-company">
-              <div class="field">Sectors
-                <details class="multi-select">
-                  <summary data-sector-summary>${esc(sectorSummary)}</summary>
-                  <div class="multi-options">${sectors}</div>
-                </details>
-                <span>NIC 2008 codes drive MCA discovery for India. Elsewhere, the labels guide web research.</span>
-              </div>
+              <label class="field">Industry <select name="industry_code"></select></label>
+              <label class="field">Sector <select name="sector_code"></select></label>
+              <label class="field">Niche <select name="niche_code"></select></label>
+              <p class="note">NIC 2025 section, division, and group. The lists come from config/nic JSON files.</p>
               <label class="field">Revenue unit <select name="revenue_scale">${revenueScales}</select></label>
               <label class="field">Revenue minimum <input name="revenue_min" type="number" min="0" value="${esc(config.revenue_min)}" /></label>
               <label class="field">Revenue maximum <input name="revenue_max" type="number" min="1" value="${esc(config.revenue_max)}" /></label>
@@ -541,12 +813,7 @@
         form.querySelector("[name=focus]").addEventListener("change", (event) => {
           form.dataset.focus = event.target.value;
         });
-        form.querySelectorAll("[name=sector_codes]").forEach((checkbox) => {
-          checkbox.addEventListener("change", () => {
-            const count = form.querySelectorAll("[name=sector_codes]:checked").length;
-            form.querySelector("[data-sector-summary]").textContent = count ? `${count} selected` : "Select NIC sectors";
-          });
-        });
+        bindNicSelects(form, config);
         form.addEventListener("submit", saveConfig);
         return;
       }
@@ -565,7 +832,9 @@
           <div>Exclude <b>${esc(labelList(config.exclude_assets, "None"))}</b></div>` : `
           <div>Buy box <b>Operating company</b></div>
           <div>Geography <b>${esc(pretty(config.geography[0]))}</b></div>
-          <div>Sectors <b>${esc(labelList(config.sector, ""))}</b></div>
+          <div>Industry <b>${esc(nicLabel("industries", config.industry_code, labelList(config.sector, "")))}</b></div>
+          <div>Sector <b>${esc(nicLabel("sectors", config.sector_code, ""))}</b></div>
+          <div>Niche <b>${esc(nicLabel("niches", config.niche_code, "All niches in this sector"))}</b></div>
           <div>Currency <b>${esc(config.currency)}</b></div>
           <div>Revenue <b>${esc(band)}</b></div>
           <div>Ownership <b>${esc(labelList(config.ownership, ""))}</b></div>
@@ -576,6 +845,10 @@
       }
       if (state.view === "inbox") {
         renderInboxWorkspace();
+        return;
+      }
+      if (state.view === "contracts") {
+        renderContractsWorkspace();
         return;
       }
       workspace.innerHTML = `
@@ -611,10 +884,10 @@
       }
       return targets.map((item) => {
         const tone = item.fit_label === "MANDATE_FIT" ? "good" : (item.fit_label === "FAILS_MANDATORY" ? "bad" : "");
-        return `<article class="dossier">
+        return `<article class="dossier${item.entity_id === state.selectedEntityId ? " selected" : ""}"${item.entity_id ? ` data-select-entity="${esc(item.entity_id)}"` : ""}>
           <h3>${esc(item.name)}</h3>
           <p class="fit ${tone}">${esc(item.fit)}</p>
-          ${item.entity_id && !realEstate ? `<div class="dossier-actions"><button class="back yes" type="button" data-prepare-outreach="${esc(item.entity_id)}"${state.outreachBusy || !state.outreachReadiness.ready ? " disabled" : ""}>Outreach</button></div>` : ""}
+          ${item.entity_id && !realEstate ? `<div class="dossier-actions"><button class="back yes" type="button" data-prepare-outreach="${esc(item.entity_id)}"${state.outreachBusy || !state.outreachReadiness.ready ? " disabled" : ""}>Outreach</button><button class="back" type="button" data-open-contracts="${esc(item.entity_id)}">Contract origination</button></div>` : ""}
         </article>`;
       }).join("");
     }
@@ -655,11 +928,11 @@
         <div class="block">
           <h2>Mandate-fit companies</h2>
           ${targets.length ? targets.map((item) => `
-            <article class="dossier">
+            <article class="dossier${item.entity_id === state.selectedEntityId ? " selected" : ""}"${item.entity_id ? ` data-select-entity="${esc(item.entity_id)}"` : ""}>
               <h3>${esc(item.name)}</h3>
               ${item.facts ? `<p>${esc(item.facts)}</p>` : ""}
               <p class="note">${esc(item.fit || "")}</p>
-              ${item.entity_id ? `<div class="dossier-actions"><button class="back yes" type="button" data-prepare-outreach="${esc(item.entity_id)}"${state.outreachBusy || blocked ? " disabled" : ""}>${state.outreachBusy ? "Finding contact…" : "Find decision-maker & write copy"}</button></div>` : ""}
+              ${item.entity_id ? `<div class="dossier-actions"><button class="back yes" type="button" data-prepare-outreach="${esc(item.entity_id)}"${state.outreachBusy || blocked ? " disabled" : ""}>${state.outreachBusy ? "Finding contact…" : "Find decision-maker & write copy"}</button><button class="back" type="button" data-open-contracts="${esc(item.entity_id)}">Contract origination</button></div>` : ""}
             </article>
           `).join("") : `<p class="note">Run the team first. Outreach only starts from a company that already fits this buy box.</p>`}
         </div>`;
@@ -679,13 +952,492 @@
         ${cards || `<p class="note">Inbox is empty. Open Outreach, pick a mandate-fit company, and let the agents find a contact and write copy.</p>`}`;
     }
 
+    function syncContractsLayout() {
+      const layout = document.getElementById("layout");
+      if (layout) {
+        layout.classList.toggle("contracts-open", state.view === "contracts");
+        layout.classList.toggle("mca-open", state.view === "mca");
+      }
+    }
+
+    function selectedOpportunity(desk) {
+      const rows = desk?.opportunities || [];
+      const chosen = rows.find((row) => row.id === state.selectedOpportunityId);
+      if (chosen) return chosen;
+      if ((state.contractPane || "signals") === "signals") return null;
+      return rows[0] || null;
+    }
+
+    function sourceLink(url, label) {
+      if (!url) return `<span>${esc(label || "Source not attached")}</span>`;
+      return `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label || url)}</a>`;
+    }
+
+    function renderContractsWorkspace() {
+      const targets = state.targets || [];
+      const desk = state.contractDesk;
+      if (state.contractsBusy) {
+        workspace.innerHTML = `
+          <header><div><h2>Contract origination</h2><strong>Building the desk</strong></div><div class="actions"><button class="back" type="button" data-view="mandate">Back to mandate</button></div></header>
+          <p class="note">Reading the last origination package for this account. Nothing is sent.</p>`;
+        return;
+      }
+      if (!desk) {
+        workspace.innerHTML = `
+          <header><div><h2>Contract origination</h2><strong>Pick an account</strong></div><div class="actions"><button class="back" type="button" data-view="mandate">Back to mandate</button></div></header>
+          <p class="note">The PE target is the buyer. The demo client is an Indian industrial automation seller (₹5–100cr, India + GCC). Open a mandate-fit company, or type “Find contract opportunities for this company.”</p>
+          ${state.contractsError ? `<p class="outreach-error">${esc(state.contractsError)}</p>` : ""}
+          <div class="block">
+            <h2>Mandate-fit companies</h2>
+            ${targets.length ? targets.map((item) => `
+              <article class="dossier">
+                <h3>${esc(item.name)}</h3>
+                <p class="note">${esc(item.fit || "")}</p>
+                ${item.entity_id ? `<div class="dossier-actions"><button class="back yes" type="button" data-open-contracts="${esc(item.entity_id)}">Open contract desk</button></div>` : ""}
+              </article>`).join("") : `<p class="note">Run the team first. Contract origination does not invent accounts.</p>`}
+          </div>`;
+        return;
+      }
+      const client = desk.client || {};
+      const funnel = desk.funnel || {};
+      const pane = state.contractPane || "signals";
+      const opportunity = selectedOpportunity(desk);
+      const kindLabel = {
+        capacity: "Plant / capacity",
+        transaction: "Transaction / JV",
+        footprint: "Site",
+        process: "Products",
+        demand: "Customers",
+        trigger: "Funding / trigger"
+      };
+      const signalRows = (desk.signals || []).map((row) => `
+        <button class="signal-row${row.id === state.selectedSignalId ? " active" : ""}" type="button" data-select-signal="${esc(row.id)}">
+          <small>${esc(kindLabel[row.kind] || row.kind)} · ${esc(row.date_label || "Date not sourced")}${row.fresh ? "" : " · Historical"}</small>
+          <span>${esc(row.value || row.title)}</span>
+        </button>`).join("");
+      const visibleOpps = (desk.opportunities || []).filter((row) => pane !== "qualified" || row.fit?.label === "QUALIFIED");
+      const cards = visibleOpps.map((row) => `
+        <button class="opp-card${opportunity && row.id === opportunity.id ? " active" : ""}" type="button" data-select-opportunity="${esc(row.id)}">
+          <h3>${esc(row.title)}</h3>
+          <div class="opp-meta">
+            <span>Date <b>${esc(row.date_label || row.signal?.date_label || "Date not sourced")}</b></span>
+            <span>Trigger <b>${esc(row.trigger)}</b></span>
+            <span>Stage <b>${esc(row.stage)}</b></span>
+            <span>Fit <b>${esc(row.fit?.score ?? "—")}/100 · ${esc(row.fit?.label || "")}</b></span>
+            <span>${esc(row.fit?.value_note || "")}</span>
+          </div>
+        </button>`).join("");
+      const chain = ((opportunity && opportunity.procurement_chain) || []).map((node) => `
+        <li class="${node.known ? "known" : ""}"><b>${esc(node.role)}</b> — ${esc(node.name)}</li>`).join("");
+      const people = ((opportunity && opportunity.people) || desk.people || []).map((person) => `
+        <li>${esc(person.name)} — ${esc(person.role)}${person.source_url ? ` · ${sourceLink(person.source_url, "source")}` : ""}</li>`).join("");
+      const stages = (desk.pursuit || []).map((stage) => `
+        <span class="${opportunity && stage === opportunity.stage ? "now" : ""}">${esc(stage)}</span>`).join("");
+      const selectedSignal = (desk.signals || []).find((row) => row.id === state.selectedSignalId) || null;
+      const signal = opportunity?.signal || selectedSignal || {};
+      workspace.innerHTML = `
+        <header><div><h2>Contract origination</h2><strong>${esc(desk.account?.name || "Account")}</strong></div><div class="actions"><button class="back" type="button" data-view="mandate">Back to mandate</button></div></header>
+        <div class="client-box">
+          <h2>Demo client</h2>
+          <p>${esc(client.name || "Aveyroni Industrial Automation")}</p>
+          <p class="note">${esc(client.summary || "")}</p>
+          <div class="opp-meta">
+            <span>Mandate <b>₹${esc(client.contract_min_inr_cr)}–${esc(client.contract_max_inr_cr)}cr · ${esc((client.geography || []).join(", "))} · ${esc((client.products || []).join(", "))}</b></span>
+          </div>
+        </div>
+        <div class="funnel-row">
+          <button class="funnel-card${pane === "signals" ? " active" : ""}" type="button" data-contract-pane="signals"><b>${esc(funnel.signals ?? 0)}</b><span>Signals found</span></button>
+          <button class="funnel-card${pane === "potential" ? " active" : ""}" type="button" data-contract-pane="potential"><b>${esc(funnel.potential ?? 0)}</b><span>Potential opportunities</span></button>
+          <button class="funnel-card${pane === "qualified" ? " active" : ""}" type="button" data-contract-pane="qualified"><b>${esc(funnel.qualified ?? 0)}</b><span>Qualified contracts</span></button>
+        </div>
+        ${state.contractsError ? `<p class="outreach-error">${esc(state.contractsError)}</p>` : ""}
+        ${pane === "signals" ? `<div class="block">
+          <h2>Signals</h2>
+          ${signalRows || `<p class="note">No sourced signals on this account yet.</p>`}
+        </div>` : `<div class="block">
+          <h2>${pane === "qualified" ? "Qualified contracts" : "Potential opportunities"}</h2>
+          ${cards || `<p class="note">None in this step of the funnel.</p>`}
+        </div>`}
+        ${opportunity ? `
+        <div class="trail-box">
+          <h2>Research trail</h2>
+          <p class="note">${esc(opportunity.note || "")}</p>
+          <div class="opp-meta">
+            <span>Date <b>${esc(opportunity.date_label || signal.date_label || "Date not sourced")}</b></span>
+            <span>Recommended action <b>${esc(opportunity.recommended_action)}</b></span>
+            <span>Procurement window <b>${esc(opportunity.fit?.window || "Unknown")}</b></span>
+            <span>Warm paths <b>${esc(opportunity.warm_paths ?? 0)}</b></span>
+          </div>
+          <h2>Procurement chain</h2>
+          <ul class="chain">${chain}</ul>
+          <h2>Buying committee</h2>
+          ${people ? `<ul class="people-list">${people}</ul>` : `<p class="note">No named people sourced yet. EPC and procurement stay unknown.</p>`}
+          <h2>Source</h2>
+          <ul class="source-list">
+            <li>${sourceLink(signal.source_url, signal.title || "Sourced signal")}${signal.excerpt ? ` — ${esc(signal.excerpt)}` : ""}</li>
+            <li>${esc(signal.inferred || "Ask what they might buy, when, and who controls the award.")}</li>
+          </ul>
+          <h2>Pursuit</h2>
+          <div class="stage-row">${stages}</div>
+          ${(opportunity.fit?.reasons || []).length ? `<ul class="people-list">${opportunity.fit.reasons.map((reason) => `<li>${esc(reason)}</li>`).join("")}</ul>` : ""}
+        </div>` : selectedSignal ? `
+        <div class="trail-box">
+          <h2>Signal</h2>
+          <p>${esc(selectedSignal.value || selectedSignal.title)}</p>
+          <p class="note">${esc(selectedSignal.fresh_note || selectedSignal.date_label || "Date not sourced")}</p>
+          <ul class="source-list">
+            <li>${sourceLink(selectedSignal.source_url, "Source")}${selectedSignal.excerpt ? ` — ${esc(selectedSignal.excerpt)}` : ""}</li>
+            <li>${esc(selectedSignal.inferred || "")}</li>
+          </ul>
+        </div>` : ""}`;
+    }
+
+    async function openContracts(entityId) {
+      if (!state.activeMandateId) return;
+      state.view = "contracts";
+      state.contractEntityId = entityId || state.contractEntityId || "";
+      if (state.contractEntityId) state.selectedEntityId = state.contractEntityId;
+      state.contractsError = "";
+      if (!state.contractEntityId) {
+        state.contractDesk = null;
+        renderSessions();
+        renderWorkspace();
+        return;
+      }
+      if (state.contractDesk?.account?.entity_id === state.contractEntityId && !entityId) {
+        renderSessions();
+        renderWorkspace();
+        return;
+      }
+      state.contractsBusy = true;
+      renderSessions();
+      renderWorkspace();
+      try {
+        const response = await fetch(`/api/contracts?mandate_id=${encodeURIComponent(state.activeMandateId)}&entity_id=${encodeURIComponent(state.contractEntityId)}`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Contract origination could not be opened.");
+        state.contractDesk = data.desk || null;
+        state.contractPane = "signals";
+        state.selectedOpportunityId = null;
+        state.selectedSignalId = null;
+      } catch (error) {
+        state.contractDesk = null;
+        state.contractsError = error.message;
+      } finally {
+        state.contractsBusy = false;
+        renderSessions();
+        renderWorkspace();
+      }
+    }
+
+    function captureMcaFilters() {
+      const form = document.getElementById("mca-form");
+      const searchBar = document.getElementById("mca-search");
+      if (!form) return state.mca.filters;
+      return {
+        search: searchBar?.search?.value.trim() || "",
+        q: form.q.value.trim(),
+        cin: form.cin.value.trim(),
+        company_class: form.company_class.value,
+        listing_status: form.listing_status.value,
+        company_status: form.company_status.value,
+        state: form.state.value,
+        nic: form.nic.value,
+        roc: form.roc.value,
+        category: form.category.value,
+        sub_category: form.sub_category.value,
+        origin: form.origin.value,
+        address: form.address.value.trim(),
+        industry: form.industry.value.trim(),
+        paidup_min_cr: form.paidup_min_cr.value.trim(),
+        paidup_max_cr: form.paidup_max_cr.value.trim(),
+        authorized_min_cr: form.authorized_min_cr.value.trim(),
+        authorized_max_cr: form.authorized_max_cr.value.trim(),
+        registered_from: form.registered_from.value.trim(),
+        registered_to: form.registered_to.value.trim(),
+        plc: form.plc.checked
+      };
+    }
+
+    function mcaQuery(filters, page) {
+      const params = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value === true) params.set(key, "true");
+        else if (value === false) params.set(key, "false");
+        else if (value || value === 0) params.set(key, value);
+      });
+      params.set("page", String(page || 1));
+      params.set("page_size", String(state.mca.page_size || 25));
+      return params.toString();
+    }
+
+    async function loadMca(page = state.mca.page || 1, refreshFilters = true) {
+      const filters = refreshFilters ? captureMcaFilters() : state.mca.filters;
+      state.mca.filters = filters;
+      state.mca.page = page;
+      state.mca.busy = true;
+      state.mca.error = "";
+      renderSessions();
+      renderWorkspace();
+      try {
+        const response = await fetch(`/api/mca?${mcaQuery(filters, page)}`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "MCA registry could not be queried.");
+        state.mca.rows = data.rows || [];
+        state.mca.total = data.total || 0;
+        state.mca.pages = data.pages || 1;
+        state.mca.page = data.page || page;
+        state.mca.page_size = data.page_size || 25;
+        state.mca.options = data.options || state.mca.options;
+        state.mca.readiness = data.readiness || state.mca.readiness;
+        if (data.filters) state.mca.filters = { ...state.mca.filters, ...data.filters, plc: Boolean(data.filters.plc) };
+      } catch (error) {
+        state.mca.error = error.message;
+      } finally {
+        state.mca.busy = false;
+        renderSessions();
+        renderWorkspace();
+      }
+    }
+
+    async function openMca() {
+      state.view = "mca";
+      renderSessions();
+      renderWorkspace();
+      if (!state.mca.rows.length && !state.mca.error) {
+        await loadMca(1, false);
+      }
+    }
+
+    async function enrichMca(cin) {
+      state.mca.selectedCin = cin;
+      state.mca.enriching = cin;
+      state.mca.error = "";
+      renderWorkspace();
+      try {
+        const response = await fetch("/api/mca/enrich", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cin })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Foxlabs enrichment failed.");
+        state.mca.enrichments[cin] = data.enrichment;
+        if (data.readiness) state.mca.readiness = data.readiness;
+      } catch (error) {
+        state.mca.error = error.message;
+      } finally {
+        state.mca.enriching = "";
+        renderWorkspace();
+      }
+    }
+
+    function optionList(values, selected, blank) {
+      const items = (values || []).map((item) => {
+        const id = typeof item === "string" ? item : item.id;
+        const label = typeof item === "string" ? item : item.label;
+        return `<option value="${esc(id)}"${id === selected ? " selected" : ""}>${esc(label)}</option>`;
+      }).join("");
+      return `<option value="">${esc(blank)}</option>${items}`;
+    }
+
+    function mcaReadinessBanner() {
+      const ready = state.mca.readiness || {};
+      if (ready.ready && ready.enrich_ready) return "";
+      const items = [...(ready.missing || []), ...(ready.enrich_missing || [])].map((line) => `<li>${esc(line)}</li>`).join("");
+      return `<div class="readiness-banner">
+        <b>${ready.ready ? "Enrichment is blocked" : "MCA search is blocked"}</b>
+        ${ready.ready ? "The company table can load. Foxlabs will not run until the token is present. Cached enrichments still open." : "The company table cannot load until the MCA database is configured."}
+        <ul>${items}</ul>
+      </div>`;
+    }
+
+    function mcaEnrichmentHtml(row) {
+      const enrichment = state.mca.enrichments[row.cin];
+      if (state.mca.enriching === row.cin) {
+        return `<p class="note">Calling Foxlabs for ${esc(row.cin)}. Cached CINs are not billed again. $0.004 if this is a new delivered row.</p>`;
+      }
+      if (!enrichment) return "";
+      const charges = (enrichment.charges || []).map((item) => `<tr><td>${esc(item.date)}</td><td>${esc(item.amount)}</td><td>${esc(item.holder)}</td></tr>`).join("");
+      const directors = (enrichment.directors || []).map((item) => `<tr><td>${esc(item.name)}</td><td>${esc(item.din)}</td><td>${esc(item.designation)}</td><td>${esc(item.tenure)}</td></tr>`).join("");
+      const locations = (enrichment.locations || []).map((item) => `<tr><td>${esc(item.type)}</td><td>${esc(item.address)}</td><td>${esc(item.state)}</td><td>${esc(item.pincode)}</td></tr>`).join("");
+      const subsidiaries = (enrichment.subsidiaries || []).map((item) => `<tr><td>${esc(item.name)}</td><td>${esc(item.cin)}</td><td>${esc(item.status)}</td></tr>`).join("");
+      return `<div class="mca-enrich">
+        <div class="kv">
+          <div>Class <b>${esc(enrichment.company_class || "—")}</b></div>
+          <div>Status <b>${esc(enrichment.status || "—")}</b></div>
+          <div>Revenue <b>${esc(enrichment.revenue || "Not on the public Tofler page")}</b></div>
+          <div>Revenue FY <b>${esc(enrichment.revenue_fy_end || "—")}</b></div>
+          <div>EBITDA change <b>${esc(enrichment.ebitda_change_pct || "—")}</b></div>
+          <div>Net worth change <b>${esc(enrichment.networth_change_pct || "—")}</b></div>
+          <div>Paid-up <b>${esc(enrichment.paidup || "—")}</b></div>
+          <div>Authorised <b>${esc(enrichment.authorized || "—")}</b></div>
+          <div>Currency <b>${esc(enrichment.currency || "—")}</b></div>
+          <div>Incorporated <b>${esc(enrichment.incorporation_date || "—")}</b></div>
+          <div>Age <b>${esc(enrichment.age_years || "—")}</b></div>
+          <div>Last AGM <b>${esc(enrichment.last_agm_date || "—")}</b></div>
+          <div>State <b>${esc(enrichment.registered_state || "—")}</b></div>
+          <div>Pincode <b>${esc(enrichment.registered_pincode || "—")}</b></div>
+          <div>Email <b>${esc(enrichment.email || "Not sourced")}</b></div>
+          <div>Description <b>${esc(enrichment.description || "—")}</b></div>
+          <div>Balance sheet <b>${esc(enrichment.balance_sheet || "Not on the public page")}</b></div>
+          <div>Source <b>${esc(enrichment.source || "foxlabs")}${enrichment.cached ? " · cached" : ""}</b></div>
+          <div>Scraped <b>${esc(enrichment.scraped_at || "—")}</b></div>
+        </div>
+        <div class="mca-subtable">
+          <table>
+            <thead><tr><th>Charge date</th><th>Amount</th><th>Holder</th></tr></thead>
+            <tbody>${charges || `<tr><td colspan="3">No charges on the public page.</td></tr>`}</tbody>
+          </table>
+        </div>
+        <div class="mca-subtable">
+          <table>
+            <thead><tr><th>Director</th><th>DIN</th><th>Designation</th><th>Tenure</th></tr></thead>
+            <tbody>${directors || `<tr><td colspan="4">No directors on the public page.</td></tr>`}</tbody>
+          </table>
+        </div>
+        <div class="mca-subtable">
+          <table>
+            <thead><tr><th>Location type</th><th>Address</th><th>State</th><th>Pincode</th></tr></thead>
+            <tbody>${locations || `<tr><td colspan="4">No locations on the public page.</td></tr>`}</tbody>
+          </table>
+        </div>
+        <div class="mca-subtable">
+          <table>
+            <thead><tr><th>Subsidiary</th><th>CIN</th><th>Status</th></tr></thead>
+            <tbody>${subsidiaries || `<tr><td colspan="3">No subsidiaries on the public page.</td></tr>`}</tbody>
+          </table>
+        </div>
+      </div>`;
+    }
+
+    function renderMcaWorkspace() {
+      const filters = state.mca.filters;
+      const options = state.mca.options || {};
+      const selected = (state.mca.rows || []).find((row) => row.cin === state.mca.selectedCin);
+      const rows = (state.mca.rows || []).map((row) => `
+        <tr class="${row.cin === state.mca.selectedCin ? "selected" : ""}">
+          <td class="name">${esc(row.name)}</td>
+          <td>${esc(row.cin)}</td>
+          <td>${esc(row.roc)}</td>
+          <td>${esc(row.category)}</td>
+          <td>${esc(row.sub_category)}</td>
+          <td>${esc(row.company_class)}</td>
+          <td>${esc(row.authorized)}</td>
+          <td>${esc(row.paidup)}</td>
+          <td>${esc(row.registration_date)}</td>
+          <td class="name">${esc(row.address)}</td>
+          <td>${esc(row.listing_status)}</td>
+          <td>${esc(row.company_status)}</td>
+          <td>${esc(row.state)}</td>
+          <td>${esc(row.origin)}</td>
+          <td>${esc(row.nic_code)}</td>
+          <td class="name">${esc(row.industry)}</td>
+          <td>${esc(row.source)}</td>
+          <td>${esc(row.updated_at)}</td>
+          <td><button class="mca-enrich-btn${state.mca.enrichments[row.cin] ? " done" : ""}" type="button" data-mca-enrich="${esc(row.cin)}"${state.mca.enriching === row.cin ? " disabled" : ""}>${state.mca.enrichments[row.cin] ? "Enriched" : state.mca.enriching === row.cin ? "Enriching…" : "Enrich"}</button></td>
+        </tr>`).join("");
+      workspace.innerHTML = `
+        <header><div><h2>MCA registry</h2><strong>${state.mca.total ? `${state.mca.total.toLocaleString()} companies` : "Company master extract"}</strong></div><div class="actions"><button class="back" type="button" data-view="mandate">Back to mandate</button></div></header>
+        ${mcaReadinessBanner()}
+        ${state.mca.error ? `<p class="outreach-error">${esc(state.mca.error)}</p>` : ""}
+        <form id="mca-search" class="mca-search">
+          <input name="search" value="${esc(filters.search || "")}" placeholder="Search any company by name or CIN" autocomplete="off" />
+          <button class="save" type="submit">Search</button>
+        </form>
+        <form id="mca-form" class="mca-filters">
+          <label class="field">Name <input name="q" value="${esc(filters.q || "")}" placeholder="Company name" /></label>
+          <label class="field">CIN <input name="cin" value="${esc(filters.cin || "")}" placeholder="21-character CIN" /></label>
+          <label class="field">Address <input name="address" value="${esc(filters.address || "")}" placeholder="Registered office" /></label>
+          <label class="field">Industry text <input name="industry" value="${esc(filters.industry || "")}" placeholder="Industrial classification" /></label>
+          <label class="field">Class <select name="company_class">${optionList(options.company_class, filters.company_class, "Any class")}</select></label>
+          <label class="field">Listing <select name="listing_status">${optionList(options.listing_status, filters.listing_status, "Any listing")}</select></label>
+          <label class="field">Status <select name="company_status">${optionList(options.company_status, filters.company_status, "Any status")}</select></label>
+          <label class="field">State <select name="state">${optionList(options.state, filters.state, "Any state")}</select></label>
+          <label class="field">ROC <select name="roc">${optionList(options.roc, filters.roc, "Any ROC")}</select></label>
+          <label class="field">Category <select name="category">${optionList(options.category, filters.category, "Any category")}</select></label>
+          <label class="field">Sub-category <select name="sub_category">${optionList(options.sub_category, filters.sub_category, "Any sub-category")}</select></label>
+          <label class="field">Origin <select name="origin">${optionList(options.origin, filters.origin, "Any origin")}</select></label>
+          <label class="field">NIC sector <select name="nic">${optionList(options.nic, filters.nic, "Any NIC sector")}</select></label>
+          <label class="field">Paid-up min (₹ cr) <input name="paidup_min_cr" type="number" min="0" step="0.01" value="${esc(filters.paidup_min_cr ?? "")}" /></label>
+          <label class="field">Paid-up max (₹ cr) <input name="paidup_max_cr" type="number" min="0" step="0.01" value="${esc(filters.paidup_max_cr ?? "")}" /></label>
+          <label class="field">Authorised min (₹ cr) <input name="authorized_min_cr" type="number" min="0" step="0.01" value="${esc(filters.authorized_min_cr ?? "")}" /></label>
+          <label class="field">Authorised max (₹ cr) <input name="authorized_max_cr" type="number" min="0" step="0.01" value="${esc(filters.authorized_max_cr ?? "")}" /></label>
+          <label class="field">Registered from <input name="registered_from" value="${esc(filters.registered_from || "")}" placeholder="2018 or 2018-04-01" /></label>
+          <label class="field">Registered to <input name="registered_to" value="${esc(filters.registered_to || "")}" placeholder="2024 or 2024-12-31" /></label>
+          <label class="field checks"><span></span><label><input name="plc" type="checkbox"${filters.plc ? " checked" : ""} /> Public limited (PLC in CIN)</label></label>
+          <div class="mca-actions"><button class="save" type="submit">Search</button></div>
+        </form>
+        <div class="mca-table-wrap">
+          <table class="mca-table">
+            <thead><tr><th>Company</th><th>CIN</th><th>ROC</th><th>Category</th><th>Sub-category</th><th>Class</th><th>Authorised</th><th>Paid-up</th><th>Registered</th><th>Address</th><th>Listing</th><th>Status</th><th>State</th><th>Origin</th><th>NIC</th><th>Industry</th><th>Source</th><th>Updated</th><th></th></tr></thead>
+            <tbody>${state.mca.busy ? `<tr><td colspan="19">Loading the MCA extract…</td></tr>` : rows || `<tr><td colspan="19">No companies match these filters.</td></tr>`}</tbody>
+          </table>
+        </div>
+        <div class="mca-pager">
+          <span class="note">Page ${esc(state.mca.page)} of ${esc(state.mca.pages)}</span>
+          <div class="actions">
+            <button class="back" type="button" data-mca-page="${Math.max(1, (state.mca.page || 1) - 1)}"${state.mca.page <= 1 || state.mca.busy ? " disabled" : ""}>Previous</button>
+            <button class="back" type="button" data-mca-page="${Math.min(state.mca.pages || 1, (state.mca.page || 1) + 1)}"${state.mca.page >= (state.mca.pages || 1) || state.mca.busy ? " disabled" : ""}>Next</button>
+          </div>
+        </div>
+        ${selected ? `<div class="block"><h2>${esc(selected.name)}</h2><p class="note">${esc(selected.address || "")}</p>${mcaEnrichmentHtml(selected)}</div>` : ""}`;
+      const searchForm = document.getElementById("mca-search");
+      if (searchForm) {
+        searchForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const term = searchForm.search.value.trim();
+          state.mca.filters = {
+            ...state.mca.filters,
+            search: term,
+            q: "",
+            cin: "",
+            company_class: "",
+            listing_status: "",
+            company_status: "",
+            state: "",
+            nic: "",
+            roc: "",
+            category: "",
+            sub_category: "",
+            origin: "",
+            address: "",
+            industry: "",
+            paidup_min_cr: "",
+            paidup_max_cr: "",
+            authorized_min_cr: "",
+            authorized_max_cr: "",
+            registered_from: "",
+            registered_to: "",
+            plc: false
+          };
+          loadMca(1, false).catch((error) => {
+            state.mca.error = error.message;
+            renderWorkspace();
+          });
+        });
+      }
+      const form = document.getElementById("mca-form");
+      if (form) {
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          loadMca(1, true).catch((error) => {
+            state.mca.error = error.message;
+            renderWorkspace();
+          });
+        });
+      }
+    }
+
     async function saveConfig(event) {
       event.preventDefault();
       const form = event.currentTarget;
       const formData = new FormData(form);
       const body = Object.fromEntries(formData.entries());
       body.asset_types = formData.getAll("asset_types");
-      body.sector_codes = formData.getAll("sector_codes");
+      body.industry_code = formData.get("industry_code") || "";
+      body.sector_code = formData.get("sector_code") || "";
+      body.niche_code = formData.get("niche_code") || "";
       const error = document.getElementById("config-error");
       try {
         const creating = state.creating;
@@ -710,6 +1462,7 @@
           sessionId = null;
           clearThreadDom();
           state.targets = [];
+          state.selectedEntityId = null;
           state.outreach = [];
         }
         renderSessions();
@@ -730,6 +1483,7 @@
         const role = message.role === "user" ? "user" : "agent";
         addMessage(role, message.content ?? message.text ?? "");
       });
+      syncGoDeeperButtons();
     }
 
     function blankConfig(source) {
@@ -741,6 +1495,14 @@
         geography: [],
         sector: [],
         sector_codes: [],
+        industry_code: "",
+        sector_code: "",
+        niche_code: "",
+        nic_catalog: source?.nic_catalog || { industries: [], sectors: [], niches: [] },
+        focuses: source?.focuses,
+        currencies: source?.currencies,
+        revenue_scales: source?.revenue_scales,
+        asset_catalog: source?.asset_catalog,
         revenue_min: "",
         revenue_max: "",
         revenue_scale: source?.revenue_scale || "million",
@@ -777,6 +1539,8 @@
       state.activeMandateId = mandateId;
       state.config = configData.config || configData;
       state.targets = targetsData.targets || [];
+      state.selectedEntityId = (state.targets[0] && state.targets[0].entity_id) || null;
+      state.deep = targetsData.deep || {};
       state.outreach = outreachData.drafts || [];
       state.outreachReadiness = outreachData.readiness || { ready: false, missing: ["Outreach configuration"] };
       state.outreachError = "";
@@ -786,6 +1550,10 @@
       state.attached = "";
       state.view = "mandate";
       state.selectedDraftId = null;
+      state.contractDesk = null;
+      state.selectedOpportunityId = null;
+      state.contractEntityId = null;
+      state.contractsError = "";
       sessionId = historyData.session_id || null;
       renderHistory(historyData.messages || []);
       renderSessions();
@@ -804,8 +1572,14 @@
       sessionId = null;
       state.attached = "";
       state.targets = [];
+      state.selectedEntityId = null;
       state.outreach = [];
       state.outreachError = "";
+      state.contractDesk = null;
+      state.selectedOpportunityId = null;
+      state.contractEntityId = null;
+      state.contractsError = "";
+      state.view = "mandate";
       clearThreadDom();
       renderWorkspace();
     }
@@ -903,9 +1677,67 @@
       if (!value) return "";
       return `<div class="section"><h4>${esc(title)}</h4><p>${esc(value)}</p></div>`;
     }
+    function memoHeading(title) {
+      const lower = String(title || "").toLowerCase();
+      if (/overstated|unsupported|inadequately supported/.test(lower)) return "Overstated";
+      if (/conflict|contradiction|inconsistenc/.test(lower)) return "Conflicts";
+      if (/what holds|trust/.test(lower)) return "What holds";
+      if (/still unknown|^unknown$/.test(lower)) return "Still unknown";
+      return title.replace(/:$/, "");
+    }
+    function memoHtml(title, text) {
+      let raw = String(text || "").trim();
+      if (!raw) return "";
+      raw = raw.replace(/^(Evidence audit|Outreach intelligence)(\s*[—–-]\s*)?/i, "");
+      raw = raw.replace(/\s+-\s+/g, "\n- ");
+      raw = raw.replace(/^#{1,3}\s+/gm, "");
+      const blocks = [];
+      let list = [];
+      let para = [];
+      const flushList = () => {
+        if (!list.length) return;
+        blocks.push(`<ul>${list.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>`);
+        list = [];
+      };
+      const flushPara = () => {
+        if (!para.length) return;
+        blocks.push(`<p>${esc(para.join(" "))}</p>`);
+        para = [];
+      };
+      for (const line of raw.split("\n")) {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          flushList();
+          flushPara();
+          continue;
+        }
+        const body = trimmed.replace(/^[-•]\s*/, "");
+        const lower = body.toLowerCase();
+        if (/evidence_ids|evidence_completeness|financial_confirmation|fit_label|fit_score|fit label, fit score|mandatory screening|evidence arrays/.test(lower)) {
+          continue;
+        }
+        if (/^[-•]\s/.test(trimmed)) {
+          flushPara();
+          list.push(body);
+          continue;
+        }
+        if (/:$/.test(trimmed) || /^(What holds|Overstated|Still unknown|Conflicts)$/i.test(trimmed)) {
+          flushList();
+          flushPara();
+          blocks.push(`<h5>${esc(memoHeading(trimmed))}</h5>`);
+          continue;
+        }
+        flushList();
+        para.push(trimmed);
+      }
+      flushList();
+      flushPara();
+      if (!blocks.length) return "";
+      return `<div class="section memo"><h4>${esc(title)}</h4>${blocks.join("")}</div>`;
+    }
     function looksLikeReport(text) {
       const value = String(text || "");
-      return /Why it fits|Market thesis|Nothing was sent/.test(value);
+      return /Why it fits|Market thesis|Deeper pass|Nothing was sent/.test(value);
     }
     function reportHtml(text, targets) {
       const lines = String(text || "").split("\n").map((line) => line.trim()).filter(Boolean);
@@ -922,14 +1754,45 @@
           ${sectionBlock("Facts", item.facts, [])}
           ${sectionBlock("Process", item.transaction, [])}
           ${sectionBlock("Seller interest", item.seller, ["Seller interest (signals only):"])}
+          ${sectionBlock("Legal identity", item.identity, [])}
+          ${sectionBlock("Company profile", item.profile, [])}
+          ${sectionBlock("Financials", item.financials, [])}
+          ${sectionBlock("Transaction history", item.history, [])}
+          ${sectionBlock("Seller signals", item.signals, [])}
+          ${sectionBlock("Relationships", item.relationships, [])}
+          ${sectionBlock("Monitoring", item.monitor, [])}
           ${sectionBlock("Source", item.source, ["Source:"])}
         </article>`;
       }).join("");
+      const deep = state.deep || {};
+      const market = (deep.market_map || []).map((line) => `<p>${esc(line)}</p>`).join("");
+      const extras = [
+        market ? `<div class="section"><h4>Market map</h4>${market}</div>` : "",
+        memoHtml("Evidence audit", deep.evidence_audit),
+        memoHtml("Outreach intelligence", deep.outreach_intelligence),
+      ].join("");
       return `<div class="report">
         <header class="report-head"><h2>${esc(title)}</h2>${summary ? `<p>${esc(summary)}</p>` : ""}</header>
+        ${extras}
         ${cards}
         <p class="report-foot">Nothing was sent.</p>
+        ${canGoDeeper(text) ? `<div class="actions"><button class="back yes" type="button" data-go-deeper>Go Deeper</button></div>` : ""}
       </div>`;
+    }
+    function hasDeepened() {
+      const deep = state.deep || {};
+      return Boolean((deep.market_map && deep.market_map.length) || deep.evidence_audit || deep.outreach_intelligence);
+    }
+    function canGoDeeper(text) {
+      if (!(state.targets || []).length || hasDeepened()) return false;
+      return !/Deeper pass/i.test(String(text || ""));
+    }
+    function syncGoDeeperButtons() {
+      const deepBtn = document.getElementById("deep");
+      if (deepBtn) deepBtn.hidden = !canGoDeeper();
+      if (hasDeepened()) {
+        document.querySelectorAll("[data-go-deeper]").forEach((button) => button.closest(".actions")?.remove());
+      }
     }
     function paintAgentBody(body, text) {
       if (!body) return;
@@ -1021,14 +1884,14 @@
       const card = addCard(
         `<button class="trace-toggle" type="button" data-trace-toggle>` +
         `<span class="chevron">\u25be</span><h3>Agent trace</h3>` +
-        `<span class="summary-inline" data-summary-inline></span></button>` +
+        `<span class="summary-inline live-wait" data-summary-inline>Running</span></button>` +
         `<div class="trace-body" data-trace-body>` +
         `<div class="legend">${legend}</div><ul class="stages" data-trace></ul>` +
         `<div class="actions"><button type="button" data-stop>Stop run</button></div>` +
         `<div class="trace-summary" data-summary hidden></div>` +
         `</div>`
       );
-      card.classList.add("trace-card");
+      card.classList.add("trace-card", "live");
       const list = card.querySelector("[data-trace]");
       const summaryEl = card.querySelector("[data-summary]");
       const summaryInlineEl = card.querySelector("[data-summary-inline]");
@@ -1142,6 +2005,8 @@
           thread.scrollTop = thread.scrollHeight;
         },
         finish() {
+          card.classList.remove("live");
+          summaryInlineEl.classList.remove("live-wait");
           stopButton.hidden = true; // the run is over; a live "Stop run" control no longer makes sense
           if (!list.children.length) {
             const row = document.createElement("li");
@@ -1186,12 +2051,14 @@
       abort = new AbortController();
       const run = traceCard();
       const reply = addMessage("agent", "");
+      reply.innerHTML = `<span class="live-wait">Working</span>`;
       try {
-        const suffix = endpoint === "/api/orchestrate" ? "orchestrate" : "chat";
+        const suffix = endpoint === "/api/orchestrate" ? "orchestrate" : (endpoint === "/api/deepen" ? "deepen" : "chat");
+        if (suffix === "orchestrate") state.deep = {};
         const response = await fetch(`/api/${suffix}?mandate_id=${encodeURIComponent(state.activeMandateId)}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: suffix === "orchestrate" ? "{}" : JSON.stringify({ message }),
+          body: suffix === "chat" ? JSON.stringify({ message }) : "{}",
           signal: abort.signal
         });
         if (!response.ok) {
@@ -1216,9 +2083,12 @@
             if (event.subagent) run.subagent(event.subagent);
             if (event.targets) {
               state.targets = event.targets;
+              if (event.deep) state.deep = event.deep;
               if (!state.editing) renderWorkspace();
             }
+            if (event.deep && !event.targets) state.deep = event.deep;
             if (event.delta) {
+              if (reply.querySelector(".live-wait")) reply.textContent = "";
               reply.textContent += event.delta;
               thread.scrollTop = thread.scrollHeight;
             }
@@ -1226,10 +2096,13 @@
           }
         }
         run.finish();
+        const wait = reply.querySelector(".live-wait");
+        if (wait) wait.remove();
         if (!reply.textContent.trim() && !reply.querySelector(".report")) reply.textContent = "The desk returned an empty reply.";
         else if (looksLikeReport(reply.textContent) && (state.targets || []).length) {
           paintAgentBody(reply, reply.textContent);
         }
+        syncGoDeeperButtons();
       } catch (error) {
         if (error.name === "AbortError") reply.textContent = "Run stopped. Nothing was sent outside this desk.";
         else {
@@ -1257,6 +2130,23 @@
       input.value = "";
       const note = state.attached ? `File name only, contents not uploaded: ${state.attached}\n\n` : "";
       state.attached = "";
+      if (/browse mca|mca registry|company master/i.test(message)) {
+        addMessage("user", note + message);
+        addMessage("agent", "Opening the MCA registry. Filter the extract, then Enrich a row to pull Foxlabs charges and directors. Cached CINs are not billed again.");
+        openMca();
+        return;
+      }
+      if (/find contract opportunities/i.test(message)) {
+        addMessage("user", note + message);
+        const entityId = state.contractEntityId || (state.targets || [])[0]?.entity_id;
+        if (!entityId) {
+          addMessage("agent", "Run the team first so a mandate-fit company is on the board. Contract origination does not invent accounts, and nothing is sent.");
+          return;
+        }
+        addMessage("agent", "Opening the contract-origination desk on the boarded company. Signal Hunter reads the last package. Hermes layers stay attached for the next live pass. Nothing is sent.");
+        openContracts(entityId);
+        return;
+      }
       ask(note + message);
     });
     input.addEventListener("keydown", (event) => {
@@ -1266,15 +2156,58 @@
       }
     });
     document.body.addEventListener("click", (event) => {
+      const entityCard = event.target.closest("[data-select-entity]");
+      if (entityCard && !event.target.closest("button, a")) {
+        state.selectedEntityId = entityCard.dataset.selectEntity;
+        renderWorkspace();
+        bindProjectHandoff();
+        return;
+      }
       const button = event.target.closest("button");
       if (!button) return;
       if (button.dataset.mandateId) {
         selectMandate(button.dataset.mandateId).catch((error) => addMessage("agent error", error.message));
       }
       if (button.dataset.view) {
+        if (button.dataset.view === "contracts") {
+          openContracts(state.contractEntityId || (state.targets || [])[0]?.entity_id || "");
+          return;
+        }
+        if (button.dataset.view === "mca") {
+          openMca();
+          return;
+        }
         state.view = button.dataset.view;
         state.selectedDraftId = null;
         renderSessions();
+        renderWorkspace();
+      }
+      if (button.dataset.openContracts) {
+        openContracts(button.dataset.openContracts);
+      }
+      if (button.dataset.contractPane) {
+        state.contractPane = button.dataset.contractPane;
+        renderWorkspace();
+      }
+      if (button.dataset.mcaPage) {
+        loadMca(Number(button.dataset.mcaPage) || 1, true).catch((error) => {
+          state.mca.error = error.message;
+          renderWorkspace();
+        });
+      }
+      if (button.dataset.mcaEnrich) {
+        enrichMca(button.dataset.mcaEnrich);
+      }
+      if (button.dataset.selectSignal) {
+        state.selectedSignalId = button.dataset.selectSignal;
+        const match = (state.contractDesk?.opportunities || []).find((row) => row.signal?.id === button.dataset.selectSignal);
+        state.selectedOpportunityId = match?.id || null;
+        renderWorkspace();
+      }
+      if (button.dataset.selectOpportunity) {
+        state.selectedOpportunityId = button.dataset.selectOpportunity;
+        const match = (state.contractDesk?.opportunities || []).find((row) => row.id === button.dataset.selectOpportunity);
+        state.selectedSignalId = match?.signal?.id || state.selectedSignalId;
         renderWorkspace();
       }
       if (button.dataset.openInbox) {
@@ -1311,6 +2244,7 @@
       if (button.dataset.deliverOutreach) deliverOutreach(button);
       if (button.dataset.suppressOutreach) suppressOutreach(button);
       if ("runTeam" in button.dataset) requestTeamRun();
+      if ("goDeeper" in button.dataset) requestDeepen();
       if ("stop" in button.dataset && abort) abort.abort();
       if ("deep" in button.dataset) approval("Approval required", "This starts a longer research pass in the thread. No one is contacted.");
       if ("approve" in button.dataset) {
@@ -1326,10 +2260,14 @@
       sessionId = null;
       state.attached = "";
       state.targets = [];
+      state.selectedEntityId = null;
       state.outreach = [];
       state.outreachError = "";
       state.view = "mandate";
       state.selectedDraftId = null;
+      state.contractDesk = null;
+      state.selectedOpportunityId = null;
+      state.contractEntityId = null;
       state.creating = true;
       state.editing = true;
       clearThreadDom();
@@ -1347,9 +2285,7 @@
     document.getElementById("sources").addEventListener("click", () => {
       addCard("<h3>How sources are used</h3><p>Company sites, rating reports, and filings outrank directories. Founder or family ownership is evidence for the buy box, not proof that a transaction is available.</p>");
     });
-    document.getElementById("deep").addEventListener("click", () => {
-      approval("Approval required", "This starts a longer research pass in the thread. No one is contacted.");
-    });
+    document.getElementById("deep").addEventListener("click", requestDeepen);
     document.getElementById("roles").addEventListener("click", () => {
       const rows = AGENTS.map((a) => `<div class="agent"><span class="dot kind-${a.kind}"></span><span><b>${esc(a.name)}</b> — ${esc(a.note)}</span></div>`).join("");
       addCard(
@@ -1367,6 +2303,19 @@
         return;
       }
       ask("Run the origination team on the active buy box.", false, "/api/orchestrate");
+    }
+    function requestDeepen() {
+      const orchestrator = state.config?.orchestrator;
+      if (orchestrator && !orchestrator.ready) {
+        const items = (orchestrator.missing || []).map((line) => `<li>${esc(line)}</li>`).join("");
+        addCard(`<h3>Go Deeper is blocked</h3><p>The deeper team cannot run right now:</p><ul>${items}</ul>`);
+        return;
+      }
+      if (!(state.targets || []).length) {
+        addCard("<h3>Go Deeper</h3><p>Run the team first so there are mandate-fit companies on the board. The deeper pass does not hunt new names, and nothing is sent.</p>");
+        return;
+      }
+      ask("Go deeper on the companies already on the board.", false, "/api/deepen");
     }
 
     document.getElementById("team").addEventListener("click", requestTeamRun);

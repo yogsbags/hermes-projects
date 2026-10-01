@@ -1,0 +1,1559 @@
+{
+  "source": "NIC 2025",
+  "source_url": "https://www.mospi.gov.in/uploads/publications_reports/publications_reports1763457214315_c3e5d4f3-8e25-4775-85e3-ad42d571652f_NIC_2025_Final.pdf",
+  "levels": {
+    "industry": "section",
+    "sector": "division",
+    "niche": "group"
+  },
+  "items": [
+    {
+      "id": "011",
+      "sector_id": "01",
+      "industry_id": "A",
+      "label": "Growing of non-perennial crops"
+    },
+    {
+      "id": "012",
+      "sector_id": "01",
+      "industry_id": "A",
+      "label": "Growing of perennial crops"
+    },
+    {
+      "id": "013",
+      "sector_id": "01",
+      "industry_id": "A",
+      "label": "Plant propagation"
+    },
+    {
+      "id": "014",
+      "sector_id": "01",
+      "industry_id": "A",
+      "label": "Animal production"
+    },
+    {
+      "id": "015",
+      "sector_id": "01",
+      "industry_id": "A",
+      "label": "Mixed farming"
+    },
+    {
+      "id": "016",
+      "sector_id": "01",
+      "industry_id": "A",
+      "label": "Support activities to agriculture and post-harvest crop activities"
+    },
+    {
+      "id": "017",
+      "sector_id": "01",
+      "industry_id": "A",
+      "label": "Hunting, trapping and related service activities"
+    },
+    {
+      "id": "021",
+      "sector_id": "02",
+      "industry_id": "A",
+      "label": "Silviculture and other forestry activities"
+    },
+    {
+      "id": "022",
+      "sector_id": "02",
+      "industry_id": "A",
+      "label": "Logging"
+    },
+    {
+      "id": "023",
+      "sector_id": "02",
+      "industry_id": "A",
+      "label": "Gathering of non-wood forest products"
+    },
+    {
+      "id": "024",
+      "sector_id": "02",
+      "industry_id": "A",
+      "label": "Support services to forestry"
+    },
+    {
+      "id": "031",
+      "sector_id": "03",
+      "industry_id": "A",
+      "label": "Fishing"
+    },
+    {
+      "id": "032",
+      "sector_id": "03",
+      "industry_id": "A",
+      "label": "Aquaculture"
+    },
+    {
+      "id": "033",
+      "sector_id": "03",
+      "industry_id": "A",
+      "label": "Support activities for fishing and aquaculture"
+    },
+    {
+      "id": "051",
+      "sector_id": "05",
+      "industry_id": "B",
+      "label": "Mining of hard coal"
+    },
+    {
+      "id": "052",
+      "sector_id": "05",
+      "industry_id": "B",
+      "label": "Mining of lignite"
+    },
+    {
+      "id": "061",
+      "sector_id": "06",
+      "industry_id": "B",
+      "label": "Extraction of crude petroleum"
+    },
+    {
+      "id": "062",
+      "sector_id": "06",
+      "industry_id": "B",
+      "label": "Extraction of natural gas"
+    },
+    {
+      "id": "071",
+      "sector_id": "07",
+      "industry_id": "B",
+      "label": "Mining of iron ores"
+    },
+    {
+      "id": "072",
+      "sector_id": "07",
+      "industry_id": "B",
+      "label": "Mining of non-ferrous metal ores"
+    },
+    {
+      "id": "081",
+      "sector_id": "08",
+      "industry_id": "B",
+      "label": "Quarrying of stone, sand and clay"
+    },
+    {
+      "id": "089",
+      "sector_id": "08",
+      "industry_id": "B",
+      "label": "Mining and quarrying n.e.c."
+    },
+    {
+      "id": "091",
+      "sector_id": "09",
+      "industry_id": "B",
+      "label": "Support activities for petroleum and natural gas extraction"
+    },
+    {
+      "id": "099",
+      "sector_id": "09",
+      "industry_id": "B",
+      "label": "Support activities for other mining and quarrying"
+    },
+    {
+      "id": "101",
+      "sector_id": "10",
+      "industry_id": "C",
+      "label": "Processing and preserving of meat"
+    },
+    {
+      "id": "102",
+      "sector_id": "10",
+      "industry_id": "C",
+      "label": "Processing and preserving of fish, crustaceans and molluscs"
+    },
+    {
+      "id": "103",
+      "sector_id": "10",
+      "industry_id": "C",
+      "label": "Processing and preserving of fruit and vegetables"
+    },
+    {
+      "id": "104",
+      "sector_id": "10",
+      "industry_id": "C",
+      "label": "Manufacture of vegetable and animal oils and fats"
+    },
+    {
+      "id": "105",
+      "sector_id": "10",
+      "industry_id": "C",
+      "label": "Manufacture of dairy products"
+    },
+    {
+      "id": "106",
+      "sector_id": "10",
+      "industry_id": "C",
+      "label": "Manufacture of grain mill products, starches and starch products"
+    },
+    {
+      "id": "107",
+      "sector_id": "10",
+      "industry_id": "C",
+      "label": "Manufacture of other food products"
+    },
+    {
+      "id": "108",
+      "sector_id": "10",
+      "industry_id": "C",
+      "label": "Manufacture of prepared animal feed"
+    },
+    {
+      "id": "110",
+      "sector_id": "11",
+      "industry_id": "C",
+      "label": "Manufacture of beverages"
+    },
+    {
+      "id": "120",
+      "sector_id": "12",
+      "industry_id": "C",
+      "label": "Manufacture of tobacco products"
+    },
+    {
+      "id": "131",
+      "sector_id": "13",
+      "industry_id": "C",
+      "label": "Spinning, weaving and finishing of textiles"
+    },
+    {
+      "id": "139",
+      "sector_id": "13",
+      "industry_id": "C",
+      "label": "Manufacture of other textiles"
+    },
+    {
+      "id": "141",
+      "sector_id": "14",
+      "industry_id": "C",
+      "label": "Manufacture of wearing apparel, except fur apparel"
+    },
+    {
+      "id": "142",
+      "sector_id": "14",
+      "industry_id": "C",
+      "label": "Manufacture of articles of fur"
+    },
+    {
+      "id": "143",
+      "sector_id": "14",
+      "industry_id": "C",
+      "label": "Manufacture of knitted and crocheted apparel"
+    },
+    {
+      "id": "151",
+      "sector_id": "15",
+      "industry_id": "C",
+      "label": "Tanning, dyeing, dressing of leather and fur; manufacture of luggage, handbags, saddlery and harness"
+    },
+    {
+      "id": "152",
+      "sector_id": "15",
+      "industry_id": "C",
+      "label": "Manufacture of footwear"
+    },
+    {
+      "id": "161",
+      "sector_id": "16",
+      "industry_id": "C",
+      "label": "Sawmilling and planing of wood"
+    },
+    {
+      "id": "162",
+      "sector_id": "16",
+      "industry_id": "C",
+      "label": "Manufacture of products of wood, cork, straw and plaiting materials"
+    },
+    {
+      "id": "170",
+      "sector_id": "17",
+      "industry_id": "C",
+      "label": "Manufacture of paper and paper products"
+    },
+    {
+      "id": "181",
+      "sector_id": "18",
+      "industry_id": "C",
+      "label": "Printing and service activities related to printing"
+    },
+    {
+      "id": "182",
+      "sector_id": "18",
+      "industry_id": "C",
+      "label": "Reproduction of recorded media"
+    },
+    {
+      "id": "191",
+      "sector_id": "19",
+      "industry_id": "C",
+      "label": "Manufacture of coke oven products"
+    },
+    {
+      "id": "192",
+      "sector_id": "19",
+      "industry_id": "C",
+      "label": "Manufacture of refined petroleum products; manufacture of fossil fuel products"
+    },
+    {
+      "id": "201",
+      "sector_id": "20",
+      "industry_id": "C",
+      "label": "Manufacture of basic chemicals, fertilizers and nitrogen compounds, plastics and synthetic rubber in primary forms"
+    },
+    {
+      "id": "202",
+      "sector_id": "20",
+      "industry_id": "C",
+      "label": "Manufacture of other chemical products"
+    },
+    {
+      "id": "203",
+      "sector_id": "20",
+      "industry_id": "C",
+      "label": "Manufacture of man-made fibres"
+    },
+    {
+      "id": "210",
+      "sector_id": "21",
+      "industry_id": "C",
+      "label": "Manufacture of pharmaceuticals, medicinal chemical and botanical products"
+    },
+    {
+      "id": "221",
+      "sector_id": "22",
+      "industry_id": "C",
+      "label": "Manufacture of rubber products"
+    },
+    {
+      "id": "222",
+      "sector_id": "22",
+      "industry_id": "C",
+      "label": "Manufacture of plastic products"
+    },
+    {
+      "id": "231",
+      "sector_id": "23",
+      "industry_id": "C",
+      "label": "Manufacture of glass and glass products"
+    },
+    {
+      "id": "239",
+      "sector_id": "23",
+      "industry_id": "C",
+      "label": "Manufacture of non-metallic mineral products n.e.c."
+    },
+    {
+      "id": "241",
+      "sector_id": "24",
+      "industry_id": "C",
+      "label": "Manufacture of basic iron and steel"
+    },
+    {
+      "id": "242",
+      "sector_id": "24",
+      "industry_id": "C",
+      "label": "Manufacture of basic precious and other non-ferrous metals"
+    },
+    {
+      "id": "243",
+      "sector_id": "24",
+      "industry_id": "C",
+      "label": "Casting of metals"
+    },
+    {
+      "id": "251",
+      "sector_id": "25",
+      "industry_id": "C",
+      "label": "Manufacture of structural metal products, tanks, reservoirs and steam generators"
+    },
+    {
+      "id": "252",
+      "sector_id": "25",
+      "industry_id": "C",
+      "label": "Manufacture of weapons and ammunition"
+    },
+    {
+      "id": "259",
+      "sector_id": "25",
+      "industry_id": "C",
+      "label": "Manufacture of other fabricated metal products; metalworking service activities"
+    },
+    {
+      "id": "261",
+      "sector_id": "26",
+      "industry_id": "C",
+      "label": "Manufacture of electronic components and boards"
+    },
+    {
+      "id": "262",
+      "sector_id": "26",
+      "industry_id": "C",
+      "label": "Manufacture of computers and peripheral equipment"
+    },
+    {
+      "id": "263",
+      "sector_id": "26",
+      "industry_id": "C",
+      "label": "Manufacture of communication equipment"
+    },
+    {
+      "id": "264",
+      "sector_id": "26",
+      "industry_id": "C",
+      "label": "Manufacture of consumer electronics"
+    },
+    {
+      "id": "265",
+      "sector_id": "26",
+      "industry_id": "C",
+      "label": "Manufacture of measuring, testing, navigating and control equipment; watches and clocks"
+    },
+    {
+      "id": "266",
+      "sector_id": "26",
+      "industry_id": "C",
+      "label": "Manufacture of irradiation, electromedical and electrotherapeutic equipment"
+    },
+    {
+      "id": "267",
+      "sector_id": "26",
+      "industry_id": "C",
+      "label": "Manufacture of optical instruments and photographic equipment"
+    },
+    {
+      "id": "268",
+      "sector_id": "26",
+      "industry_id": "C",
+      "label": "Manufacture of magnetic and optical media"
+    },
+    {
+      "id": "271",
+      "sector_id": "27",
+      "industry_id": "C",
+      "label": "Manufacture of electric motors, generators, transformers and electricity distribution and control apparatus"
+    },
+    {
+      "id": "272",
+      "sector_id": "27",
+      "industry_id": "C",
+      "label": "Manufacture of batteries and accumulators"
+    },
+    {
+      "id": "273",
+      "sector_id": "27",
+      "industry_id": "C",
+      "label": "Manufacture of wiring and wiring devices"
+    },
+    {
+      "id": "274",
+      "sector_id": "27",
+      "industry_id": "C",
+      "label": "Manufacture of lighting equipment"
+    },
+    {
+      "id": "275",
+      "sector_id": "27",
+      "industry_id": "C",
+      "label": "Manufacture of domestic appliances"
+    },
+    {
+      "id": "279",
+      "sector_id": "27",
+      "industry_id": "C",
+      "label": "Manufacture of other electrical equipment"
+    },
+    {
+      "id": "281",
+      "sector_id": "28",
+      "industry_id": "C",
+      "label": "Manufacture of general-purpose machinery"
+    },
+    {
+      "id": "282",
+      "sector_id": "28",
+      "industry_id": "C",
+      "label": "Manufacture of special-purpose machinery"
+    },
+    {
+      "id": "291",
+      "sector_id": "29",
+      "industry_id": "C",
+      "label": "Manufacture of motor vehicles"
+    },
+    {
+      "id": "292",
+      "sector_id": "29",
+      "industry_id": "C",
+      "label": "Manufacture of bodies (coachwork) for motor vehicles; manufacture of trailers and semi-trailers"
+    },
+    {
+      "id": "293",
+      "sector_id": "29",
+      "industry_id": "C",
+      "label": "Manufacture of parts and accessories for motor vehicles"
+    },
+    {
+      "id": "301",
+      "sector_id": "30",
+      "industry_id": "C",
+      "label": "Building of ships and boats"
+    },
+    {
+      "id": "302",
+      "sector_id": "30",
+      "industry_id": "C",
+      "label": "Manufacture of railway locomotives and rolling stock"
+    },
+    {
+      "id": "303",
+      "sector_id": "30",
+      "industry_id": "C",
+      "label": "Manufacture of air and spacecraft and related machinery"
+    },
+    {
+      "id": "304",
+      "sector_id": "30",
+      "industry_id": "C",
+      "label": "Manufacture of military fighting vehicles"
+    },
+    {
+      "id": "309",
+      "sector_id": "30",
+      "industry_id": "C",
+      "label": "Manufacture of transport equipment n.e.c."
+    },
+    {
+      "id": "310",
+      "sector_id": "31",
+      "industry_id": "C",
+      "label": "Manufacture of furniture"
+    },
+    {
+      "id": "321",
+      "sector_id": "32",
+      "industry_id": "C",
+      "label": "Manufacture of jewellery, bijouterie and related articles"
+    },
+    {
+      "id": "322",
+      "sector_id": "32",
+      "industry_id": "C",
+      "label": "Manufacture of musical instruments"
+    },
+    {
+      "id": "323",
+      "sector_id": "32",
+      "industry_id": "C",
+      "label": "Manufacture of sports goods"
+    },
+    {
+      "id": "324",
+      "sector_id": "32",
+      "industry_id": "C",
+      "label": "Manufacture of games and toys"
+    },
+    {
+      "id": "325",
+      "sector_id": "32",
+      "industry_id": "C",
+      "label": "Manufacture of medical and dental instruments and supplies"
+    },
+    {
+      "id": "329",
+      "sector_id": "32",
+      "industry_id": "C",
+      "label": "Other manufacturing n.e.c."
+    },
+    {
+      "id": "331",
+      "sector_id": "33",
+      "industry_id": "C",
+      "label": "Repair and maintenance of fabricated metal products, machinery and equipment"
+    },
+    {
+      "id": "332",
+      "sector_id": "33",
+      "industry_id": "C",
+      "label": "Installation of industrial machinery and equipment"
+    },
+    {
+      "id": "351",
+      "sector_id": "35",
+      "industry_id": "D",
+      "label": "Electric power generation, transmission and distribution activities"
+    },
+    {
+      "id": "352",
+      "sector_id": "35",
+      "industry_id": "D",
+      "label": "Manufacture of gas; distribution of gaseous fuels through mains"
+    },
+    {
+      "id": "353",
+      "sector_id": "35",
+      "industry_id": "D",
+      "label": "Steam and air conditioning supply"
+    },
+    {
+      "id": "354",
+      "sector_id": "35",
+      "industry_id": "D",
+      "label": "Activities of brokers and agents for electric power and natural gas"
+    },
+    {
+      "id": "360",
+      "sector_id": "36",
+      "industry_id": "E",
+      "label": "Water collection, treatment and supply"
+    },
+    {
+      "id": "370",
+      "sector_id": "37",
+      "industry_id": "E",
+      "label": "Sewerage"
+    },
+    {
+      "id": "381",
+      "sector_id": "38",
+      "industry_id": "E",
+      "label": "Waste collection activities"
+    },
+    {
+      "id": "382",
+      "sector_id": "38",
+      "industry_id": "E",
+      "label": "Waste treatment and disposal"
+    },
+    {
+      "id": "383",
+      "sector_id": "38",
+      "industry_id": "E",
+      "label": "Materials and other waste recovery"
+    },
+    {
+      "id": "390",
+      "sector_id": "39",
+      "industry_id": "E",
+      "label": "Remediation and other waste management service activities"
+    },
+    {
+      "id": "410",
+      "sector_id": "41",
+      "industry_id": "F",
+      "label": "Construction of residential and non-residential buildings"
+    },
+    {
+      "id": "421",
+      "sector_id": "42",
+      "industry_id": "F",
+      "label": "Construction of roads and railways"
+    },
+    {
+      "id": "422",
+      "sector_id": "42",
+      "industry_id": "F",
+      "label": "Construction of utility projects"
+    },
+    {
+      "id": "429",
+      "sector_id": "42",
+      "industry_id": "F",
+      "label": "Construction of other civil engineering projects"
+    },
+    {
+      "id": "431",
+      "sector_id": "43",
+      "industry_id": "F",
+      "label": "Demolition and site preparation"
+    },
+    {
+      "id": "432",
+      "sector_id": "43",
+      "industry_id": "F",
+      "label": "Electrical, plumbing and other construction installation activities"
+    },
+    {
+      "id": "433",
+      "sector_id": "43",
+      "industry_id": "F",
+      "label": "Building completion and finishing"
+    },
+    {
+      "id": "434",
+      "sector_id": "43",
+      "industry_id": "F",
+      "label": "Intermediation service activities for specialized construction services"
+    },
+    {
+      "id": "439",
+      "sector_id": "43",
+      "industry_id": "F",
+      "label": "Other specialized construction activities"
+    },
+    {
+      "id": "461",
+      "sector_id": "46",
+      "industry_id": "G",
+      "label": "Wholesale on a fee or contract basis"
+    },
+    {
+      "id": "462",
+      "sector_id": "46",
+      "industry_id": "G",
+      "label": "Wholesale of agricultural raw materials and live animals"
+    },
+    {
+      "id": "463",
+      "sector_id": "46",
+      "industry_id": "G",
+      "label": "Wholesale of food, beverages and tobacco"
+    },
+    {
+      "id": "464",
+      "sector_id": "46",
+      "industry_id": "G",
+      "label": "Wholesale of household goods"
+    },
+    {
+      "id": "465",
+      "sector_id": "46",
+      "industry_id": "G",
+      "label": "Wholesale of machinery, equipment and supplies"
+    },
+    {
+      "id": "466",
+      "sector_id": "46",
+      "industry_id": "G",
+      "label": "Wholesale of motor vehicles, motorcycles and related parts and accessories"
+    },
+    {
+      "id": "467",
+      "sector_id": "46",
+      "industry_id": "G",
+      "label": "Other specialized wholesale"
+    },
+    {
+      "id": "469",
+      "sector_id": "46",
+      "industry_id": "G",
+      "label": "Non-specialized wholesale trade"
+    },
+    {
+      "id": "471",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Non-specialized retail sale"
+    },
+    {
+      "id": "472",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Retail sale of food, beverages and tobacco"
+    },
+    {
+      "id": "473",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Retail sale of automotive fuel"
+    },
+    {
+      "id": "474",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Retail sale of information and communication equipment"
+    },
+    {
+      "id": "475",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Retail sale of other household equipment"
+    },
+    {
+      "id": "476",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Retail sale of cultural and recreational goods"
+    },
+    {
+      "id": "477",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Retail sale of other goods, except motor vehicles and motorcycles"
+    },
+    {
+      "id": "478",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Retail sale of motor vehicles, motorcycles and related parts and accessories"
+    },
+    {
+      "id": "479",
+      "sector_id": "47",
+      "industry_id": "G",
+      "label": "Intermediation service activities for retail sale"
+    },
+    {
+      "id": "491",
+      "sector_id": "49",
+      "industry_id": "H",
+      "label": "Transport via railways"
+    },
+    {
+      "id": "492",
+      "sector_id": "49",
+      "industry_id": "H",
+      "label": "Other land transport"
+    },
+    {
+      "id": "493",
+      "sector_id": "49",
+      "industry_id": "H",
+      "label": "Transport via pipeline"
+    },
+    {
+      "id": "501",
+      "sector_id": "50",
+      "industry_id": "H",
+      "label": "Sea and coastal water transport"
+    },
+    {
+      "id": "502",
+      "sector_id": "50",
+      "industry_id": "H",
+      "label": "Inland water transport"
+    },
+    {
+      "id": "511",
+      "sector_id": "51",
+      "industry_id": "H",
+      "label": "Passenger air transport"
+    },
+    {
+      "id": "512",
+      "sector_id": "51",
+      "industry_id": "H",
+      "label": "Freight air transport"
+    },
+    {
+      "id": "521",
+      "sector_id": "52",
+      "industry_id": "H",
+      "label": "Warehousing and storage"
+    },
+    {
+      "id": "522",
+      "sector_id": "52",
+      "industry_id": "H",
+      "label": "Support activities for transportation"
+    },
+    {
+      "id": "523",
+      "sector_id": "52",
+      "industry_id": "H",
+      "label": "Intermediation service activities for transportation"
+    },
+    {
+      "id": "531",
+      "sector_id": "53",
+      "industry_id": "H",
+      "label": "Postal activities"
+    },
+    {
+      "id": "532",
+      "sector_id": "53",
+      "industry_id": "H",
+      "label": "Courier activities"
+    },
+    {
+      "id": "533",
+      "sector_id": "53",
+      "industry_id": "H",
+      "label": "Intermediation service activities for postal and courier activities"
+    },
+    {
+      "id": "551",
+      "sector_id": "55",
+      "industry_id": "I",
+      "label": "Hotels and similar accommodation activities"
+    },
+    {
+      "id": "552",
+      "sector_id": "55",
+      "industry_id": "I",
+      "label": "Other short term accommodation activities"
+    },
+    {
+      "id": "553",
+      "sector_id": "55",
+      "industry_id": "I",
+      "label": "Camping grounds, recreational vehicle parks and trailer parks"
+    },
+    {
+      "id": "554",
+      "sector_id": "55",
+      "industry_id": "I",
+      "label": "Intermediation service activities for accommodation"
+    },
+    {
+      "id": "559",
+      "sector_id": "55",
+      "industry_id": "I",
+      "label": "Other accommodation n.e.c."
+    },
+    {
+      "id": "561",
+      "sector_id": "56",
+      "industry_id": "I",
+      "label": "Restaurants and mobile food service activities"
+    },
+    {
+      "id": "562",
+      "sector_id": "56",
+      "industry_id": "I",
+      "label": "Event catering and other food service activities"
+    },
+    {
+      "id": "563",
+      "sector_id": "56",
+      "industry_id": "I",
+      "label": "Beverage serving activities"
+    },
+    {
+      "id": "564",
+      "sector_id": "56",
+      "industry_id": "I",
+      "label": "Intermediation service activities for food and beverage services"
+    },
+    {
+      "id": "581",
+      "sector_id": "58",
+      "industry_id": "J",
+      "label": "Publishing of books, newspapers, periodicals and other publishing"
+    },
+    {
+      "id": "582",
+      "sector_id": "58",
+      "industry_id": "J",
+      "label": "Software publishing"
+    },
+    {
+      "id": "591",
+      "sector_id": "59",
+      "industry_id": "J",
+      "label": "Motion picture, video and television programme activities"
+    },
+    {
+      "id": "592",
+      "sector_id": "59",
+      "industry_id": "J",
+      "label": "Sound recording and music publishing activities"
+    },
+    {
+      "id": "601",
+      "sector_id": "60",
+      "industry_id": "J",
+      "label": "Radio broadcasting and audio distribution activities"
+    },
+    {
+      "id": "602",
+      "sector_id": "60",
+      "industry_id": "J",
+      "label": "Television programming, broadcasting and video distribution"
+    },
+    {
+      "id": "603",
+      "sector_id": "60",
+      "industry_id": "J",
+      "label": "News agency and other content distribution activities"
+    },
+    {
+      "id": "611",
+      "sector_id": "61",
+      "industry_id": "K",
+      "label": "Wired, wireless, and satellite telecommunication activities"
+    },
+    {
+      "id": "612",
+      "sector_id": "61",
+      "industry_id": "K",
+      "label": "Telecommunication reselling activities and intermediation service activities for telecommunication"
+    },
+    {
+      "id": "619",
+      "sector_id": "61",
+      "industry_id": "K",
+      "label": "Other telecommunication activities"
+    },
+    {
+      "id": "621",
+      "sector_id": "62",
+      "industry_id": "K",
+      "label": "Computer programming activities"
+    },
+    {
+      "id": "622",
+      "sector_id": "62",
+      "industry_id": "K",
+      "label": "Computer consultancy and computer facilities management activities"
+    },
+    {
+      "id": "629",
+      "sector_id": "62",
+      "industry_id": "K",
+      "label": "Other information technology and computer service activities"
+    },
+    {
+      "id": "631",
+      "sector_id": "63",
+      "industry_id": "K",
+      "label": "Computing infrastructure, data processing, hosting and related activities"
+    },
+    {
+      "id": "639",
+      "sector_id": "63",
+      "industry_id": "K",
+      "label": "Web search portals activities and other information service activities"
+    },
+    {
+      "id": "641",
+      "sector_id": "64",
+      "industry_id": "L",
+      "label": "Monetary intermediation"
+    },
+    {
+      "id": "642",
+      "sector_id": "64",
+      "industry_id": "L",
+      "label": "Activities of holding companies and financing conduits"
+    },
+    {
+      "id": "643",
+      "sector_id": "64",
+      "industry_id": "L",
+      "label": "Activities of trusts, funds and similar financial entities"
+    },
+    {
+      "id": "649",
+      "sector_id": "64",
+      "industry_id": "L",
+      "label": "Other financial service activities, except insurance and pension funding activities"
+    },
+    {
+      "id": "651",
+      "sector_id": "65",
+      "industry_id": "L",
+      "label": "Insurance"
+    },
+    {
+      "id": "652",
+      "sector_id": "65",
+      "industry_id": "L",
+      "label": "Reinsurance"
+    },
+    {
+      "id": "653",
+      "sector_id": "65",
+      "industry_id": "L",
+      "label": "Pension funding"
+    },
+    {
+      "id": "661",
+      "sector_id": "66",
+      "industry_id": "L",
+      "label": "Activities auxiliary to financial services, except insurance and pension funding"
+    },
+    {
+      "id": "662",
+      "sector_id": "66",
+      "industry_id": "L",
+      "label": "Activities auxiliary to insurance and pension funding"
+    },
+    {
+      "id": "663",
+      "sector_id": "66",
+      "industry_id": "L",
+      "label": "Fund management activities"
+    },
+    {
+      "id": "681",
+      "sector_id": "68",
+      "industry_id": "M",
+      "label": "Real estate activities with own or leased property"
+    },
+    {
+      "id": "682",
+      "sector_id": "68",
+      "industry_id": "M",
+      "label": "Real estate activities on a fee or contract basis"
+    },
+    {
+      "id": "691",
+      "sector_id": "69",
+      "industry_id": "N",
+      "label": "Legal activities"
+    },
+    {
+      "id": "692",
+      "sector_id": "69",
+      "industry_id": "N",
+      "label": "Accounting, bookkeeping and auditing activities; tax consultancy"
+    },
+    {
+      "id": "701",
+      "sector_id": "70",
+      "industry_id": "N",
+      "label": "Activities of head offices"
+    },
+    {
+      "id": "702",
+      "sector_id": "70",
+      "industry_id": "N",
+      "label": "Business and other management consultancy activities"
+    },
+    {
+      "id": "711",
+      "sector_id": "71",
+      "industry_id": "N",
+      "label": "Architectural and engineering, and related technical consultancy activities"
+    },
+    {
+      "id": "712",
+      "sector_id": "71",
+      "industry_id": "N",
+      "label": "Technical testing and analysis"
+    },
+    {
+      "id": "721",
+      "sector_id": "72",
+      "industry_id": "N",
+      "label": "Research and experimental development on natural sciences and engineering"
+    },
+    {
+      "id": "722",
+      "sector_id": "72",
+      "industry_id": "N",
+      "label": "Research and experimental development on social sciences and humanities"
+    },
+    {
+      "id": "731",
+      "sector_id": "73",
+      "industry_id": "N",
+      "label": "Advertising activities"
+    },
+    {
+      "id": "732",
+      "sector_id": "73",
+      "industry_id": "N",
+      "label": "Market research and public opinion polling activities"
+    },
+    {
+      "id": "733",
+      "sector_id": "73",
+      "industry_id": "N",
+      "label": "Public relations activities"
+    },
+    {
+      "id": "741",
+      "sector_id": "74",
+      "industry_id": "N",
+      "label": "Specialized design activities"
+    },
+    {
+      "id": "742",
+      "sector_id": "74",
+      "industry_id": "N",
+      "label": "Photographic activities"
+    },
+    {
+      "id": "743",
+      "sector_id": "74",
+      "industry_id": "N",
+      "label": "Translation and interpretation activities"
+    },
+    {
+      "id": "749",
+      "sector_id": "74",
+      "industry_id": "N",
+      "label": "Other professional, scientific and technical activities n.e.c."
+    },
+    {
+      "id": "750",
+      "sector_id": "75",
+      "industry_id": "N",
+      "label": "Veterinary activities"
+    },
+    {
+      "id": "771",
+      "sector_id": "77",
+      "industry_id": "O",
+      "label": "Rental and leasing of motor vehicles"
+    },
+    {
+      "id": "772",
+      "sector_id": "77",
+      "industry_id": "O",
+      "label": "Rental and leasing of personal and household goods"
+    },
+    {
+      "id": "773",
+      "sector_id": "77",
+      "industry_id": "O",
+      "label": "Rental and leasing of other machinery, equipment and tangible goods"
+    },
+    {
+      "id": "774",
+      "sector_id": "77",
+      "industry_id": "O",
+      "label": "Leasing of intellectual property and similar products, except copyrighted works"
+    },
+    {
+      "id": "775",
+      "sector_id": "77",
+      "industry_id": "O",
+      "label": "Intermediation service activities for rental and leasing of tangible goods and non financial intangible assets"
+    },
+    {
+      "id": "781",
+      "sector_id": "78",
+      "industry_id": "O",
+      "label": "Activities of employment placement agencies"
+    },
+    {
+      "id": "782",
+      "sector_id": "78",
+      "industry_id": "O",
+      "label": "Temporary employment agency activities and other human resource provisions"
+    },
+    {
+      "id": "791",
+      "sector_id": "79",
+      "industry_id": "O",
+      "label": "Travel agency and tour operator activities"
+    },
+    {
+      "id": "799",
+      "sector_id": "79",
+      "industry_id": "O",
+      "label": "Other travel related activities"
+    },
+    {
+      "id": "801",
+      "sector_id": "80",
+      "industry_id": "O",
+      "label": "Investigation and security activities"
+    },
+    {
+      "id": "811",
+      "sector_id": "81",
+      "industry_id": "O",
+      "label": "Combined facilities support activities"
+    },
+    {
+      "id": "812",
+      "sector_id": "81",
+      "industry_id": "O",
+      "label": "Cleaning activities"
+    },
+    {
+      "id": "813",
+      "sector_id": "81",
+      "industry_id": "O",
+      "label": "Landscape service activities"
+    },
+    {
+      "id": "821",
+      "sector_id": "82",
+      "industry_id": "O",
+      "label": "Office administrative and support activities"
+    },
+    {
+      "id": "822",
+      "sector_id": "82",
+      "industry_id": "O",
+      "label": "Activities of call centres"
+    },
+    {
+      "id": "823",
+      "sector_id": "82",
+      "industry_id": "O",
+      "label": "Organization of conventions and trade shows"
+    },
+    {
+      "id": "824",
+      "sector_id": "82",
+      "industry_id": "O",
+      "label": "Intermediation service activities for business support activities n.e.c., except financial intermediation"
+    },
+    {
+      "id": "829",
+      "sector_id": "82",
+      "industry_id": "O",
+      "label": "Business support activities n.e.c"
+    },
+    {
+      "id": "841",
+      "sector_id": "84",
+      "industry_id": "P",
+      "label": "Administration of the State and the economic, social and environmental policies of the community"
+    },
+    {
+      "id": "842",
+      "sector_id": "84",
+      "industry_id": "P",
+      "label": "Provision of services to the community as a whole"
+    },
+    {
+      "id": "843",
+      "sector_id": "84",
+      "industry_id": "P",
+      "label": "Compulsory social security activities"
+    },
+    {
+      "id": "851",
+      "sector_id": "85",
+      "industry_id": "Q",
+      "label": "Pre-primary education"
+    },
+    {
+      "id": "852",
+      "sector_id": "85",
+      "industry_id": "Q",
+      "label": "Primary Education"
+    },
+    {
+      "id": "853",
+      "sector_id": "85",
+      "industry_id": "Q",
+      "label": "Secondary and post-secondary non-tertiary education"
+    },
+    {
+      "id": "854",
+      "sector_id": "85",
+      "industry_id": "Q",
+      "label": "Tertiary Education"
+    },
+    {
+      "id": "855",
+      "sector_id": "85",
+      "industry_id": "Q",
+      "label": "Other Education"
+    },
+    {
+      "id": "856",
+      "sector_id": "85",
+      "industry_id": "Q",
+      "label": "Educational Support Activities"
+    },
+    {
+      "id": "861",
+      "sector_id": "86",
+      "industry_id": "R",
+      "label": "Hospital activities"
+    },
+    {
+      "id": "862",
+      "sector_id": "86",
+      "industry_id": "R",
+      "label": "Medical and dental practice activities"
+    },
+    {
+      "id": "869",
+      "sector_id": "86",
+      "industry_id": "R",
+      "label": "Other human health activities"
+    },
+    {
+      "id": "871",
+      "sector_id": "87",
+      "industry_id": "R",
+      "label": "Residential nursing care activities"
+    },
+    {
+      "id": "872",
+      "sector_id": "87",
+      "industry_id": "R",
+      "label": "Residential care activities for persons living with or having a diagnosis of a mental illness or substance abuse"
+    },
+    {
+      "id": "873",
+      "sector_id": "87",
+      "industry_id": "R",
+      "label": "Residential care activities for older persons or persons with physical disabilities"
+    },
+    {
+      "id": "879",
+      "sector_id": "87",
+      "industry_id": "R",
+      "label": "Other residential care activities"
+    },
+    {
+      "id": "881",
+      "sector_id": "88",
+      "industry_id": "R",
+      "label": "Social work activities without accommodation for older persons or persons with disabilities"
+    },
+    {
+      "id": "889",
+      "sector_id": "88",
+      "industry_id": "R",
+      "label": "Other social work activities without accommodation"
+    },
+    {
+      "id": "901",
+      "sector_id": "90",
+      "industry_id": "S",
+      "label": "Arts creation activities"
+    },
+    {
+      "id": "902",
+      "sector_id": "90",
+      "industry_id": "S",
+      "label": "Activities of performing arts"
+    },
+    {
+      "id": "903",
+      "sector_id": "90",
+      "industry_id": "S",
+      "label": "Support activities to arts creation and performing arts"
+    },
+    {
+      "id": "911",
+      "sector_id": "91",
+      "industry_id": "S",
+      "label": "Library and archive activities"
+    },
+    {
+      "id": "912",
+      "sector_id": "91",
+      "industry_id": "S",
+      "label": "Museum, collection, historical site and monument activities"
+    },
+    {
+      "id": "913",
+      "sector_id": "91",
+      "industry_id": "S",
+      "label": "Conservation, restoration and other support activities for cultural heritage"
+    },
+    {
+      "id": "914",
+      "sector_id": "91",
+      "industry_id": "S",
+      "label": "Botanical and zoological garden and nature reserve activities"
+    },
+    {
+      "id": "920",
+      "sector_id": "92",
+      "industry_id": "S",
+      "label": "Gambling and betting activities"
+    },
+    {
+      "id": "931",
+      "sector_id": "93",
+      "industry_id": "S",
+      "label": "Sports activities"
+    },
+    {
+      "id": "932",
+      "sector_id": "93",
+      "industry_id": "S",
+      "label": "Amusement and recreation activities"
+    },
+    {
+      "id": "941",
+      "sector_id": "94",
+      "industry_id": "T",
+      "label": "Activities of business, employers and professional membership organisations"
+    },
+    {
+      "id": "942",
+      "sector_id": "94",
+      "industry_id": "T",
+      "label": "Activities of trade unions"
+    },
+    {
+      "id": "949",
+      "sector_id": "94",
+      "industry_id": "T",
+      "label": "Activities of other membership organizations"
+    },
+    {
+      "id": "951",
+      "sector_id": "95",
+      "industry_id": "T",
+      "label": "Repair and maintenance of computers and communication equipment"
+    },
+    {
+      "id": "952",
+      "sector_id": "95",
+      "industry_id": "T",
+      "label": "Repair and maintenance of personal and household goods"
+    },
+    {
+      "id": "953",
+      "sector_id": "95",
+      "industry_id": "T",
+      "label": "Repair and maintenance of motor vehicles and motorcycles"
+    },
+    {
+      "id": "954",
+      "sector_id": "95",
+      "industry_id": "T",
+      "label": "Intermediation service activities for repair and maintenance of computers, personal and household goods, and motor vehicles and motorcycles"
+    },
+    {
+      "id": "961",
+      "sector_id": "96",
+      "industry_id": "T",
+      "label": "Washing and cleaning of textile and fur products"
+    },
+    {
+      "id": "962",
+      "sector_id": "96",
+      "industry_id": "T",
+      "label": "Hairdressing, beauty treatment, day spa and similar activities"
+    },
+    {
+      "id": "963",
+      "sector_id": "96",
+      "industry_id": "T",
+      "label": "Funeral and related activities"
+    },
+    {
+      "id": "964",
+      "sector_id": "96",
+      "industry_id": "T",
+      "label": "Intermediation service activities for personal services"
+    },
+    {
+      "id": "969",
+      "sector_id": "96",
+      "industry_id": "T",
+      "label": "Other personal service activities n.e.c."
+    },
+    {
+      "id": "970",
+      "sector_id": "97",
+      "industry_id": "U",
+      "label": "Activities of households as employers of domestic personnel"
+    },
+    {
+      "id": "981",
+      "sector_id": "98",
+      "industry_id": "U",
+      "label": "Undifferentiated goods-producing activities of private households for own use"
+    },
+    {
+      "id": "982",
+      "sector_id": "98",
+      "industry_id": "U",
+      "label": "Undifferentiated service-producing activities of private households for own use"
+    },
+    {
+      "id": "990",
+      "sector_id": "99",
+      "industry_id": "V",
+      "label": "Activities of extraterritorial organizations and bodies"
+    }
+  ]
+}

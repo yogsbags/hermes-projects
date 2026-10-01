@@ -51,6 +51,9 @@ def parse_mandate(config: dict) -> dict:
         "geography": geography,
         "sector": [str(item).strip() for item in config.get("sector") or [] if str(item).strip()],
         "sector_codes": [str(item).strip() for item in config.get("sector_codes") or [] if str(item).strip()],
+        "industry_code": str(config.get("industry_code") or "").strip(),
+        "sector_code": str(config.get("sector_code") or "").strip(),
+        "niche_code": str(config.get("niche_code") or "").strip(),
         "ownership": [str(item).strip() for item in config.get("ownership") or [] if str(item).strip()],
         "exclude_ownership": [
             str(item).strip() for item in config.get("exclude_ownership") or [] if str(item).strip()
@@ -756,6 +759,111 @@ def _subject(mandate: dict, count: int) -> str:
     return "company" if count == 1 else "companies"
 
 
+_AUDIT_DROP = (
+    "evidence_ids",
+    "evidence_completeness",
+    "financial_confirmation",
+    "fit_label",
+    "fit_score",
+    "fit label, fit score",
+    "mandatory screening",
+    "mandatory checks",
+    "evidence arrays",
+    "screening decisions",
+    "traceably linked",
+)
+_AUDIT_HEADINGS = (
+    ("what holds", "What holds"),
+    ("overstated", "Overstated"),
+    ("still unknown", "Still unknown"),
+    ("important unsupported", "Overstated"),
+    ("inadequately supported", "Overstated"),
+    ("contradictions", "Conflicts"),
+    ("inconsistencies", "Conflicts"),
+    ("conflicts", "Conflicts"),
+)
+
+
+def format_evidence_audit(text: object) -> str:
+    """Turn an auditor dump into a short desk memo. Drops package-field jargon."""
+    raw = str(text or "").strip()
+    if not raw:
+        return ""
+    raw = raw.replace(" - ", "\n- ")
+    lines: list[str] = []
+    for line in raw.splitlines():
+        line = " ".join(line.split()).strip()
+        if not line:
+            continue
+        body = line.lstrip("-• ").strip()
+        if line.startswith(("-", "•")):
+            body = _strip_audit_jargon(body)
+            for part in _split_audit_line(body):
+                if part in {"Overstated", "Conflicts", "What holds", "Still unknown"}:
+                    if part not in lines:
+                        lines.append(part)
+                    continue
+                if part:
+                    lines.append("- " + part)
+            continue
+        for part in _split_audit_line(body):
+            if part in {"Overstated", "Conflicts", "What holds", "Still unknown"}:
+                if part not in lines:
+                    lines.append(part)
+                continue
+            if part.lower().startswith("evidence audit"):
+                continue
+            part = _strip_audit_jargon(part)
+            if part:
+                lines.append(part)
+    cleaned: list[str] = []
+    for line in lines:
+        if line in {"Overstated", "Conflicts", "What holds", "Still unknown"}:
+            if cleaned and cleaned[-1] == line:
+                continue
+            cleaned.append(line)
+            continue
+        cleaned.append(line)
+    return "\n".join(cleaned).strip()
+
+
+def _strip_audit_jargon(text: str) -> str:
+    kept = []
+    for sentence in re.split(r"(?<=[.])\s+", text):
+        if not any(token in sentence.lower() for token in _AUDIT_DROP):
+            kept.append(sentence)
+    return " ".join(kept).strip()
+
+
+def _split_audit_line(line: str) -> list[str]:
+    lower = line.lower()
+    for needle, label in _AUDIT_HEADINGS:
+        idx = lower.find(needle)
+        if idx < 0:
+            continue
+        before = re.sub(r"^evidence audit\s*", "", line[:idx], flags=re.I).strip(" —-:")
+        parts = []
+        if before and len(before) < 80:
+            parts.append(before)
+        parts.append(label)
+        return parts
+    return [line]
+
+
+def public_deep(package: dict) -> dict:
+    if not package.get("deep"):
+        return {}
+    return {
+        "market_map": [
+            " ".join(str(row.get("value") or row.get("excerpt") or "").split())
+            for row in package.get("market_map") or []
+            if str(row.get("value") or row.get("excerpt") or "").strip()
+        ],
+        "evidence_audit": format_evidence_audit(package.get("evidence_audit") or ""),
+        "outreach_intelligence": str(package.get("outreach_intelligence") or "").strip(),
+    }
+
+
 def public_targets(package: dict) -> list[dict]:
     entities = [
         entity for entity in package.get("entities") or []
@@ -782,6 +890,13 @@ def public_targets(package: dict) -> list[dict]:
             "transaction": _plain_transaction(screening, noun),
             "seller": _seller_note(entity),
             "source": _source_host(entity),
+            "identity": " ".join(_claim_lines(entity, ("legal_name", "registration_id", "aliases", "domain", "locations"))),
+            "profile": " ".join(_claim_lines(entity, ("products", "plants", "customers", "exports"))),
+            "financials": " ".join(_claim_lines(entity, ("ebitda", "growth", "leverage", "valuation"))),
+            "history": " ".join(_claim_lines(entity, ("funding", "maa", "pe_investment"))),
+            "signals": " ".join(_claim_lines(entity, ("signal",))),
+            "relationships": " ".join(_claim_lines(entity, ("relationship",))),
+            "monitor": " ".join(_claim_lines(entity, ("monitor",))),
         })
     return cards
 
@@ -849,5 +964,89 @@ def render_report(package: dict) -> str:
             lines.append("Source")
             lines.append(card["source"])
             lines.append("")
+    lines.append("Nothing was sent.")
+    return "\n".join(lines).strip() + "\n"
+
+
+def _claim_lines(entity: dict, fields: tuple[str, ...]) -> list[str]:
+    lines = []
+    for claim in entity.get("claims") or []:
+        if claim.get("field") not in fields:
+            continue
+        value = " ".join(str(claim.get("value") or "").split())
+        excerpt = " ".join(str(claim.get("excerpt") or "").split())
+        text = value or excerpt
+        if text:
+            lines.append(text)
+    return lines
+
+
+def render_deep_report(package: dict) -> str:
+    cards = public_targets(package)
+    by_id = {entity.get("entity_id"): entity for entity in package.get("entities") or []}
+    lines = [
+        (package.get("mandate") or {}).get("title") or "Buy box",
+        "",
+        f"Deeper pass on {len(cards)} {_subject(package.get('mandate') or {}, len(cards))} already on the board.",
+        "",
+    ]
+    market = package.get("market_map") or []
+    if market:
+        lines.append("Market map")
+        for row in market:
+            value = " ".join(str(row.get("value") or row.get("excerpt") or "").split())
+            if value:
+                lines.append(value)
+        lines.append("")
+    for card in cards:
+        entity = by_id.get(card.get("entity_id")) or {}
+        lines.append(card["name"])
+        lines.append(card["fit"])
+        lines.append("")
+        identity = _claim_lines(entity, ("legal_name", "registration_id", "aliases", "domain", "locations"))
+        if identity:
+            lines.append("Legal identity")
+            lines.extend(identity)
+            lines.append("")
+        profile = _claim_lines(entity, ("products", "plants", "customers", "exports"))
+        if profile:
+            lines.append("Company profile")
+            lines.extend(profile)
+            lines.append("")
+        financials = _claim_lines(entity, ("ebitda", "growth", "leverage", "valuation", "revenue"))
+        if financials:
+            lines.append("Financials")
+            lines.extend(financials)
+            lines.append("")
+        history = _claim_lines(entity, ("funding", "maa", "pe_investment", "transaction_status"))
+        if history:
+            lines.append("Transaction history")
+            lines.extend(history)
+            lines.append("")
+        signals = _claim_lines(entity, ("signal",))
+        if signals:
+            lines.append("Seller signals")
+            lines.extend(signals)
+            lines.append("")
+        people = _claim_lines(entity, ("relationship",))
+        if people:
+            lines.append("Relationships")
+            lines.extend(people)
+            lines.append("")
+        monitor = _claim_lines(entity, ("monitor",))
+        if monitor:
+            lines.append("Monitoring")
+            lines.extend(monitor)
+            lines.append("")
+    audit = format_evidence_audit(package.get("evidence_audit") or "")
+    if audit:
+        lines.append("Evidence audit")
+        lines.extend(audit.splitlines())
+        lines.append("")
+    outreach = str(package.get("outreach_intelligence") or "").strip()
+    if outreach:
+        lines.append("Outreach intelligence")
+        lines.append(outreach)
+        lines.append("")
     lines.append("Nothing was sent.")
     return "\n".join(lines).strip() + "\n"

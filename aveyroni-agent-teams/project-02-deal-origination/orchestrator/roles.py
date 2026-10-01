@@ -73,6 +73,104 @@ FILL_ORDER = (
 AFTER_SCORE = ("relationship-researcher",)
 BATCH_SIZE = 3
 
+# Partial / missing agents from the full origination roster. Run only on
+# companies that already passed the screening pass — they do not hunt names.
+DEEP_WORKERS = (
+    {
+        "id": "market-mapper",
+        "name": "Market Mapper",
+        "skill": "deal-sourcing",
+        "asks": (
+            "Map the buy-box market: sectors, niches, geographies, and the kinds of "
+            "privately held operators that belong in this universe. "
+            "Return claims on one entity named after the mandate title, using fields "
+            "market_map, niche, and universe. Do not add companies to the priority list."
+        ),
+    },
+    {
+        "id": "entity-resolver",
+        "name": "Entity Resolver",
+        "skill": "aveyroni-entity-resolver",
+        "asks": (
+            "Verify the exact legal entity for each named target. "
+            "Use fields legal_name, aliases, domain, registration_id, and locations. "
+            "For India, registration_id is the CIN when a filing or registry page states it. "
+            "Do not merge on a similar trade name alone."
+        ),
+    },
+    {
+        "id": "company-intelligence",
+        "name": "Company Intelligence",
+        "skill": "company-intelligence",
+        "asks": (
+            "Build the company profile from sources: products, plants, customers, and exports. "
+            "Use those field names. Leave a field in unknowns rather than guessing."
+        ),
+    },
+    {
+        "id": "financial-intelligence",
+        "name": "Financial Intelligence",
+        "skill": "deal-screening",
+        "asks": (
+            "Find sourced financial clues beyond a single revenue print: ebitda, growth, "
+            "leverage, and valuation only when a filing or rating report states them. "
+            "Preserve currency and unit. Do not invent EBITDA or silently convert currencies."
+        ),
+    },
+    {
+        "id": "transaction-history",
+        "name": "Transaction History",
+        "skill": "aveyroni-transaction-status",
+        "asks": (
+            "Find prior funding, M&A, PE investments, and other transaction history for each named target. "
+            "Use fields funding, maa, and pe_investment. "
+            "If none is sourced, put that field in unknowns. Do not infer that the owner wants to sell."
+        ),
+    },
+    {
+        "id": "seller-signal",
+        "name": "Seller-Signal Agent",
+        "skill": "aveyroni-transaction-status",
+        "asks": (
+            "Search only for sourced willingness-to-transact signals: succession, promoter exit, "
+            "fundraising, strategic review, next-generation management, or a public process. "
+            "Use claim field signal. Do not infer that the owner wants to sell."
+        ),
+    },
+    {
+        "id": "relationship-deep",
+        "name": "Relationship Mapper",
+        "skill": "aveyroni-relationship-map",
+        "asks": (
+            "Map named connections: promoters, bankers, advisors, investors, and intermediaries. "
+            "Use field relationship. One search can web_extract when the snippet is not enough. "
+            "Do not invent a person. Do not write or send outreach."
+        ),
+    },
+    {
+        "id": "monitoring-agent",
+        "name": "Monitoring Agent",
+        "skill": "aveyroni-target-monitor",
+        "asks": (
+            "One monitoring pass on the shortlist only. Do not rediscover the universe. "
+            "Search for a new sourced change since the last year: director or promoter change, "
+            "fundraise, plant expansion, acquisition, or strategic review. "
+            "Use field monitor. A quiet company gets unknowns monitor, not a guessed signal."
+        ),
+    },
+)
+DEEP_WORKER_BY_ID = {worker["id"]: worker for worker in DEEP_WORKERS}
+DEEP_MARKET_ID = "market-mapper"
+DEEP_FILL_ORDER = (
+    "entity-resolver",
+    "company-intelligence",
+    "financial-intelligence",
+    "transaction-history",
+    "seller-signal",
+    "relationship-deep",
+    "monitoring-agent",
+)
+
 WEB_TOOLS = (
     "Use web_search and web_extract only. Search runs on Exa. Page extracts run on Firecrawl. "
     "Do not call Apify, Tavily, Brave, or Parallel."
@@ -231,6 +329,19 @@ def worker_task(
             "Do not add a company.\n"
             "Names:\n" + "\n".join(f"- {name}" for name in names) + "\n"
         )
+    elif mode == "deep-market":
+        assignment = (
+            "Map this buy-box market. Do not add a company to the priority list. "
+            "Return one entity named after the mandate title with fields market_map, niche, and universe.\n"
+            "Priority companies already on the board (context only):\n"
+            + "\n".join(f"- {name}" for name in names) + "\n"
+        )
+    elif mode == "deep":
+        assignment = (
+            "Deep pass. These names already fit the buy box. Research only these names. "
+            "Do not add a company.\n"
+            "Names:\n" + "\n".join(f"- {name}" for name in names) + "\n"
+        )
     elif mode == "discover":
         assignment = f"Find {subject} that match this buy box. Return the name list the other workers will share.\n"
     elif mode == "gap":
@@ -260,7 +371,76 @@ def worker_task(
 
 
 def tasks_for(worker_ids: list[str], mandate: dict, focus_notes: str, names: list[str], mode: str) -> list[dict]:
+    roster = {**WORKER_BY_ID, **DEEP_WORKER_BY_ID}
     return [
-        worker_task(WORKER_BY_ID[worker_id], mandate, focus_notes, names, mode)
+        worker_task(roster[worker_id], mandate, focus_notes, names, mode)
         for worker_id in worker_ids
     ]
+
+
+def evidence_auditor_message(package: dict) -> str:
+    brief = {
+        "mandate": package.get("mandate"),
+        "entities": [
+            {
+                "name": entity.get("name"),
+                "transaction_status": (entity.get("screening") or {}).get("transaction_status"),
+                "claims": [
+                    {
+                        "field": claim.get("field"),
+                        "value": claim.get("value"),
+                        "excerpt": claim.get("excerpt"),
+                    }
+                    for claim in entity.get("claims") or []
+                ],
+                "unknowns": entity.get("unknowns") or [],
+            }
+            for entity in package.get("entities") or []
+        ],
+    }
+    text = json.dumps(brief, ensure_ascii=False, indent=2)
+    if len(text) > 12000:
+        text = text[:12000] + "\n…"
+    return (
+        "You are the Evidence Auditor. Tools are off. Follow aveyroni-evidence-auditor. Do not search.\n"
+        "Read each claim against its excerpt. Write a desk memo a partner can read in 30 seconds.\n"
+        "Use exactly these headings, with one-line bullets:\n"
+        "What holds\nOverstated\nStill unknown\n"
+        "Rules: plain English; no field names, backticks, JSON keys, scores, or completeness numbers. "
+        "Overstated means the excerpt does not carry the wording. "
+        "No public process found is not proof the company is off-market — put that under Still unknown. "
+        "Four to eight bullets in total. Skip nitpicks. Do not mention scores. Do not recommend outreach.\n\n"
+        f"Package:\n{text}"
+    )
+
+
+def outreach_intelligence_message(package: dict) -> str:
+    brief = {
+        "mandate": package.get("mandate"),
+        "entities": [
+            {
+                "name": entity.get("name"),
+                "claims": [
+                    {
+                        "field": claim.get("field"),
+                        "value": claim.get("value"),
+                        "excerpt": claim.get("excerpt"),
+                    }
+                    for claim in entity.get("claims") or []
+                    if claim.get("field") in {
+                        "ownership", "relationship", "signal", "sector",
+                        "business_model", "monitor",
+                    }
+                ],
+            }
+            for entity in package.get("entities") or []
+        ],
+    }
+    return (
+        "You are the Outreach Intelligence Agent. Tools are off. Do not search and do not invent contacts or emails.\n"
+        "Brief only the companies in this package. Do not mention any other name.\n"
+        "For each company, say who to approach (role, not a guessed email), why now from sourced signals, "
+        "and what context the first note should use. No claim that the owner wants to sell. Nothing is sent.\n"
+        "Return short prose, one heading per company.\n\n"
+        f"Package:\n{json.dumps(brief, ensure_ascii=False, indent=2)}"
+    )

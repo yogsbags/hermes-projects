@@ -1,0 +1,13 @@
+{
+  "id": "aveyroni-industrial-automation",
+  "name": "Aveyroni Industrial Automation (demo client)",
+  "kind": "demo_client",
+  "summary": "Indian industrial automation company. The desk originates contracts this client could win — it does not sell the PE target.",
+  "geography": ["India", "GCC"],
+  "industries": ["automotive", "warehousing", "manufacturing"],
+  "products": ["robotics", "industrial automation", "warehouse automation"],
+  "contract_min_inr_cr": 5,
+  "contract_max_inr_cr": 100,
+  "timing_months": 18,
+  "exclude": ["public tender only when no named project owner can be sourced"]
+}

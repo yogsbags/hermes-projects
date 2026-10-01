@@ -1,0 +1,23 @@
+{
+  "source": "NIC 2025",
+  "note": "Free-text mandate labels mapped to NIC group codes. Used only when a mandate has no industry/sector/niche selection.",
+  "items": {
+    "auto component": ["291", "292", "293"],
+    "auto components": ["291", "292", "293"],
+    "automotive": ["291", "292", "293"],
+    "automotive components": ["291", "292", "293"],
+    "auto ancillary": ["291", "292", "293"],
+    "forging": ["241", "242", "243", "259"],
+    "casting": ["241", "242", "243"],
+    "packaging": ["170", "222"],
+    "building material": ["231", "239"],
+    "power transmission": ["271", "273", "279"],
+    "industrial manufacturing": ["251", "259", "281", "282"],
+    "pharma": ["210"],
+    "pharmaceutical": ["210"],
+    "hospital": ["861"],
+    "healthcare": ["861", "862", "869"],
+    "textile": ["131", "139", "141", "142", "143"],
+    "food processing": ["101", "102", "103", "104", "105", "106", "107", "108", "110"]
+  }
+}

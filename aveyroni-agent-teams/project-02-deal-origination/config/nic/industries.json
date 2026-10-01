@@ -1,0 +1,99 @@
+{
+  "source": "NIC 2025",
+  "source_url": "https://www.mospi.gov.in/uploads/publications_reports/publications_reports1763457214315_c3e5d4f3-8e25-4775-85e3-ad42d571652f_NIC_2025_Final.pdf",
+  "levels": {
+    "industry": "section",
+    "sector": "division",
+    "niche": "group"
+  },
+  "items": [
+    {
+      "id": "A",
+      "label": "Agriculture, forestry and fishing"
+    },
+    {
+      "id": "B",
+      "label": "Mining and quarrying"
+    },
+    {
+      "id": "C",
+      "label": "Manufacturing"
+    },
+    {
+      "id": "D",
+      "label": "Electricity, gas, steam and air conditioning supply"
+    },
+    {
+      "id": "E",
+      "label": "Water supply; sewerage, waste management and remediation activities"
+    },
+    {
+      "id": "F",
+      "label": "Construction"
+    },
+    {
+      "id": "G",
+      "label": "Wholesale and retail trade"
+    },
+    {
+      "id": "H",
+      "label": "Transportation and storage"
+    },
+    {
+      "id": "I",
+      "label": "Accommodation and food service activities"
+    },
+    {
+      "id": "J",
+      "label": "Publishing of books, newspapers, periodicals and other publishing activities"
+    },
+    {
+      "id": "K",
+      "label": "Telecommunications, computer programming, consultancy, computing infrastructure, and other information service activities"
+    },
+    {
+      "id": "L",
+      "label": "Financial and insurance activities"
+    },
+    {
+      "id": "M",
+      "label": "Real estate activities"
+    },
+    {
+      "id": "N",
+      "label": "Professional, scientific and technical activities"
+    },
+    {
+      "id": "O",
+      "label": "Administrative and support service activities"
+    },
+    {
+      "id": "P",
+      "label": "Public administration and defence; compulsory social security"
+    },
+    {
+      "id": "Q",
+      "label": "Education"
+    },
+    {
+      "id": "R",
+      "label": "Human health and social work activities"
+    },
+    {
+      "id": "S",
+      "label": "Arts, sports and recreation"
+    },
+    {
+      "id": "T",
+      "label": "Other service activities"
+    },
+    {
+      "id": "U",
+      "label": "Activities of households as employers; undifferentiated goods- and services producing activities of households for own use"
+    },
+    {
+      "id": "V",
+      "label": "Activities of extraterritorial organizations and bodies"
+    }
+  ]
+}
